@@ -1,4 +1,4 @@
-# Timemanager
+# TimeManager
 
 To start your Phoenix server:
 

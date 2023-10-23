@@ -7,19 +7,20 @@
 # General application configuration
 import Config
 
-config :timemanager,
+config :timeManager,
+  ecto_repos: [TimeManager.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :timemanager, TimemanagerWeb.Endpoint,
+config :timeManager, TimeManagerWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
-    formats: [html: TimemanagerWeb.ErrorHTML, json: TimemanagerWeb.ErrorJSON],
+    formats: [html: TimeManagerWeb.ErrorHTML, json: TimeManagerWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Timemanager.PubSub,
-  live_view: [signing_salt: "xA38s6Uf"]
+  pubsub_server: TimeManager.PubSub,
+  live_view: [signing_salt: "N/1azre2"]
 
 # Configures the mailer
 #
@@ -28,7 +29,7 @@ config :timemanager, TimemanagerWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :timemanager, Timemanager.Mailer, adapter: Swoosh.Adapters.Local
+config :timeManager, TimeManager.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
