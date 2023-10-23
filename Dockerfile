@@ -13,6 +13,9 @@ COPY mix.exs mix.lock ./
 # Install project dependencies
 RUN mix do deps.get, deps.compile
 
+
+RUN mix ecto.migrate
+
 # Copy the rest of the application code to the container
 COPY . .
 
@@ -21,3 +24,4 @@ EXPOSE 4000
 
 # Start the Phoenix app
 CMD ["mix", "phx.server"]
+

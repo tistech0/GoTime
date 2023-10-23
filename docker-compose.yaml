@@ -21,3 +21,9 @@ services:
       POSTGRES_DB: timemanager_dev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
