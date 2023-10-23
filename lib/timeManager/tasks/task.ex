@@ -1,4 +1,4 @@
-defmodule TimeManager.TimeManager.Task do
+defmodule TimeManager.Tasks.Task do
   use Ecto.Schema
   import Ecto.Changeset
 

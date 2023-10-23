@@ -13,7 +13,6 @@ COPY mix.exs mix.lock ./
 # Install project dependencies
 RUN mix do deps.get, deps.compile
 
-
 RUN mix ecto.migrate
 
 # Copy the rest of the application code to the container
