@@ -1,4 +1,5 @@
 defmodule TimeManagerWeb.Router do
+  alias TimeManagerWeb.UserController
   use TimeManagerWeb, :router
 
   pipeline :browser do
@@ -21,9 +22,9 @@ defmodule TimeManagerWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", TimeManagerWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TimeManagerWeb do
+    pipe_through :api
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timeManager, :dev_routes) do
