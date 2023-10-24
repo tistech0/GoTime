@@ -3,9 +3,12 @@ defmodule Timemanager.Repo.Migrations.CreateRoles do
 
   def change do
     create table(:roles) do
-      add(:role, :string)
+      add(:role, :string, default: "User", null: false)
 
-      timestamps(type: :utc_datetime)
+      add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
+      add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
+
+    execute("ALTER TABLE roles ADD CONSTRAINT valid_roles CHECK (role = 'User' OR role = 'Admin' OR role = 'SuperAdmin')")
   end
 end
