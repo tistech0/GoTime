@@ -24,6 +24,10 @@ defmodule TimeManagerWeb.Router do
   # Other scopes may use custom stacks.
   scope "/api", TimeManagerWeb do
     pipe_through :api
+
+    get "/tasks", TaskController, :index
+    get "/tasks/:id", TaskController, :show
+    post "/tasks", TaskController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
