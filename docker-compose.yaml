@@ -9,12 +9,13 @@ services:
       - "4000:4000"
     environment:
       MIX_ENV: dev
+      PGHOST: db
+      PGPORT: 5432
       PGDATABASE: timemanager_dev
       PGUSER: postgres
       PGPASSWORD: postgres
     depends_on:
       - db
-
   db:
     image: postgres:16
     environment:

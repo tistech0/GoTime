@@ -2,21 +2,22 @@
 FROM elixir:latest
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR ./app
+
+# Copy the rest of the application code to the container
+COPY . .
+
+# Make the entrypoint script executable
+RUN chmod +x ./entrypoint.sh
+
+# Set the entrypoint script as the container's entrypoint
+ENTRYPOINT ["./entrypoint.sh"]
 
 # Install hex and rebar
 RUN mix local.hex --force && mix local.rebar --force
 
-# Copy the mix.exs and mix.lock files to the container
-COPY mix.exs mix.lock ./
-
 # Install project dependencies
-RUN mix do deps.get, deps.compile
-
-RUN mix ecto.migrate
-
-# Copy the rest of the application code to the container
-COPY . .
+RUN mix do deps.get, deps.update --all, deps.compile
 
 # Expose the Phoenix port
 EXPOSE 4000
