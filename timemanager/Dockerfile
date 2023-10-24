@@ -22,5 +22,3 @@ RUN mix do deps.get, deps.update --all, deps.compile
 # Expose the Phoenix port
 EXPOSE 4000
 
-# Start the Phoenix app
-CMD ["mix", "phx.server"]
