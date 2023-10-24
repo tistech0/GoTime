@@ -28,6 +28,10 @@ defmodule TimeManagerWeb.Router do
     get "/tasks", TaskController, :index
     get "/tasks/:id", TaskController, :show
     post "/tasks", TaskController, :create
+    put "/tasks/:id", TaskController, :update
+    delete "/tasks/:id", TaskController, :delete
+
+    get "/users", UserController, :index
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
