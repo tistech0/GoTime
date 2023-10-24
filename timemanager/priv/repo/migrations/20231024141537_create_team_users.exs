@@ -3,10 +3,11 @@ defmodule Timemanager.Repo.Migrations.CreateTeamUsers do
 
   def change do
     create table(:team_users) do
-      add :team_id, references(:team, on_delete: :nothing)
-      add :user_id, references(:user, on_delete: :nothing)
+      add :team_id, references(:teams, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :nothing)
 
-      timestamps(type: :utc_datetime)
+      add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
+      add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
     create index(:team_users, [:team_id])

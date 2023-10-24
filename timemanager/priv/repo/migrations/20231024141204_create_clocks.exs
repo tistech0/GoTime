@@ -5,9 +5,10 @@ defmodule Timemanager.Repo.Migrations.CreateClocks do
     create table(:clocks) do
       add :time, :naive_datetime
       add :status, :boolean, default: false, null: false
-      add :user_id, references(:user, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :nothing)
 
-      timestamps(type: :utc_datetime)
+      add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
+      add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
     create index(:clocks, [:user_id])
