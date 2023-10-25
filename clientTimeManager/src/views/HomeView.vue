@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <router-link to="/current-weather/2996944">Go to Current Weather</router-link>
   </main>
 </template>
