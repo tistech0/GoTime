@@ -3,7 +3,6 @@ defmodule Timemanager.Repo.Migrations.CreateRoles do
 
   def change do
     create table(:roles, primary_key: false) do
-      add(:id, :uuid, primary_key: true, null: false)
       add(:role, :string, default: "User", null: false)
 
       add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
