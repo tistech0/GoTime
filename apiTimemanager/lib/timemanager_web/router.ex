@@ -8,7 +8,11 @@ defmodule TimemanagerWeb.Router do
   scope "/api", TimemanagerWeb do
     pipe_through(:api)
 
-    get "/roles", RoleController, :index
+    scopte "workingtimes", TimemanagerWeb do
+      pipe_through(:api)
+
+      get("/", WorkingTimeController, :index)
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
