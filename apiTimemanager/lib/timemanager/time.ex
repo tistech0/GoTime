@@ -134,6 +134,27 @@ defmodule Timemanager.Time do
   def get_working_times!(id), do: Repo.get!(WorkingTimes, id)
 
   @doc """
+  Get a single working_times link to workingTime id and UserId.
+
+  """
+
+  def get_working_times_by_user_id_and_working_time_id(user_id, working_time_id) do
+    Repo.get_by(WorkingTimes, user_id: user_id, id: working_time_id)
+  end
+
+  @doc """
+  Get a single working_times with user id with start and end time param.
+
+  """
+
+def get_working_times_by_user_id_and_start_and_end_time(user_id, start_time, end_time) do
+  query = from w in WorkingTimes,
+      where: w.user_id == ^user_id and w.start >= ^start_time and w.end <= ^end_time
+
+  results = Repo.all(query)
+end
+
+  @doc """
   Creates a working_times.
 
   ## Examples

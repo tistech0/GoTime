@@ -40,4 +40,16 @@ defmodule TimemanagerWeb.WorkingTimesController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def getWithUserId(conn, %{"userID" => user_id, "id" => working_time_id}) do
+    working_times = Time.get_working_times_by_user_id_and_working_time_id(user_id, working_time_id)
+    render(conn, :show, working_times: working_times)
+  end
+
+  def getWithStartEnd(conn, %{"userID" => user_id, "start" => start_time, "end" => end_time}) do
+    working_times = Timemanager.Time.get_working_times_by_user_id_and_start_and_end_time(user_id, start_time, end_time)
+
+    render(conn, :render_working_times_list, working_times: working_times)
+  end
+
 end
