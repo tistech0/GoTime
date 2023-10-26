@@ -11,6 +11,13 @@ defmodule TimemanagerWeb.Router do
     get "/roles", RoleController, :index
   end
 
+  scope "/api/teams", TimemanagerWeb do
+    pipe_through(:api)
+
+    get "/", TeamController, :index
+    delete "/:teamID", TeamController, :delete
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
