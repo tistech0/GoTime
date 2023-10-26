@@ -18,4 +18,9 @@ defmodule Timemanager.Account.User do
     |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
     |> validate_required([:username, :email, :password, :time_contract])
   end
+
+  @doc false
+  def get_user!(id) do
+    Timemanager.Repo.get!(Timemanager.Account.User, id)
+  end
 end

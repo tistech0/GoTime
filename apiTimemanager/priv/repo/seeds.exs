@@ -77,6 +77,5 @@ Enum.each(users_list, fn user ->
     _ ->
       # User already exists, do nothing
       IO.puts("User '#{user.username}' already exists.")
-  end
->>>>>>> 545d6e8614c11759e27c9a4ba33aba979e2d95fa
+  ends
 end)

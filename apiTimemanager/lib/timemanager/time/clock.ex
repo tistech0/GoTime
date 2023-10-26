@@ -19,9 +19,10 @@ defmodule Timemanager.Time.Clock do
 
   @doc false
   def changeset(clock, attrs, user_id) do
+    user_id = String.to_integer(user_id)
     clock
     |> cast(attrs, [:time, :status])
     |> validate_required([:time, :status])
-    |> put_change(:user_id, user_id)
+    |> put_assoc(:user, Timemanager.Account.User.get_user!(user_id))
   end
 end

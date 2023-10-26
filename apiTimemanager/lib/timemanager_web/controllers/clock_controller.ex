@@ -22,8 +22,8 @@ defmodule TimemanagerWeb.ClockController do
   end
   
 
-  def show(conn, %{"id" => id}) do
-    clock = Time.get_clock!(id)
+  def show(conn, %{"userID" => userID}) do
+    clock = Time.get_clock!(userID)
     render(conn, :show, clock: clock)
   end
 
