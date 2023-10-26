@@ -77,7 +77,7 @@ Enum.each(users_list, fn user ->
     _ ->
       # User already exists, do nothing
       IO.puts("User '#{user.username}' already exists.")
-  ends
+  end
 end)
 
 # List of working_times to be inserted
@@ -243,3 +243,4 @@ Enum.each(team_members_list, fn team_member ->
       IO.puts("Team_member '#{team_member.team_id}' already exists.")
   end
 end)
+s

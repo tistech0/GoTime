@@ -11,6 +11,26 @@ defmodule TimemanagerWeb.ClockController do
     render(conn, :index, clocks: clocks)
   end
 
+  def createOrUpdate(conn, %{"clock" => clock_params}) do
+    user_id = conn.params["userID"]
+    case Time.get_clock_by_user_id!(user_id) do
+      %Clock{} = clock ->
+        with {:ok, updated_clock} <- Time.update_clock(clock, clock_params) do
+          conn
+          |> put_status(:ok)
+          |> render(:show, clock: updated_clock)
+        end
+
+      nil ->
+        with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params, user_id) do
+          conn
+          |> put_status(:created)  # Utilisez :created pour indiquer qu'une nouvelle ressource a été créée.
+          |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
+          |> render(:show, clock: clock)
+        end
+    end
+  end
+
   def create(conn, %{"clock" => clock_params}) do
     user_id = conn.params["userID"]
     with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params, user_id) do
@@ -20,10 +40,9 @@ defmodule TimemanagerWeb.ClockController do
       |> render(:show, clock: clock)
     end
   end
-  
 
   def show(conn, %{"userID" => userID}) do
-    clock = Time.get_clock!(userID)
+    clock = Time.get_clock_by_user_id!(userID)
     render(conn, :show, clock: clock)
   end
 

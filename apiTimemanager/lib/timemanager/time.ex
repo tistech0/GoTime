@@ -38,6 +38,24 @@ defmodule Timemanager.Time do
   def get_clock!(id), do: Repo.get!(Clock, id)
 
   @doc """
+  Gets a single clock with user id.
+
+  Raises `Ecto.NoResultsError` if the Clock does not exist.
+
+  ## Examples
+
+      iex> get_clock!(123)
+      %Clock{}
+
+      iex> get_clock!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_clock_by_user_id!(user_id) do
+    Repo.get_by(Clock, user_id: user_id)
+  end
+
+  @doc """
   Creates a clock.
 
   ## Examples

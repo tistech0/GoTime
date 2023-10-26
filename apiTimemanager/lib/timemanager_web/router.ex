@@ -24,7 +24,7 @@ defmodule TimemanagerWeb.Router do
     pipe_through(:api)
 
     get("/:userID", ClockController, :show)
-    post("/:userID", ClockController, :create)
+    post("/:userID", ClockController, :createOrUpdate)
   end
 
 
