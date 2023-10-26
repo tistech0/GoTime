@@ -40,4 +40,9 @@ defmodule TimemanagerWeb.TeamController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def getTeamLinkManager(conn, %{"userID" => id}) do
+    team = Teams.get_team!(id)
+    render(conn, :show, team: team)
+  end
 end
