@@ -7,7 +7,6 @@ defmodule TimemanagerWeb.Router do
 
   scope "/api", TimemanagerWeb do
     pipe_through(:api)
-
   end
 
   scope "/api/workingtimes", TimemanagerWeb do
@@ -16,8 +15,9 @@ defmodule TimemanagerWeb.Router do
     get("/", WorkingTimeController, :index)
     get("/:userID/:id", WorkingTimesController, :getWithUserId)
     get("/:userID", WorkingTimesController, :getWithStartEnd, [:start, :end])
-    post("/userID", WorkingTimesController, :create)
+    post("/:userID", WorkingTimesController, :create)
     delete("/:id", WorkingTimesController, :delete)
+    put("/:id", WorkingTimesController, :update)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

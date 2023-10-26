@@ -1,0 +1,27 @@
+{
+	"info": {
+		"_postman_id": "89c011a2-c595-4270-9821-01ddda3098a8",
+		"name": "Time manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26866004",
+		"_collection_link": "https://warped-meadow-398163.postman.co/workspace/My-Workspace~ad5643c1-4a0c-451e-88b5-c53e6a369e77/collection/26866004-89c011a2-c595-4270-9821-01ddda3098a8?action=share&source=collection_link&creator=26866004"
+	},
+	"item": [
+		{
+			"name": "get working time 1 user 1",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get working time user 1 begin and end",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
