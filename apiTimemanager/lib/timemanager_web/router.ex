@@ -20,6 +20,15 @@ defmodule TimemanagerWeb.Router do
     delete("/:id", WorkingTimesController, :delete)
   end
 
+  scope "/api/clocks", TimemanagerWeb do
+    pipe_through(:api)
+
+    get("/:userID", ClockController, :show)
+    post("/:userID", ClockController, :create)
+  end
+
+
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put

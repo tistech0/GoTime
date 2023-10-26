@@ -49,9 +49,9 @@ defmodule Timemanager.Time do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_clock(attrs \\ %{}) do
+  def create_clock(attrs \\ %{}, user_id) do
     %Clock{}
-    |> Clock.changeset(attrs)
+    |> Clock.changeset(attrs,user_id)
     |> Repo.insert()
   end
 
