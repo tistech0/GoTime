@@ -16,6 +16,8 @@ defmodule TimemanagerWeb.Router do
     get("/", WorkingTimeController, :index)
     get("/:userID/:id", WorkingTimesController, :getWithUserId)
     get("/:userID", WorkingTimesController, :getWithStartEnd, [:start, :end])
+    post("/userID", WorkingTimesController, :create)
+    delete("/:id", WorkingTimesController, :delete)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
