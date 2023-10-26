@@ -4,7 +4,7 @@ defmodule Timemanager.Teams.Team do
 
   schema "teams" do
     field :name, :string
-    field :manager_id, :id
+    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
