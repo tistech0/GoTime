@@ -5,7 +5,7 @@ defmodule Timemanager.Team.Team_user do
   schema "team_users" do
 
     belongs_to :team, Timemanager.Team.Team, foreign_key: :team_id
-    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
+    belongs_to :user, Timemanager.Team.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
@@ -13,7 +13,7 @@ defmodule Timemanager.Team.Team_user do
   @doc false
   def changeset(team_user, attrs) do
     team_user
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:team_id, :user_id])
+    |> validate_required([:team_id, :user_id])
   end
 end

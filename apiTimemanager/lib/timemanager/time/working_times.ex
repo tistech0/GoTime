@@ -5,7 +5,7 @@ defmodule Timemanager.Time.WorkingTimes do
   schema "working_time" do
     field :end, :naive_datetime
     field :start, :naive_datetime
-    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
+    belongs_to :user, Timemanager.Time.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
@@ -13,7 +13,7 @@ defmodule Timemanager.Time.WorkingTimes do
   @doc false
   def changeset(working_times, attrs) do
     working_times
-    |> cast(attrs, [:start, :end])
-    |> validate_required([:start, :end])
+    |> cast(attrs, [:start, :end, :user_id])
+    |> validate_required([:start, :end, :user_id])
   end
 end
