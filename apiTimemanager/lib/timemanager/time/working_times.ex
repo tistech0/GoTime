@@ -16,4 +16,13 @@ defmodule Timemanager.Time.WorkingTimes do
     |> cast(attrs, [:start, :end, :user_id])
     |> validate_required([:start, :end, :user_id])
   end
+
+  def changeset(working_time, attrs, user_id) do
+    user_id = String.to_integer(user_id)
+
+    working_time
+    |> cast(attrs, [:time, :status])
+    |> validate_required([:time, :status])
+    |> put_assoc(:user, Timemanager.Account.User.get_user!(user_id))
+  end
 end
