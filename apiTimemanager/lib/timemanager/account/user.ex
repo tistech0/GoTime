@@ -8,7 +8,7 @@ defmodule Timemanager.Account.User do
     field :hashed_password, :string, redact: true
     field :time_contract, :integer
     field :username, :string
-    field :role, :id
+    belongs_to :role, Timemanager.Account.Role, foreign_key: :role_id
 
     timestamps(type: :utc_datetime)
   end
@@ -16,8 +16,8 @@ defmodule Timemanager.Account.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password, :time_contract, :role])
-    |> validate_required([:username, :email, :password, :time_contract, :role])
+    |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
+    |> validate_required([:username, :email, :password, :time_contract, :role_id])
   end
 
   @doc """
