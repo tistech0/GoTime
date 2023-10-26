@@ -5,7 +5,7 @@ defmodule Timemanager.Time.WorkingTimes do
   schema "working_time" do
     field :end, :naive_datetime
     field :start, :naive_datetime
-    field :user_id, :id
+    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
