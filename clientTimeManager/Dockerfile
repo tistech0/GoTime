@@ -1,0 +1,20 @@
+# Use a specific Node.js version
+FROM node:21
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Install app dependencies
+RUN npm install
+
+# Copy the rest of the app source code to the container
+COPY . .
+
+# Expose the port that the Vue.js app will run on
+EXPOSE 8081
+
+# Command to start the Vue.js app in development mode
+CMD [ "npm", "run", "dev:docker" ]
