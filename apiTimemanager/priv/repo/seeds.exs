@@ -243,4 +243,3 @@ Enum.each(team_members_list, fn team_member ->
       IO.puts("Team_member '#{team_member.team_id}' already exists.")
   end
 end)
-s
