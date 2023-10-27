@@ -1,19 +1,19 @@
 version: '3.8'
 
 services:
-  web:
-    build:
-      context: ./clientTimeManager
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    environment:
-      MIX_ENV: dev
-      PGDATABASE: timemanager_dev
-      PGUSER: postgres
-      PGPASSWORD: postgres
-    depends_on:
-      - db
+  # web:
+  #   build:
+  #     context: ./clientTimeManager
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     MIX_ENV: dev
+  #     PGDATABASE: timemanager_dev
+  #     PGUSER: postgres
+  #     PGPASSWORD: postgres
+  #   depends_on:
+  #     - db
 
   api:
     build:
