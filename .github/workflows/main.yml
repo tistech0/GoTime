@@ -1,4 +1,4 @@
-name: Hello World Pipeline
+name: Build pipeline
 
 on: [push]
 
@@ -6,6 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Say Hello
-      run: echo "Hello, World!"
+    - name: build docker image and run
+      run: docker-compose build && docker-compose up
 
