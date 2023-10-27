@@ -13,8 +13,8 @@ jobs:
     - name: Build and Run Docker Containers
       run: |
         # Build and run containers using docker-compose
-        docker-compose -f docker-compose.yml build
-        docker-compose -f docker-compose.yml up -d
+        docker-compose -f docker-compose.yaml build
+        docker-compose -f docker-compose.yaml up -d
 
     - name: Check Containers Status
       run: |
