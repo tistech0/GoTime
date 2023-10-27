@@ -20,7 +20,7 @@ defmodule TimemanagerWeb.TeamController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"teamID" => id}) do
     team = Teams.get_team!(id)
     render(conn, :show, team: team)
   end
@@ -42,7 +42,8 @@ defmodule TimemanagerWeb.TeamController do
   end
 
   def getTeamLinkManager(conn, %{"userID" => id}) do
-    team = Teams.get_team!(id)
-    render(conn, :show, team: team)
+    teams = Teams.get_list_team_link_manager(id)
+    IO.inspect(teams)
+    render(conn, :render_team_link_manager, teams: teams)
   end
 end

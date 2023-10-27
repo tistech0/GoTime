@@ -15,7 +15,15 @@ defmodule TimemanagerWeb.Router do
     pipe_through(:api)
 
     get "/", TeamController, :index
+    get "/:teamID", TeamController, :show
+    get "/:userID", TeamController, :getTeamLinkManager
     delete "/:teamID", TeamController, :delete
+  end
+
+  scope "/api/teamUser", TimemanagerWeb do
+    pipe_through(:api)
+
+    get "/:userID", Team_userController, :getTeamLinkMember
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
