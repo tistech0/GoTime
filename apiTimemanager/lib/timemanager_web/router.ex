@@ -25,7 +25,7 @@ defmodule TimemanagerWeb.Router do
   ## Team routes
 
   scope "/api/teams", TimemanagerWeb do
-    pipe_through(:api)
+    pipe_through [:api, :require_authenticated_user]
 
     get "/", TeamController, :index
     get "/:teamID", TeamController, :show
@@ -36,7 +36,7 @@ defmodule TimemanagerWeb.Router do
   ## Team user routes
 
   scope "/api/teamUser", TimemanagerWeb do
-    pipe_through(:api)
+    pipe_through [:api, :require_authenticated_user]
 
     get "/:userID", Team_userController, :getTeamLinkMember
   end
