@@ -40,4 +40,16 @@ defmodule TimemanagerWeb.Team_userController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def getTeamLinkMember(conn, %{"userID" => id}) do
+    team_user = Team.get_list_team_link_member(id)
+
+    conn
+    |> put_status(:ok)
+    |> json(%{
+      "teams" => Enum.map(team_user, &%{
+        "name" => &1.name
+      })
+    })
+  end
 end
