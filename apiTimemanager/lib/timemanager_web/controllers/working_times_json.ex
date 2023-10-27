@@ -15,6 +15,13 @@ defmodule TimemanagerWeb.WorkingTimesJSON do
     %{data: data(working_times)}
   end
 
+  @doc """
+  Renders a list of working times with start and end times.
+  """
+  def render_working_times_list(%{working_times: working_times}) do
+    %{data: Enum.map(working_times, &data/1)}
+  end
+
   defp data(%WorkingTimes{} = working_times) do
     %{
       id: working_times.id,
