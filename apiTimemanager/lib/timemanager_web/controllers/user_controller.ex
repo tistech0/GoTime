@@ -22,10 +22,27 @@ defmodule TimemanagerWeb.UserController do
   """
   @todo "Check if user can create another user. NB with role different than User"
   def register(conn, %{"user" => user_params}) do
-    # Get the role by it's role name. When registering, we use the "User" role by default.
-    role = Roles.get_role_by_role(user_params["role"])
+
+    # Chek if the current user's role to control the action
+    current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+    role = cond do
+      current_user_role == "Admin" -> # Can only create users with the "User" role
+        Roles.get_role_by_role("User")
+      current_user_role == "SuperAdmin" -> # Can create users with any role
+        Roles.get_role_by_role(user_params["role"])
+      true -> # Can't create any user by default
+        conn
+        |> put_status(401)
+        |> json(%{error: "You are not allowed to create a new user."})
+        |> halt()
+    end
+
+    # Send an error if the role given doesn't exist.
     if is_nil(role) do
-      json(conn |> put_status(400), %{error: "Invalid role."})
+      conn
+      |> put_status(400)
+      |> json(%{error: "Invalid role."})
+      |> halt()
     end
 
     # Assign the role id to the user
