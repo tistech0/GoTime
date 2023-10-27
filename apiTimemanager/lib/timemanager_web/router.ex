@@ -1,16 +1,18 @@
 defmodule TimemanagerWeb.Router do
   use TimemanagerWeb, :router
 
+  import TimemanagerWeb.UserAuth
+
   pipeline :api do
     plug(:accepts, ["json"])
+    plug :fetch_session
+    plug :fetch_current_user
   end
 
-  scope "/api", TimemanagerWeb do
-    pipe_through(:api)
-  end
+  ## Working Times routes
 
   scope "/api/workingtimes", TimemanagerWeb do
-    pipe_through(:api)
+    pipe_through [:api, :require_authenticated_user]
 
     get("/", WorkingTimeController, :index)
     get("/:userID/:id", WorkingTimesController, :getWithUserId)
@@ -19,6 +21,8 @@ defmodule TimemanagerWeb.Router do
     delete("/:id", WorkingTimesController, :delete)
     put("/:id", WorkingTimesController, :update)
   end
+
+  ## Team routes
 
   scope "/api/teams", TimemanagerWeb do
     pipe_through(:api)
@@ -29,17 +33,58 @@ defmodule TimemanagerWeb.Router do
     delete "/:teamID", TeamController, :delete
   end
 
+  ## Team user routes
+
   scope "/api/teamUser", TimemanagerWeb do
     pipe_through(:api)
 
     get "/:userID", Team_userController, :getTeamLinkMember
   end
+
+  # Clocks routes
+
   scope "/api/clocks", TimemanagerWeb do
-    pipe_through(:api)
+    pipe_through [:api, :require_authenticated_user]
 
     get("/:userID", ClockController, :show)
     post("/:userID", ClockController, :createOrUpdate)
   end
+
+  ## Authentication routes
+
+  scope "/api/users", TimemanagerWeb do
+    pipe_through [:api, :redirect_if_user_is_authenticated]
+
+    post("/log_in", UserSessionController, :create)
+  end
+
+  scope "/api/users", TimemanagerWeb do
+    pipe_through [:api]
+
+    delete("/log_out", UserSessionController, :delete)
+  end
+
+  ## User routes
+
+  scope "/api/users", TimemanagerWeb do
+    pipe_through [:api, :require_authenticated_user]
+
+    get("/", UserController, :get_user_by_email_and_username, [:email, :username])
+    get("/:userID", UserController, :show)
+    post("/", UserController, :register)
+    put("/:userID", UserController, :update)
+    delete("/:userID", UserController, :delete)
+  end
+
+  ## Role routes
+
+  scope "/api/roles", TimemanagerWeb do
+    pipe_through [:api, :require_authenticated_user]
+
+    get "/", RoleController, :index
+  end
+
+
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
