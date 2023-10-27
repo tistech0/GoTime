@@ -22,6 +22,25 @@ defmodule TimemanagerWeb.Router do
     put("/:id", WorkingTimesController, :update)
   end
 
+  ## Team routes
+
+  scope "/api/teams", TimemanagerWeb do
+    pipe_through(:api)
+
+    get "/", TeamController, :index
+    get "/:teamID", TeamController, :show
+    get "/:userID", TeamController, :getTeamLinkManager
+    delete "/:teamID", TeamController, :delete
+  end
+
+  ## Team user routes
+
+  scope "/api/teamUser", TimemanagerWeb do
+    pipe_through(:api)
+
+    get "/:userID", Team_userController, :getTeamLinkMember
+  end
+
   # Clocks routes
 
   scope "/api/clocks", TimemanagerWeb do
