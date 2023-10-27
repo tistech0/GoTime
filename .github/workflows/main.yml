@@ -19,7 +19,7 @@ jobs:
     - name: Check Containers Status
       run: |
         # Check the status of containers (optional)
-        docker-compose -f docker-compose.yml ps
+        docker-compose -f docker-compose.yaml ps
 
     - name: Run Tests (if applicable)
       run: |
@@ -29,4 +29,4 @@ jobs:
     - name: Stop Containers (if needed)
       run: |
         # If you need to stop and remove the containers
-        docker-compose -f docker-compose.yml down
+        docker-compose -f docker-compose.yaml down
