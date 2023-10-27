@@ -56,21 +56,21 @@ users_list = [
   %{
     username: "admin",
     email: "admin@email.com",
-    hashed_password: "admin", # Need to hash it
+    hashed_password: Bcrypt.hash_pwd_salt("admin"),
     time_contract: 40,
     role_id: 2
   },
   %{
     username: "user",
     email: "user@email.com",
-    hashed_password: "user", # Need to hash it
+    hashed_password: Bcrypt.hash_pwd_salt("user"),
     time_contract: 35,
     role_id: 1
   },
   %{
     username: "superadmin",
     email: "superadmin@email.com",
-    hashed_password: "superadmin", # Need to hash it
+    hashed_password: Bcrypt.hash_pwd_salt("superadmin"),
     time_contract: 40,
     role_id: 3
   }
