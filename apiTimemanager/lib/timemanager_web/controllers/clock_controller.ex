@@ -15,14 +15,35 @@ defmodule TimemanagerWeb.ClockController do
     user_id = conn.params["userID"]
     case Time.get_clock_by_user_id!(user_id) do
       %Clock{} = clock ->
-        with {:ok, updated_clock} <- Time.update_clock(clock, clock_params) do
+        current_status = clock.status
+
+        if current_status do
+          end_time = DateTime.utc_now()
+          start_time = clock.time
+
+          working_time_params = %{
+            "start" => start_time,
+            "end" => end_time
+          }
+          with {:ok, %Timemanager.Time.WorkingTimes{} = working_times} <-
+            Time.create_working_times(working_time_params, user_id) do
+            conn
+            |> put_status(:created)
+            |> put_resp_header("location", ~p"/api/working_time/#{working_times}")
+            |> json(TimemanagerWeb.WorkingTimesJSON.show(%{working_times: working_times}))
+          end
+        end
+        updated_status = !current_status
+        clock_params_with_status = Map.put(clock_params, "status", updated_status)
+        with {:ok, updated_clock} <- Time.update_clock(clock, clock_params_with_status) do
           conn
           |> put_status(:ok)
           |> render(:show, clock: updated_clock)
         end
 
       nil ->
-        with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params, user_id) do
+        clock_params_with_status = Map.put(clock_params, "status", true)
+        with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params_with_status, user_id) do
           conn
           |> put_status(:created)  # Utilisez :created pour indiquer qu'une nouvelle ressource a été créée.
           |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")

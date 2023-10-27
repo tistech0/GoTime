@@ -5,7 +5,7 @@ defmodule Timemanager.Time.WorkingTimes do
   schema "working_time" do
     field :end, :naive_datetime
     field :start, :naive_datetime
-    belongs_to :user, Timemanager.Time.User, foreign_key: :user_id
+    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
@@ -21,8 +21,8 @@ defmodule Timemanager.Time.WorkingTimes do
     user_id = String.to_integer(user_id)
 
     working_time
-    |> cast(attrs, [:time, :status])
-    |> validate_required([:time, :status])
+    |> cast(attrs,  [:start, :end])
+    |> validate_required([:start, :end])
     |> put_assoc(:user, Timemanager.Account.User.get_user!(user_id))
   end
 end

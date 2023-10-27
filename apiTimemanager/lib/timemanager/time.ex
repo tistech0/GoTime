@@ -184,9 +184,9 @@ end
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_working_times(attrs \\ %{}) do
+  def create_working_times(attrs \\ %{}, user_id) do
     %WorkingTimes{}
-    |> WorkingTimes.changeset(attrs)
+    |> WorkingTimes.changeset(attrs,user_id)
     |> Repo.insert()
   end
 

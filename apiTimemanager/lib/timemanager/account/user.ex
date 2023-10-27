@@ -23,8 +23,4 @@ defmodule Timemanager.Account.User do
   def get_user!(id) do
     Timemanager.Repo.get!(Timemanager.Account.User, id)
   end
-
-  def get_user!(id) do
-    Timemanager.Repo.get!(Timemanager.Account.User, id)
-  end
 end
