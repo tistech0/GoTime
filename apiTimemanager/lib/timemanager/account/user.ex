@@ -20,6 +20,11 @@ defmodule Timemanager.Account.User do
     |> validate_required([:username, :email, :password, :time_contract, :role_id])
   end
 
+  @doc false
+  def get_user!(id) do
+    Timemanager.Repo.get!(Timemanager.Account.User, id)
+  end
+
     @doc """
     Changeset specific for seed purposes
     """
