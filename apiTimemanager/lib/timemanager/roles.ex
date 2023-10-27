@@ -43,7 +43,7 @@ defmodule Timemanager.Roles do
     Raises `Ecto.NoResultsError` if the Role does not exist.
 
   """
-  def get_role_by_role!(role), do: Repo.get_by!(Role, role: role)
+  def get_role_by_role(role), do: Repo.get_by(Role, role: role)
 
   @doc """
   Creates a role.

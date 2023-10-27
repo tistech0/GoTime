@@ -26,16 +26,15 @@ defmodule TimemanagerWeb.UserAuth do
   disconnected on log out. The line can be safely removed
   if you are not using LiveView.
   """
-  @todo "Do something instead on redirect"
   def log_in_user(conn, user, params \\ %{}) do
     token = Account.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
 
     conn
     |> renew_session()
-    |> put_token_in_session(token)
+    |> put_session(:user_token, token)
     |> maybe_write_remember_me_cookie(token, params)
-    #|> redirect(to: user_return_to || signed_in_path(conn))
+    |> json(%{message: "Welcome back!"})
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
@@ -72,7 +71,6 @@ defmodule TimemanagerWeb.UserAuth do
 
   It clears all session data for safety. See renew_session.
   """
-  @todo "Do something instead on redirect"
   def log_out_user(conn) do
     user_token = get_session(conn, :user_token)
     user_token && Account.delete_user_session_token(user_token)
@@ -80,7 +78,7 @@ defmodule TimemanagerWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    #|> redirect(to: ~p"/")
+    |> json(%{message: "Successfully logged out"})
   end
 
   @doc """
@@ -111,11 +109,11 @@ defmodule TimemanagerWeb.UserAuth do
   @doc """
   Used for routes that require the user to not be authenticated.
   """
-  @todo "Do something instead on redirect"
   def redirect_if_user_is_authenticated(conn, _opts) do
     if conn.assigns[:current_user] do
       conn
-      #|> redirect(to: signed_in_path(conn))
+      |> put_status(400)
+      |> json(%{error: "Already Connected."})
       |> halt()
     else
       conn
@@ -128,15 +126,13 @@ defmodule TimemanagerWeb.UserAuth do
   If you want to enforce the user email is confirmed before
   they use the application at all, here would be a good place.
   """
-  @todo "Do something instead on redirect"
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do
       conn
     else
       conn
-      |> put_flash(:error, "You must log in to access this page.")
-      |> maybe_store_return_to()
-      #|> redirect(to: ~p"/users/log_in")
+      |> put_status(401)
+      |> json(%{error: "You need to be connected."})
       |> halt()
     end
   end

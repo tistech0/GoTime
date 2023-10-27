@@ -20,6 +20,15 @@ defmodule Timemanager.Account.User do
     |> validate_required([:username, :email, :password, :time_contract, :role_id])
   end
 
+    @doc """
+    Changeset specific for seed purposes
+    """
+    def seeds_changeset(user, attrs) do
+      user
+      |> cast(attrs, [:username, :email, :hashed_password, :time_contract, :role_id])
+      |> validate_required([:username, :email, :hashed_password, :time_contract, :role_id])
+    end
+
   @doc """
   A user changeset for registration.
 
@@ -46,6 +55,17 @@ defmodule Timemanager.Account.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
+    |> validate_email(opts)
+    |> validate_password(opts)
+  end
+
+  @doc """
+    This def updates the user without changing the role!
+  """
+  def update_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username, :email, :password, :time_contract])
+    |> validate_required([:username, :email, :password, :time_contract])
     |> validate_email(opts)
     |> validate_password(opts)
   end

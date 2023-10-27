@@ -32,13 +32,13 @@ defmodule TimemanagerWeb.Router do
     scope "/api/users", TimemanagerWeb do
       pipe_through [:api, :redirect_if_user_is_authenticated]
 
-      post("/register", UserController, :register) # to delete
       post("/log_in", UserSessionController, :create)
 
     end
 
     scope "/api", TimemanagerWeb do
       pipe_through [:api]
+      post("/users/register", UserController, :register) # to delete
       delete("/users/log_out", UserSessionController, :delete)
     end
 
@@ -48,6 +48,7 @@ defmodule TimemanagerWeb.Router do
       pipe_through [:api, :require_authenticated_user]
 
       get("/", UserController, :get_user_by_email_and_username, [:email, :username])
+      get("/", UserController, :index)
       get("/:userID", UserController, :show)
       post("/", UserController, :register)
       put("/:userID", UserController, :update)

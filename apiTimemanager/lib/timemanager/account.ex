@@ -69,7 +69,7 @@ defmodule Timemanager.Account do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -102,7 +102,7 @@ defmodule Timemanager.Account do
     User.changeset(user, attrs)
   end
 
-  alias Timemanager.Account.{User, UserToken, UserNotifier}
+  alias Timemanager.Account.{User, UserToken}
 
   ## Database getters
 

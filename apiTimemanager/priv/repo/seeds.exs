@@ -56,21 +56,21 @@ users_list = [
   %{
     username: "admin",
     email: "admin@email.com",
-    password: "admin",
+    hashed_password: "admin", # Need to hash it
     time_contract: 40,
-    role_id: 1
+    role_id: 2
   },
   %{
     username: "user",
     email: "user@email.com",
-    password: "user",
+    hashed_password: "user", # Need to hash it
     time_contract: 35,
-    role_id: 2
+    role_id: 1
   },
   %{
     username: "superadmin",
     email: "superadmin@email.com",
-    password: "superadmin",
+    hashed_password: "superadmin", # Need to hash it
     time_contract: 40,
     role_id: 3
   }
@@ -83,7 +83,7 @@ Enum.each(users_list, fn user ->
   case existing_user do
     nil ->
       # If the user doesn't exist, create it
-      user_changeset = Timemanager.Account.User.changeset(%Timemanager.Account.User{}, user)
+      user_changeset = Timemanager.Account.User.seeds_changeset(%Timemanager.Account.User{}, user)
       Repo.insert!(user_changeset)
     _ ->
       # User already exists, do nothing

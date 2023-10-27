@@ -10,8 +10,7 @@ defmodule Timemanager.Repo.Migrations.CreateUsersAuthTables do
       add :role_id, references(:roles, on_delete: :nothing)
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
-      add :confirmed_at, :naive_datetime
-      
+
       add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
       add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
@@ -24,7 +23,7 @@ defmodule Timemanager.Repo.Migrations.CreateUsersAuthTables do
       add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string
-      
+
       add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
