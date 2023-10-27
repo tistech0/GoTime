@@ -3,11 +3,11 @@ defmodule Timemanager.Account.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :email, :string
-    field :password, :string
-    field :time_contract, :integer
-    field :username, :string
-    belongs_to :role, Timemanager.Account.Role, foreign_key: :role_id
+    field(:email, :string)
+    field(:password, :string)
+    field(:time_contract, :integer)
+    field(:username, :string)
+    belongs_to(:role, Timemanager.Account.Role, foreign_key: :role_id)
 
     timestamps(type: :utc_datetime)
   end
@@ -17,5 +17,10 @@ defmodule Timemanager.Account.User do
     user
     |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
     |> validate_required([:username, :email, :password, :time_contract, :role_id])
+  end
+
+  @doc false
+  def get_user!(id) do
+    Timemanager.Repo.get!(Timemanager.Account.User, id)
   end
 end

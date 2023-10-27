@@ -9,6 +9,8 @@ defmodule Timemanager.Repo.Migrations.CreateRoles do
       add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
-    execute("ALTER TABLE roles ADD CONSTRAINT valid_roles CHECK (role = 'User' OR role = 'Admin' OR role = 'SuperAdmin')")
+    execute(
+      "ALTER TABLE roles ADD CONSTRAINT valid_roles CHECK (role = 'User' OR role = 'Admin' OR role = 'SuperAdmin')"
+    )
   end
 end

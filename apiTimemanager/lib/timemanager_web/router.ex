@@ -7,9 +7,27 @@ defmodule TimemanagerWeb.Router do
 
   scope "/api", TimemanagerWeb do
     pipe_through(:api)
-
-    get "/roles", RoleController, :index
   end
+
+  scope "/api/workingtimes", TimemanagerWeb do
+    pipe_through(:api)
+
+    get("/", WorkingTimeController, :index)
+    get("/:userID/:id", WorkingTimesController, :getWithUserId)
+    get("/:userID", WorkingTimesController, :getWithStartEnd, [:start, :end])
+    post("/:userID", WorkingTimesController, :create)
+    delete("/:id", WorkingTimesController, :delete)
+    put("/:id", WorkingTimesController, :update)
+  end
+
+  scope "/api/clocks", TimemanagerWeb do
+    pipe_through(:api)
+
+    get("/:userID", ClockController, :show)
+    post("/:userID", ClockController, :createOrUpdate)
+  end
+
+
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:timemanager, :dev_routes) do
