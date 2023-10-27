@@ -12,32 +12,32 @@ services:
       PGDATABASE: timemanager_dev
       PGUSER: postgres
       PGPASSWORD: postgres
-    # depends_on:
-    #   - db
+    depends_on:
+      - db
 
-  # api:
-  #   build:
-  #     context: ./apiTimemanager
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "4000:4000"
-  #   environment:
-  #     MIX_ENV: dev
-  #     PGDATABASE: timemanager_dev
-  #     PGUSER: postgres
-  #     PGPASSWORD: postgres
-  #   depends_on:
-  #     - db
+  api:
+    build:
+      context: ./apiTimemanager
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      MIX_ENV: dev
+      PGDATABASE: timemanager_dev
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    depends_on:
+      - db
 
-  # db:
-  #   image: postgres:16
-  #   environment:
-  #     POSTGRES_DB: timemanager_dev
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: timemanager_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
-  # adminer: 
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
+  adminer: 
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
