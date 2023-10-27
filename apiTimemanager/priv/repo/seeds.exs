@@ -152,7 +152,7 @@ Enum.each(working_times_list, fn working_time ->
       Repo.insert!(working_time_changeset)
     _ ->
       # Working_time already exists, do nothing
-      IO.puts("Working_time '#{working_time.start_time}' already exists.")
+      IO.puts("Working_time '#{working_time.start}' already exists.")
   end
 end)
 
@@ -200,7 +200,15 @@ teams_list = [
   %{
     name: "Team 2",
     manager_id: 3
-  }
+  },
+  %{
+    name: "Team 3",
+    manager_id: 3
+  },
+  %{
+    name: "Team 4",
+    manager_id: 2
+  },
 ]
 
 Enum.each(teams_list, fn team ->
@@ -236,7 +244,23 @@ team_members_list = [
   %{
     team_id: 2,
     user_id: 2
-  }
+  },
+  %{
+    team_id: 3,
+    user_id: 1
+  },
+  %{
+    team_id: 3,
+    user_id: 2
+  },
+  %{
+    team_id: 4,
+    user_id: 1
+  },
+  %{
+    team_id: 4,
+    user_id: 3
+  },
 ]
 
 Enum.each(team_members_list, fn team_member ->
