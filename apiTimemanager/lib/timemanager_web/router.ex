@@ -73,6 +73,7 @@ defmodule TimemanagerWeb.Router do
     get("/:userID", UserController, :show)
     post("/", UserController, :register)
     put("/:userID", UserController, :update)
+    patch("/:userID", UserController, :update_user_role, [:role])
     delete("/:userID", UserController, :delete)
   end
 

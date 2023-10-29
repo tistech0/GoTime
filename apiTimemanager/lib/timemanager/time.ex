@@ -107,6 +107,11 @@ defmodule Timemanager.Time do
     Repo.delete(clock)
   end
 
+  def delete_all_clocks_by_user_id(user_id) do
+    clocks = from(c in Clock, where: c.user_id == ^user_id)
+    Repo.delete_all(clocks)
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking clock changes.
 
@@ -222,6 +227,11 @@ end
   """
   def delete_working_times(%WorkingTimes{} = working_times) do
     Repo.delete(working_times)
+  end
+
+  def delete_all_working_times_by_user_id(user_id) do
+    working_times = from(wt in WorkingTimes, where: wt.user_id == ^user_id)
+    Repo.delete_all(working_times)
   end
 
   @doc """

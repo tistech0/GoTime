@@ -3,8 +3,14 @@ defmodule TimemanagerWeb.UserController do
 
   alias Timemanager.Account
   alias Timemanager.Account.User
-  alias TimemanagerWeb.UserAuth
   alias Timemanager.Roles
+  alias Timemanager.Time
+  alias Timemanager.Team
+  alias Timemanager.Teams
+
+  @super_admin_role "SuperAdmin"
+  @admin_role "Admin"
+  @user_role "User"
 
   action_fallback TimemanagerWeb.FallbackController
 
@@ -20,29 +26,22 @@ defmodule TimemanagerWeb.UserController do
   @doc """
   This def creates a new user with the User default role
   """
-  @todo "Check if user can create another user. NB with role different than User"
   def register(conn, %{"user" => user_params}) do
 
     # Chek if the current user's role to control the action
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
     role = cond do
-      current_user_role == "Admin" -> # Can only create users with the "User" role
-        Roles.get_role_by_role("User")
-      current_user_role == "SuperAdmin" -> # Can create users with any role
+      current_user_role == @admin_role -> # Can only create users with the @user_role role
+        Roles.get_role_by_role(@user_role)
+      current_user_role == @super_admin_role -> # Can create users with any role
         Roles.get_role_by_role(user_params["role"])
       true -> # Can't create any user by default
-        conn
-        |> put_status(401)
-        |> json(%{error: "You are not allowed to create a new user."})
-        |> halt()
+      error_template(conn, 401, "You are not allowed to create a new user.")
     end
 
     # Send an error if the role given doesn't exist.
     if is_nil(role) do
-      conn
-      |> put_status(400)
-      |> json(%{error: "Invalid role."})
-      |> halt()
+      error_template(conn, 400, "Invalid role")
     end
 
     # Assign the role id to the user
@@ -56,7 +55,7 @@ defmodule TimemanagerWeb.UserController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         error_msg = changeset_error_message(changeset)
-        json(conn |> put_status(403), %{error: error_msg})
+        error_template(conn, 403, error_msg)
       end
   end
 
@@ -86,8 +85,7 @@ defmodule TimemanagerWeb.UserController do
     if user = Account.get_user_by_email_and_username(email, username) do
       render(conn, :show, user: user)
     else
-      # Send message
-      json(conn |> put_status(404), %{error: "Email and username are different"})
+      error_template(conn, 404, "Email and username are different.")
     end
   end
 
@@ -100,10 +98,7 @@ defmodule TimemanagerWeb.UserController do
     # check that the user connected is the user it is trying to update
     current_user_id = conn.assigns[:current_user].id
     if current_user_id != String.to_integer(id) do
-      conn
-      |> put_status(401)
-      |> json(%{error: "You can't update this user."})
-      |> halt()
+      error_template(conn, 401, "You are not allowed to update this user.")
     end
     user = Account.get_user!(id)
 
@@ -113,14 +108,88 @@ defmodule TimemanagerWeb.UserController do
   end
 
   @doc """
-    This def delete the user.
+    This def updates only the user role. It will only work for a SuperAdmin
   """
-  @todo "Need to delete userId references"
-  def delete(conn, %{"userID" => id}) do
+  def update_user_role(conn, %{"userID" => id, "role" => role}) do
+
+    # check that the user connected is a @super_admin_role
+    current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+    if current_user_role != @super_admin_role do
+      error_template(conn, 401, "You are not allowed to update this user's role.")
+    end
     user = Account.get_user!(id)
 
+    new_role = Roles.get_role_by_role(role)
+
+    # Send an error if the role given doesn't exist.
+    if is_nil(new_role) do
+      error_template(conn, 400, "Invalid role")
+    end
+
+    with {:ok, %User{} = user} <- Account.update_user_role(user, %{role_id: new_role.id}) do
+      render(conn, :show, user: user)
+    end
+  end
+
+  @doc """
+    This def delete the user.
+  """
+  def delete(conn, %{"userID" => id}) do
+    current_user = conn.assigns[:current_user]
+
+    # Check user is allowed to delete other user
+    if Roles.get_role!(conn.assigns[:current_user].role_id).role == @user_role do
+      error_template(conn, 401, "You are not allowed to delete a user.")
+    end
+
+    # fetch the user to delete
+    user = Account.get_user(id)
+
+    # Check user isn't nil
+    if is_nil(user) do
+      error_template(conn, 400, "Invalid user")
+    end
+
+    # Check user isn't trying to delete itself
+    if current_user.id == user.id do
+      error_template(conn, 403, "You are no allowed to delete yourself")
+    end
+
+    # If the user has the @user_role, terminate the def
+    if Roles.get_role!(user.role_id).role != @user_role do
+      # get user's managed team
+      teams_managed = Teams.get_list_team_link_manager(user.id)
+      # if list isn't empty, send error because the user is manages at least one team. Manager should be replaced before deleting
+      if teams_managed != [] do
+        error_template(conn, 403, "The user manages teams. You should replace the manager before deleting this user.")
+      end
+    end
+
+    # delete all clocks for this user
+    Time.delete_all_clocks_by_user_id(user.id)
+
+    # delete all working times for this user
+    Time.delete_all_working_times_by_user_id(user.id)
+
+    # user_token should delete themselves because of cascade delete
+
+    # remove user from team_user
+    Team.delete_team_user_by_user_id(user.id)
+
+    # finally delete the user
     with {:ok, %User{}} <- Account.delete_user(user) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  @doc """
+    This private def is an error template to return.
+    It accepts the conn, and HttpErrorCode and a message
+  """
+  defp error_template(conn, error_code, message) do
+    conn
+    |> put_status(error_code)
+    |> json(%{error: message})
+    |> halt()
   end
 end

@@ -90,6 +90,14 @@ defmodule Timemanager.Team do
   end
 
   @doc """
+    This def removes the user from all teams
+  """
+  def delete_team_user_by_user_id(user_id) do
+    team_users = from(tu in Team_user, where: tu.user_id == ^user_id)
+    Repo.delete_all(team_users)
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking team_user changes.
 
   ## Examples
