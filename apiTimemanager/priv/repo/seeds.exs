@@ -184,7 +184,7 @@ end)
 teams_list = [
   %{
     name: "Team 1",
-    manager_id: 2
+    manager_id: 1
   },
   %{
     name: "Team 2",
@@ -196,7 +196,7 @@ teams_list = [
   },
   %{
     name: "Team 4",
-    manager_id: 2
+    manager_id: 1
   },
 ]
 
