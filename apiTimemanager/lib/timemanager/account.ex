@@ -38,6 +38,11 @@ defmodule Timemanager.Account do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  This def gets the user without throwing an exception if it's null
+  """
+  def get_user(id), do: Repo.get(User, id)
+
+  @doc """
   Creates a user.
 
   ## Examples
@@ -70,6 +75,15 @@ defmodule Timemanager.Account do
   def update_user(%User{} = user, attrs) do
     user
     |> User.update_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+    This def only updates the user roles.
+  """
+  def update_user_role(%User{} = user, attrs) do
+    user
+    |> User.update_user_role_changeset(attrs)
     |> Repo.update()
   end
 

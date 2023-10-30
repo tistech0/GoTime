@@ -25,14 +25,24 @@ defmodule Timemanager.Account.User do
     Timemanager.Repo.get!(Timemanager.Account.User, id)
   end
 
-    @doc """
-    Changeset specific for seed purposes
-    """
-    def seeds_changeset(user, attrs) do
-      user
-      |> cast(attrs, [:username, :email, :hashed_password, :time_contract, :role_id])
-      |> validate_required([:username, :email, :hashed_password, :time_contract, :role_id])
-    end
+  @doc """
+  Changeset specific for seed purposes
+  """
+  def seeds_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:username, :email, :hashed_password, :time_contract, :role_id])
+    |> validate_required([:username, :email, :hashed_password, :time_contract, :role_id])
+  end
+
+  @doc """
+  Changeset only to update the role
+  """
+  def update_user_role_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:role_id])
+    |> validate_required([:role_id])
+  end
+
 
   @doc """
   A user changeset for registration.
