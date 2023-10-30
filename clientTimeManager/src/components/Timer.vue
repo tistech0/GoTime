@@ -5,7 +5,7 @@ import type { Role } from '../types/roles';
 const thing = reactive<{ roles: Role[] }>({ roles: [] });
 
 // async function getData() {
-//     const res = await fetch("http://localhost:4000/api/user");
+//     const res = await fetch("http://localhost:4000/api/users");
 //     const { data } = await res.json();
 //     console.log(data);
 //     thing.roles = data;
@@ -23,9 +23,9 @@ const clock = {
 // getData();
 </script>
 <template>
-    <div class="bgOpacity fixed bg-cover bg-center bg-[url('../assets/bgCompany.png')]  w-1/3 h-full">
+    <div class="h-[100vh] bg-cover bg-center bg-[url('../assets/bgCompany.png')]">
         <div class="p-8">
-            <p class="pb-5">
+            <p class="pb-5 text-center">
                 Hello <span class="text-customSecondary">{{ user.username }}</span>,
             </p>
             <h2>Check-in to work</h2>

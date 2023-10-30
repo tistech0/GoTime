@@ -4,6 +4,7 @@ import Sidebar from './components/SideBar.vue'
 import Timer from './components/Timer.vue';
 import { useDisplay } from 'vuetify';
 import BottomNav from './components/BottomNav.vue';
+import DashboardView from './views/DashboardView.vue';
 
 
 const { mobile } = useDisplay()
@@ -11,11 +12,7 @@ const { mobile } = useDisplay()
 
 <template>
   <v-layout>
-    <BottomNav v-if="mobile" />
-    <Sidebar v-else />
-    <v-main class="w-full h-full">
-      <Timer />
-    </v-main>
+    <DashboardView />
   </v-layout>
 </template>
 
