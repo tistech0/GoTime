@@ -101,4 +101,22 @@ defmodule Timemanager.Teams do
   def change_team(%Team{} = team, attrs \\ %{}) do
     Team.changeset(team, attrs)
   end
+
+  @doc """
+  Get all teams linked to a manager_id.
+
+  ## Examples
+
+      iex> get_list_team_link_manager(manager_id)
+      [%Team{}, ...]
+
+  """
+  def get_list_team_link_manager(manager_id) do
+    query =
+      from(t in Team,
+        where: t.manager_id == ^manager_id
+      )
+
+      teams = Repo.all(query)
+  end
 end

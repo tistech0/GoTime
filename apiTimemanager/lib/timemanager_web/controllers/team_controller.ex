@@ -20,12 +20,12 @@ defmodule TimemanagerWeb.TeamController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"teamID" => id}) do
     team = Teams.get_team!(id)
     render(conn, :show, team: team)
   end
 
-  def update(conn, %{"id" => id, "team" => team_params}) do
+  def update(conn, %{"teamID" => id, "team" => team_params}) do
     team = Teams.get_team!(id)
 
     with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
@@ -39,5 +39,11 @@ defmodule TimemanagerWeb.TeamController do
     with {:ok, %Team{}} <- Teams.delete_team(team) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def getTeamLinkManager(conn, %{"userID" => id}) do
+    teams = Teams.get_list_team_link_manager(id)
+    IO.inspect(teams)
+    render(conn, :render_team_link_manager, teams: teams)
   end
 end

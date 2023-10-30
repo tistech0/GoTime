@@ -9,17 +9,6 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Timemanager.Repo.insert!(%Timemanager.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
 alias Timemanager.Repo
 alias Timemanager.Roles.Role
 
@@ -56,21 +45,21 @@ users_list = [
   %{
     username: "admin",
     email: "admin@email.com",
-    password: "admin",
+    hashed_password: Bcrypt.hash_pwd_salt("admin"),
     time_contract: 40,
-    role_id: 1
+    role_id: 2
   },
   %{
     username: "user",
     email: "user@email.com",
-    password: "user",
+    hashed_password: Bcrypt.hash_pwd_salt("user"),
     time_contract: 35,
-    role_id: 2
+    role_id: 1
   },
   %{
     username: "superadmin",
     email: "superadmin@email.com",
-    password: "superadmin",
+    hashed_password: Bcrypt.hash_pwd_salt("superadmin"),
     time_contract: 40,
     role_id: 3
   }
@@ -83,7 +72,7 @@ Enum.each(users_list, fn user ->
   case existing_user do
     nil ->
       # If the user doesn't exist, create it
-      user_changeset = Timemanager.Account.User.changeset(%Timemanager.Account.User{}, user)
+      user_changeset = Timemanager.Account.User.seeds_changeset(%Timemanager.Account.User{}, user)
       Repo.insert!(user_changeset)
     _ ->
       # User already exists, do nothing
@@ -152,7 +141,7 @@ Enum.each(working_times_list, fn working_time ->
       Repo.insert!(working_time_changeset)
     _ ->
       # Working_time already exists, do nothing
-      IO.puts("Working_time '#{working_time.start_time}' already exists.")
+      IO.puts("Working_time '#{working_time.start}' already exists.")
   end
 end)
 
@@ -195,12 +184,20 @@ end)
 teams_list = [
   %{
     name: "Team 1",
-    manager_id: 2
+    manager_id: 1
   },
   %{
     name: "Team 2",
     manager_id: 3
-  }
+  },
+  %{
+    name: "Team 3",
+    manager_id: 3
+  },
+  %{
+    name: "Team 4",
+    manager_id: 1
+  },
 ]
 
 Enum.each(teams_list, fn team ->
@@ -236,7 +233,23 @@ team_members_list = [
   %{
     team_id: 2,
     user_id: 2
-  }
+  },
+  %{
+    team_id: 3,
+    user_id: 1
+  },
+  %{
+    team_id: 3,
+    user_id: 2
+  },
+  %{
+    team_id: 4,
+    user_id: 1
+  },
+  %{
+    team_id: 4,
+    user_id: 3
+  },
 ]
 
 Enum.each(team_members_list, fn team_member ->

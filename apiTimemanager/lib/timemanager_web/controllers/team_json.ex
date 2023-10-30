@@ -15,6 +15,13 @@ defmodule TimemanagerWeb.TeamJSON do
     %{data: data(team)}
   end
 
+  @doc """
+  Renders a list of teams link to a manager.
+  """
+  def render_team_link_manager(%{teams: teams}) do
+    %{data: Enum.map(teams, &data/1)}
+  end
+
   defp data(%Team{} = team) do
     %{
       id: team.id,
