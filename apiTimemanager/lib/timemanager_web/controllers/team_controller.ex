@@ -25,7 +25,7 @@ defmodule TimemanagerWeb.TeamController do
     render(conn, :show, team: team)
   end
 
-  def update(conn, %{"id" => id, "team" => team_params}) do
+  def update(conn, %{"teamID" => id, "team" => team_params}) do
     team = Teams.get_team!(id)
 
     with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
