@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import Home from '../components/Home.vue'
+import Timer from '../components/Timer.vue';
+
 </script>
 
 <template>
   <main>
-    <Home />
+    <Timer />
   </main>
 </template>
