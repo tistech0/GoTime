@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: [larger-runner]
+    runs-on: [Team & Enterprise]
 
     strategy:
       matrix:
@@ -41,7 +41,7 @@ jobs:
 
   mirror:
     name: Push content of the current repo on mirror
-    runs-on: [larger-runner]
+    runs-on: [Team & Enterprise]
 
     strategy:
       matrix:
