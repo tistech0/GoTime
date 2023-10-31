@@ -41,7 +41,6 @@ jobs:
 
   mirror:
     name: Push content of the current repo on mirror
-    build:
     runs-on: [larger-runner]
 
     strategy:
