@@ -1,0 +1,25 @@
+name: Mirror repo
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  Mirror-Repo:
+    name: Mirror repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            ${{ secrets.REPO_URL }}
+          ssh_private_key:
+            ${{ secrets.SSH_KEY }}
