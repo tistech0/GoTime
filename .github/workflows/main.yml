@@ -7,26 +7,39 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Build and Run Docker Containers
-      run: |
-        # Build and run containers using docker-compose
-        docker-compose -f docker-compose.yaml build
-        docker-compose -f docker-compose.yaml up -d
+      - name: Build and Run Docker Containers
+        run: |
+          # Build and run containers using docker-compose
+          docker-compose -f docker-compose.yaml build
+          docker-compose -f docker-compose.yaml up -d
 
-    - name: Check Containers Status
-      run: |
-        # Check the status of containers (optional)
-        docker-compose -f docker-compose.yaml ps
+      - name: Check Containers Status
+        run: |
+          # Check the status of containers (optional)
+          docker-compose -f docker-compose.yaml ps
 
-    - name: Run Tests (if applicable)
-      run: |
-        # If you have tests to run inside the containers, you can run them here
-        # For example: docker-compose -f docker-compose.yml exec your-service-name pytest
+      - name: Run Tests (if applicable)
+        run: |
+          # If you have tests to run inside the containers, you can run them here
+          # For example: docker-compose -f docker-compose.yml exec your-service-name pytest
 
-    - name: Stop Containers (if needed)
-      run: |
-        # If you need to stop and remove the containers
-        docker-compose -f docker-compose.yaml down
+      - name: Stop Containers (if needed)
+        run: |
+          # If you need to stop and remove the containers
+          docker-compose -f docker-compose.yaml down
+
+  mirror:
+    name: Push content of the current repo on mirror
+    runs-on: self-hosted
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: git@github.com:EpitechMscProPromo2025/T-POO-700-NAN_9.git
+          ssh_private_key: ${{ secrets.SSH_KEY }}
