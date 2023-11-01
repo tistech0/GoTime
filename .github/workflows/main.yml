@@ -36,16 +36,13 @@ jobs:
 
   mirror:
     name: Push content of the current repo on mirror
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [build]
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: mirror-repository
-      uses: spyoungtech/mirror-action@v0.5.1
-      with:
-        REMOTE: git@github.com:tistech0/GoTime.git
-        GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_KEY }}
-        GIT_SSH_NO_VERIFY_HOST: "true"
-        DEBUG: "true"
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: git@github.com:EpitechMscProPromo2025/T-POO-700-NAN_9.git
+          ssh_private_key: ${{ secrets.SSH_KEY }}
