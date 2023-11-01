@@ -36,7 +36,7 @@ jobs:
 
   mirror:
     name: Push content of the current repo on mirror
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
