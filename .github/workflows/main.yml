@@ -21,7 +21,7 @@ jobs:
 
       - name: Check Containers Status
         run: |
-          # Check the status of containers (optional)
+          # Check the status of containers
           docker-compose -f docker-compose.yaml ps
 
       - name: Run Tests (if applicable)
