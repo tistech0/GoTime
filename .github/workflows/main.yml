@@ -70,6 +70,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
+          gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
           gcloud auth configure-docker
           cd apiTimemanager
           docker build -t eu.gcr.io/gotime-403610/gotime-api:latest .
@@ -87,3 +88,4 @@ jobs:
         with:
           target_repo_url: git@github.com:EpitechMscProPromo2025/T-POO-700-NAN_9.git
           ssh_private_key: ${{ secrets.SSH_KEY }}
+²
