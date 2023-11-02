@@ -44,7 +44,7 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Set up Elixir environment and run Elixir analysis
+      - name: Set up Elixir environment
         run: |
           # Install Elixir
           wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
@@ -56,6 +56,8 @@ jobs:
           mix local.hex --force
           mix local.rebar --force
 
+      - name: Run Elixir analysis on apiTimemanager
+        run: |
           # Change to your Elixir app directory
           cd apiTimemanager
 
@@ -72,13 +74,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Set up SonarQube for another folder
+      - name: Run SonarQube scan on clientTimeManager
         run: |
           cd clientTimeManager
           sonar-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
 
   mirror:
     name: Push content of the current repo on mirror
