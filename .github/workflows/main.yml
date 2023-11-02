@@ -88,4 +88,3 @@ jobs:
         with:
           target_repo_url: git@github.com:EpitechMscProPromo2025/T-POO-700-NAN_9.git
           ssh_private_key: ${{ secrets.SSH_KEY }}
-²
