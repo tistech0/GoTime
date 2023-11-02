@@ -39,19 +39,46 @@ jobs:
     runs-on: ubuntu-latest
     permissions: read-all
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: sonarsource/sonarqube-scan-action@master
+
+      - name: Set up Elixir environment and run Elixir analysis
+        run: |
+          # Install Elixir
+          wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+          sudo dpkg -i erlang-solutions_2.0_all.deb
+          sudo apt-get update
+          sudo apt-get install -y esl-erlang elixir
+
+          # Install Hex and Rebar
+          mix local.hex --force
+          mix local.rebar --force
+
+          # Change to your Elixir app directory
+          cd apiTimemanager
+
+          # Install project dependencies
+          mix do deps.get, deps.compile
+
+          # Run Credo for static code analysis
+          mix credo --strict
+
+          # Run SonarQube analysis for Elixir
+          echo "Running SonarQube analysis for Elixir..."
+          mix do sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Set up SonarQube for another folder
+        run: |
+          cd clientTimeManager
+          sonar-scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   mirror:
     name: Push content of the current repo on mirror
