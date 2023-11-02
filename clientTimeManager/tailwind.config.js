@@ -12,6 +12,7 @@ module.exports = {
       customPrimary: 'var(--primary-blue)',
       customSecondary: 'var(--secondary-pink)',
       darkPrimary: 'var(--primary-blue-dark)',
+      lightPrimary: 'var(--primary-blue-light)',
       customGrey: 'var(--grey)', 
       ...colors
     }
