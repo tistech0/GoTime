@@ -62,16 +62,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1.1.1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1.1.1
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: gotime-403610
 
       - name: Build and Push Docker Image
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > key.json
-          gcloud auth activate-service-account --key-file=key.json
           gcloud auth configure-docker
           cd apiTimemanager
           docker build -t eu.gcr.io/gotime-403610/gotime-api:latest .
