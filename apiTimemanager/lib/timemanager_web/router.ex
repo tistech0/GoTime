@@ -139,10 +139,16 @@ defmodule TimemanagerWeb.Router do
   end
 
   ## Stats routes
-  scope "/api/stats/workingtimes/team", TimemanagerWeb do
+  scope "/api/stats/team/workingtimes/all", TimemanagerWeb do
     pipe_through [:api, :require_authenticated_user]
 
     get("/:teamID", WorkingTimesController, :getWithStartEndTeam, [:start, :end])
+  end
+
+  scope "/api/stats/team/workingtimes/average", TimemanagerWeb do
+    pipe_through [:api, :require_authenticated_user]
+
+    get("/:teamID", WorkingTimesController, :getTeamAverageHoursPerDay, [:start, :end])
   end
 
 

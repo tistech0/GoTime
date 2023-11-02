@@ -274,6 +274,14 @@ end
     users = Repo.all(query)
   end
 
+  @doc """
+  Get hours and minutes between two dates.
+  ## Examples
+
+      iex> calculate_day_and_night_hours(date1, date2)
+      {day_hours, night_hours}
+
+  """
   def calculate_day_and_night_hours(date1, date2) do
     total_diff = NaiveDateTime.diff(date2, date1, :minute)
 
