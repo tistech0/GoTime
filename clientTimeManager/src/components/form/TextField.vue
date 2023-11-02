@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, defineEmits, defineProps } from 'vue';
 
-const props = defineProps<{ label: string, inputType: string, modelValue: string }>()
+const props = defineProps({ label: String, inputType: String, hint: { type: String, default: "" }, modelValue: [String, Number] })
 const emit = defineEmits(["update:modelValue"]);
 
 const inputValue = ref("");
@@ -21,6 +21,7 @@ const handleChange = () => {
             clearable
             v-model= inputValue
             variant="solo-filled"
+            :hint= props.hint
             @input="handleChange">
         </v-text-field>
     </div>

@@ -21,7 +21,7 @@ const loginFormData = ref({
 // Form submition for login
 async function handleSubmit() {
 
-    // Encrypt password with bcrypt
+    // TODO: Encrypt password with bcrypt
 
     const response = await fetch("http://localhost:4000/api/users/log_in", {
             method: 'POST',
