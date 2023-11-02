@@ -36,7 +36,7 @@ jobs:
   
   sonarQube:
     name: SonarQube Scan
-    runs-on: elixir:latest
+    runs-on: ubuntu-latest
     permissions: read-all
     steps:
       - name: Checkout code
