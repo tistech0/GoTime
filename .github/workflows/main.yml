@@ -69,7 +69,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           gcloud auth configure-docker
-          cd apiTimeManager
+          cd apiTimemanager
           docker build -t eu.gcr.io/gotime-403610/gotime-api:latest .
           docker push eu.gcr.io/gotime-403610/gotime-api:latest
 
