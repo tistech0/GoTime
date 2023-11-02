@@ -13,6 +13,9 @@ RUN chmod +x ./entrypoint.sh
 # Set the entrypoint script as the container's entrypoint
 ENTRYPOINT ["./entrypoint.sh"]
 
+#Install Credo
+RUN mix archive.install hex credo
+
 # Install hex and rebar
 RUN mix local.hex --force && mix local.rebar --force
 
