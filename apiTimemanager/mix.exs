@@ -49,7 +49,8 @@ defmodule Timemanager.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:bcrypt_elixir, "~> 3.1"},
       {:todo, "~> 1.5"},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:sonarqube, "~> 0.1", only: :dev}
     ]
   end
 
@@ -67,7 +68,8 @@ defmodule Timemanager.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      "sonarqube": ["deps.get", "compile", "sonarqube.scan"]
     ]
   end
 end
