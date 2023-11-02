@@ -4,10 +4,9 @@ import { ref, defineEmits, defineProps } from 'vue';
 const props = defineProps({ label: String, itemList: Array, hint: { type: String, default: "" }, modelValue: [String, Number] })
 const emit = defineEmits(["update:modelValue"]);
 
-const selectedValue = ref("");
+const selectedValue = ref();
 
-function handleChange () {
-console.log(selectedValue.value);
+const handleChange =  ()  =>{
   emit("update:modelValue", selectedValue.value);
 };
 
@@ -19,14 +18,14 @@ console.log(selectedValue.value);
             bg-color="var(--primary-blue-light)"
             :label= props.label
             :hint= props.hint
-            :items= props.itemList
+            :items=itemList
             item-title="name"
             item-value="id"
-            v-model= selectedValue
+            v-model="selectedValue"
             variant="solo-filled"
             clearable
-            @input="handleChange">
-        </v-select>
+            @update:model-value="handleChange"
+        ></v-select>
 
     </div>
 </template>
