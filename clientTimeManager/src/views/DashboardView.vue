@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Timer from '../components/Timer.vue';
 import TryTest from '../components/TryTest.vue';
-import TrySomething from '../components/TrySomething.vue';
 import BottomNav from '@/components/BottomNav.vue';
 import Sidebar from '@/components/SideBar.vue';
 import { useDisplay } from 'vuetify';
