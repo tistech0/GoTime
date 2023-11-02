@@ -62,21 +62,6 @@ jobs:
           # Run Credo for static code analysis and save the report in a file
           mix credo --format=oneline --strict > credo_analysis.txt || echo "Credo analysis failed"
 
-      - name: Run Elixir analysis on apiTimemanager
-        run: |
-          # Change to your Elixir app directory
-          cd apiTimemanager
-
-          # Install project dependencies
-          mix do deps.get, deps.compile || echo "Dependencies not installed correctly"
-
-          # Run SonarQube analysis for Elixir
-          echo "Running SonarQube analysis for Elixir..."
-          mix do sonarqube || echo "SonarQube analysis failed"
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
       - name: Run SonarQube scan on clientTimeManager
         run: |
           cd clientTimeManager && sonar-scanner || echo "SonarQube scan failed"
