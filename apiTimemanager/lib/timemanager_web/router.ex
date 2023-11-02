@@ -11,16 +11,23 @@ defmodule TimemanagerWeb.Router do
 
   ## Working Times routes
 
+  scope "/api/workingtimes/team", TimemanagerWeb do
+    pipe_through [:api, :require_authenticated_user]
+
+    get("/:teamID", WorkingTimesController, :getWithStartEndTeam, [:start, :end])
+  end
+
   scope "/api/workingtimes", TimemanagerWeb do
     pipe_through [:api, :require_authenticated_user]
 
     get("/", WorkingTimeController, :index)
     get("/:userID/:id", WorkingTimesController, :getWithUserId)
-    get("/:userID", WorkingTimesController, :getWithStartEnd, [:start, :end])
+    get("/:userID", WorkingTimesController, :getWithStartEndUser, [:start, :end])
     post("/:userID", WorkingTimesController, :create)
     delete("/:id", WorkingTimesController, :delete)
     put("/:id", WorkingTimesController, :update)
   end
+
 
   ## Team routes
 
@@ -70,12 +77,17 @@ defmodule TimemanagerWeb.Router do
   ## User routes
 
   scope "/api/users", TimemanagerWeb do
+    # Routes access with basic rights
     pipe_through [:api, :require_authenticated_user]
 
-    get("/", UserController, :get_user_by_email_and_username, [:email, :username])
     get("/:userID", UserController, :show)
-    post("/", UserController, :register)
     put("/:userID", UserController, :update)
+
+    # Routes with admin rights. More control to make in the controller.
+    pipe_through [:require_admin_role]
+
+    get("/", UserController, :get_user_by_email_and_username, [:email, :username])
+    post("/", UserController, :register)
     patch("/:userID", UserController, :update_user_role, [:role])
     delete("/:userID", UserController, :delete)
   end
