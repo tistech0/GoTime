@@ -56,6 +56,9 @@ jobs:
           # Change to your Elixir app directory
           cd apiTimemanager
 
+          #Install Credo
+          mix archive.install hex credo
+
           # Install project dependencies
           mix do deps.get, deps.compile || echo "Dependencies not installed correctly"
 
