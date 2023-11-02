@@ -38,31 +38,18 @@ jobs:
     name: SonarQube Scan
     runs-on: ubuntu-latest
     permissions: read-all
+    container:
+      image: elixir:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Set up Elixir environment
+      - name: Install Hex and Rebar
         run: |
-          # Update your system
-          sudo apt update
-
-          # Install required dependencies
-          sudo apt install curl software-properties-common apt-transport-https lsb-release
-
-          # Add Erlang Repository
-          curl -1sLf 'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/setup.deb.sh' | sudo -E bash
-
-          # Install Erlang
-          sudo apt update
-          sudo apt install erlang
-
-          # Install Hex and Rebar
           mix local.hex --force || echo "Hex not installed correctly"
           mix local.rebar --force || echo "Rebar not installed correctly"
-
 
       - name: Run Elixir analysis on apiTimemanager
         run: |
@@ -88,7 +75,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
 
   mirror:
     name: Push content of the current repo on mirror
