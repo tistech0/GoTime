@@ -36,7 +36,7 @@ jobs:
   
   sonarQube:
     name: SonarQube Scan
-    runs-on: ubuntu-latest
+    runs-on: elixir:latest
     permissions: read-all
     steps:
       - name: Checkout code
@@ -46,13 +46,23 @@ jobs:
 
       - name: Set up Elixir environment
         run: |
-          # Install Elixir
-          wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && sudo dpkg -i erlang-solutions_2.0_all.deb
-          sudo apt-get update && sudo apt-get install esl-erlang=1:26.1.2 elixir=1.16.0-rc.0 || echo "Erlang or Elixir not installed correctly"
+          # Update your system
+          sudo apt update
+
+          # Install required dependencies
+          sudo apt install curl software-properties-common apt-transport-https lsb-release
+
+          # Add Erlang Repository
+          curl -1sLf 'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/setup.deb.sh' | sudo -E bash
+
+          # Install Erlang
+          sudo apt update
+          sudo apt install erlang
 
           # Install Hex and Rebar
           mix local.hex --force || echo "Hex not installed correctly"
           mix local.rebar --force || echo "Rebar not installed correctly"
+
 
       - name: Run Elixir analysis on apiTimemanager
         run: |
