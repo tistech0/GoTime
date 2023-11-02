@@ -6,6 +6,14 @@ defmodule Timemanager.Time do
   import Ecto.Query, warn: false
   alias Timemanager.Repo
 
+  alias Timemanager.Account.User
+
+  alias Timemanager.Team.Team_user
+
+  alias Timemanager.Teams.Team
+
+  alias Timemanager.Time.WorkingTimes
+
   alias Timemanager.Time.Clock
 
   @doc """
@@ -124,8 +132,6 @@ defmodule Timemanager.Time do
   def change_clock(%Clock{} = clock, attrs \\ %{}) do
     Clock.changeset(clock, attrs)
   end
-
-  alias Timemanager.Time.WorkingTimes
 
   @doc """
   Returns the list of working_time.
@@ -246,4 +252,40 @@ end
   def change_working_times(%WorkingTimes{} = working_times, attrs \\ %{}) do
     WorkingTimes.changeset(working_times, attrs)
   end
+
+  @doc """
+  Get all user linked to a team_id.
+
+  ## Examples
+
+      iex> get_list_team_link_manager(team_id)
+      [%Team_user{}, ...]
+
+  """
+  def get_list_user_link_team(team_id) do
+    query =
+      from(tu in Timemanager.Team.Team_user,
+        where: tu.team_id == ^team_id,
+        join: u in Timemanager.Account.User,
+        on: u.id == tu.user_id,
+        select: u
+      )
+
+    users = Repo.all(query)
+  end
+
+  @doc """
+  Get Hours between two dates.
+  """
+  # def hours_between(date1, date2) do
+  #   case {DateTime.from_iso8601(date1), DateTime.from_iso8601(date2)} do
+  #     {{:ok, date1Modified}, {:ok, date2Modified}} ->
+  #       diff = DateTime.diff(date1Modified, date2Modified, :second)
+  #       diff / 3600
+  #     _ ->
+  #       {:error, "Invalid dates"}
+  #   end
+  # end
+
+
 end

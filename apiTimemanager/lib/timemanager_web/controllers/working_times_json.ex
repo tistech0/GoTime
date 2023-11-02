@@ -26,7 +26,10 @@ defmodule TimemanagerWeb.WorkingTimesJSON do
     %{
       id: working_times.id,
       start: working_times.start,
-      end: working_times.end
+      end: working_times.end,
+      valueDay: working_times.valueDay,
+      valueNight: working_times.valueNight,
+      status: working_times.status
     }
   end
 end

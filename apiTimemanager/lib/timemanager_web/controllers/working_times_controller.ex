@@ -13,6 +13,11 @@ defmodule TimemanagerWeb.WorkingTimesController do
 
   def create(conn, %{"working_times" => working_times_params}) do
     user_id = conn.params["userID"]
+    working_times_params = Map.put(working_times_params, "status", "waiting")
+
+    start_time = Map.get(working_times_params, "start")
+    end_time = Map.get(working_times_params, "end")
+    working_times_params = Map.put(working_times_params, "value", Time.hours_between(start_time, end_time))
 
     with {:ok, %WorkingTimes{} = working_times} <-
            Time.create_working_times(working_times_params, user_id) do
@@ -30,6 +35,10 @@ defmodule TimemanagerWeb.WorkingTimesController do
 
   def update(conn, %{"id" => id, "working_times" => working_times_params}) do
     working_times = Time.get_working_times!(id)
+
+    start_time = Map.get(working_times_params, "start")
+    end_time = Map.get(working_times_params, "end")
+    working_times_params = Map.put(working_times_params, "value", Time.hours_between(start_time, end_time))
 
     with {:ok, %WorkingTimes{} = working_times} <-
            Time.update_working_times(working_times, working_times_params) do
@@ -52,7 +61,7 @@ defmodule TimemanagerWeb.WorkingTimesController do
     render(conn, :show, working_times: working_times)
   end
 
-  def getWithStartEnd(conn, %{"userID" => user_id, "start" => start_time, "end" => end_time}) do
+  def getWithStartEndUser(conn, %{"userID" => user_id, "start" => start_time, "end" => end_time}) do
     working_times =
       Timemanager.Time.get_working_times_by_user_id_and_start_and_end_time(
         user_id,
@@ -60,6 +69,24 @@ defmodule TimemanagerWeb.WorkingTimesController do
         end_time
       )
 
+    render(conn, :render_working_times_list, working_times: working_times)
+  end
+
+  def getWithStartEndTeam(conn, %{"teamID" => team_id, "start" => start_time, "end" => end_time}) do
+    users_list = Timemanager.Time.get_list_user_link_team(team_id)
+
+    # Fetch working times for all users and store them in a list
+    working_times =
+      users_list
+      |> Enum.flat_map(fn user ->
+        # You can also fetch working times for each user
+        Timemanager.Time.get_working_times_by_user_id_and_start_and_end_time(
+          user.id,  # Assuming there's an `id` field in the user struct
+          start_time,
+          end_time
+        )
+      end)
+    # Finally, render the working times list (if needed)
     render(conn, :render_working_times_list, working_times: working_times)
   end
 end

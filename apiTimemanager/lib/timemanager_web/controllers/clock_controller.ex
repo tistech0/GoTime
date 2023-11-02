@@ -23,7 +23,9 @@ defmodule TimemanagerWeb.ClockController do
 
           working_time_params = %{
             "start" => start_time,
-            "end" => end_time
+            "end" => end_time,
+            "value" => Time.hours_between(start_time, end_time),
+            "status" => "validated"
           }
           with {:ok, %Timemanager.Time.WorkingTimes{} = working_times} <-
             Time.create_working_times(working_time_params, user_id) do
