@@ -57,7 +57,7 @@ jobs:
           cd apiTimemanager
 
           #Install Credo
-          mix archive.install hex credo || echo "Credo not installed correctly"
+          mix archive.install --yes hex credo || echo "Credo not installed correctly"
           echo "Credo installed"
 
           # Install project dependencies
