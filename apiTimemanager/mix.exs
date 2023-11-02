@@ -51,6 +51,7 @@ defmodule Timemanager.MixProject do
       {:todo, "~> 1.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:sonarqube, "~> 0.1", only: :dev}
+      {:cors_plug, "~> 3.0"}
     ]
   end
 
