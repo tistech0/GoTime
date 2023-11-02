@@ -4,8 +4,10 @@ import { ref } from 'vue';
 import TextField from '../form/TextField.vue';
 import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
+import myImage from '../../assets/Logo-GoTime.png';
 
-const { lg } = useDisplay()
+
+const { lg, mobile } = useDisplay()
 
 
 const loginFormData = ref({
@@ -43,7 +45,15 @@ async function handleSubmit() {
 </script>
 
 <template>
-    <div class="grid grid-cols-1" :class="lg ? 'login-large' : 'login-small'">
+    <div class="grid grid-cols-1" :class="[lg ? 'login-large' : 'login-medium',mobile ? 'login-small' : '']">
+        <div v-if="mobile" class="logo-container">
+            <v-img
+                aspect-ratio="1/1"
+                cover
+                width="9rem"
+                :src="myImage">
+            </v-img>
+        </div>
         <div>
             <h1 class="text-customSecondary">LOGIN</h1>
             <p class="welcome-message">Welcome back, you've been missed!</p>
@@ -65,11 +75,17 @@ async function handleSubmit() {
 .login-large {
     margin: 5rem;
 }
-.login-small {
+.login-medium {
     margin: 5rem 1rem;
 }
-
+.login-small {
+    margin: 1rem 1rem;
+}
 .text-input {
     padding: 0 1rem 0 1rem;
+}
+
+.logo-container {
+    margin: auto;
 }
 </style>
