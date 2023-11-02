@@ -274,18 +274,34 @@ end
     users = Repo.all(query)
   end
 
-  @doc """
-  Get Hours between two dates.
-  """
-  # def hours_between(date1, date2) do
-  #   case {DateTime.from_iso8601(date1), DateTime.from_iso8601(date2)} do
-  #     {{:ok, date1Modified}, {:ok, date2Modified}} ->
-  #       diff = DateTime.diff(date1Modified, date2Modified, :second)
-  #       diff / 3600
-  #     _ ->
-  #       {:error, "Invalid dates"}
-  #   end
-  # end
+  def calculate_day_and_night_hours(date1, date2) do
+    total_diff = NaiveDateTime.diff(date2, date1, :minute)
 
+    night_minutes = calculate_night_hours(date1, date2)
+    day_minutes = total_diff - night_minutes
+
+    {convert_to_hours(day_minutes), convert_to_hours(night_minutes)}
+  end
+
+  defp calculate_night_hours(from_datetime, to_datetime) do
+    night_start_hour = 21
+    night_end_hour = 6
+
+    total_minutes = NaiveDateTime.diff(to_datetime, from_datetime, :minute)
+
+    night_minutes = Enum.count(0..total_minutes-1, fn minute ->
+      current_hour = rem(minute + NaiveDateTime.to_time(from_datetime).hour * 60, 24 * 60) |> div(60)
+      current_hour >= night_start_hour or current_hour < night_end_hour
+    end)
+
+    night_minutes
+  end
+
+  defp convert_to_hours(minutes) do
+    hours = div(minutes, 60)
+    remaining_minutes = rem(minutes, 60)
+
+    hours + remaining_minutes / 60.0
+  end
 
 end

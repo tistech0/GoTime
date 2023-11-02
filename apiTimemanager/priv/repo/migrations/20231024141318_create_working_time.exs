@@ -5,8 +5,8 @@ defmodule Timemanager.Repo.Migrations.CreateWorkingTime do
     create table(:working_time) do
       add :start, :naive_datetime
       add :end, :naive_datetime
-      add :valueDay, :float
-      add :valueNight, :float
+      add :valueDay, :float, default: 0.0, null: false
+      add :valueNight, :float, default: 0.0, null: false
       add :status, :string, null: false
       add :user_id, references(:users, on_delete: :nothing)
 

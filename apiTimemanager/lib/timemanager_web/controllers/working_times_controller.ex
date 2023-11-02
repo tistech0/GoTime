@@ -15,9 +15,13 @@ defmodule TimemanagerWeb.WorkingTimesController do
     user_id = conn.params["userID"]
     working_times_params = Map.put(working_times_params, "status", "waiting")
 
-    start_time = Map.get(working_times_params, "start")
-    end_time = Map.get(working_times_params, "end")
-    working_times_params = Map.put(working_times_params, "value", Time.hours_between(start_time, end_time))
+    {:ok, start_time} = Map.get(working_times_params, "start") |> NaiveDateTime.from_iso8601()
+    {:ok, end_time} = Map.get(working_times_params, "end") |> NaiveDateTime.from_iso8601()
+
+    {day_hours, night_hours} = Time.calculate_day_and_night_hours(start_time, end_time)
+
+    working_times_params = Map.put(working_times_params, "valueDay", day_hours)
+    working_times_params = Map.put(working_times_params, "valueNight", night_hours)
 
     with {:ok, %WorkingTimes{} = working_times} <-
            Time.create_working_times(working_times_params, user_id) do
@@ -36,9 +40,13 @@ defmodule TimemanagerWeb.WorkingTimesController do
   def update(conn, %{"id" => id, "working_times" => working_times_params}) do
     working_times = Time.get_working_times!(id)
 
-    start_time = Map.get(working_times_params, "start")
-    end_time = Map.get(working_times_params, "end")
-    working_times_params = Map.put(working_times_params, "value", Time.hours_between(start_time, end_time))
+    {:ok, start_time} = Map.get(working_times_params, "start") |> NaiveDateTime.from_iso8601()
+    {:ok, end_time} = Map.get(working_times_params, "end") |> NaiveDateTime.from_iso8601()
+
+    {day_hours, night_hours} = Time.calculate_day_and_night_hours(start_time, end_time)
+
+    working_times_params = Map.put(working_times_params, "valueDay", day_hours)
+    working_times_params = Map.put(working_times_params, "valueNight", night_hours)
 
     with {:ok, %WorkingTimes{} = working_times} <-
            Time.update_working_times(working_times, working_times_params) do
