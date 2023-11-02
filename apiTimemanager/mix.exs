@@ -48,7 +48,8 @@ defmodule Timemanager.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:bcrypt_elixir, "~> 3.1"},
-      {:todo, "~> 1.5"}
+      {:todo, "~> 1.5"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 
