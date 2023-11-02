@@ -6,6 +6,7 @@ defmodule TimemanagerWeb.UserAuth do
   import Phoenix.Controller
 
   alias Timemanager.Account
+  alias Timemanager.Roles
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -13,6 +14,10 @@ defmodule TimemanagerWeb.UserAuth do
   @max_age 60 * 60 * 24 * 60
   @remember_me_cookie "_timemanager_web_user_remember_me"
   @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
+
+  @super_admin_role "SuperAdmin"
+  @admin_role "Admin"
+  @user_role "User"
 
   @doc """
   Logs the user in.
@@ -137,6 +142,30 @@ defmodule TimemanagerWeb.UserAuth do
     end
   end
 
+
+  def require_admin_role(conn, _opts) do
+    if Roles.get_role!(conn.assigns[:current_user].role_id).role == @user_role do
+      conn
+      |> put_status(401)
+      |> json(%{error: "You are not authorized."})
+      |> halt()
+    else
+      conn
+    end
+  end
+
+  def require_super_admin_role(conn, _opts) do
+    if Roles.get_role!(conn.assigns[:current_user].role_id).role != @super_admin_role do
+      conn
+      |> put_status(401)
+      |> json(%{error: "You are not authorized."})
+      |> halt()
+    else
+      conn
+    end
+  end
+
+
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)
@@ -148,6 +177,4 @@ defmodule TimemanagerWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  @todo "Maybe delete this redirection"
-  defp signed_in_path(_conn), do: ~p"/"
 end

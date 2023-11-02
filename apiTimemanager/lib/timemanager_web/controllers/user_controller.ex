@@ -31,12 +31,10 @@ defmodule TimemanagerWeb.UserController do
     # Chek if the current user's role to control the action
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
     role = cond do
-      current_user_role == @admin_role -> # Can only create users with the @user_role role
-        Roles.get_role_by_role(@user_role)
       current_user_role == @super_admin_role -> # Can create users with any role
         Roles.get_role_by_role(user_params["role"])
-      true -> # Can't create any user by default
-      error_template(conn, 401, "You are not allowed to create a new user.")
+      true -> # Admin can only create users with the @user_role role
+        Roles.get_role_by_role(@user_role)
     end
 
     # Send an error if the role given doesn't exist.
@@ -136,11 +134,6 @@ defmodule TimemanagerWeb.UserController do
   """
   def delete(conn, %{"userID" => id}) do
     current_user = conn.assigns[:current_user]
-
-    # Check user is allowed to delete other user
-    if Roles.get_role!(conn.assigns[:current_user].role_id).role == @user_role do
-      error_template(conn, 401, "You are not allowed to delete a user.")
-    end
 
     # fetch the user to delete
     user = Account.get_user(id)
