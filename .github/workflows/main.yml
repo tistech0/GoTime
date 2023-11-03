@@ -93,11 +93,6 @@ jobs:
 
       - name: Deploy new image
         run: |
-          pwd
-          ls
-          cd ..
-          pwd
-          ls
           kubectl apply -f gotime-deployement.yaml
 
   mirror:
