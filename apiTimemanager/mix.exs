@@ -49,7 +49,8 @@ defmodule Timemanager.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:bcrypt_elixir, "~> 3.1"},
       {:todo, "~> 1.5"},
-      {:ex_doc, "~> 0.25", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.25", only: :dev, runtime: false},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 
