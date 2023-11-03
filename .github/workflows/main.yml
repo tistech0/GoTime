@@ -54,35 +54,10 @@ jobs:
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build_api_image:
-    name: Build and Push Docker Image for apiTimeManager
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1.1.1
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1.1.1
-        with:
-          project_id: gotime-403610
-
-      - name: Build and Push Docker Image
-        run: |
-          gcloud auth configure-docker
-          cd apiTimemanager
-          docker build -t eu.gcr.io/gotime-403610/gotime-api:latest .
-          docker push eu.gcr.io/gotime-403610/gotime-api:latest
-
   mirror:
     name: Push content of the current repo on mirror
     runs-on: ubuntu-latest
-    needs: [sonarQube, build_api_image]
+    needs: [sonarQube]
     steps:
       - uses: actions/checkout@v2
         with:
