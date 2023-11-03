@@ -6,7 +6,7 @@ defmodule Timemanager.Account.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
-    field :time_contract, :integer
+    field :time_contract, :float
     field :username, :string
     belongs_to :role, Timemanager.Account.Role, foreign_key: :role_id
 

@@ -8,7 +8,8 @@
   :root {
     --primary-blue: rgb(72, 169, 166);
     --primary-blue-dark: rgb(27, 42, 65);
-    --secondary-pink: rgb(193, 102, 107);
+    --primary-blue-light: rgb(72, 169, 166, 0.4);
+    --secondary-pink: rgb(193, 102, 106);
     --grey: rgb(225, 225, 225);
   }
 }
@@ -16,6 +17,7 @@
 :root {
   --primary-blue: rgb(72, 169, 166);
   --primary-blue-dark: rgb(27, 42, 65);
+  --primary-blue-light: rgb(72, 169, 166, 0.4);
   --secondary-pink: rgb(193, 102, 107);
   --grey: rgb(225, 225, 225);
 }
