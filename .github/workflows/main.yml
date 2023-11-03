@@ -89,6 +89,7 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
           gcloud container clusters get-credentials gotime --zone europe-west9 --project gotime-403610
+          gcloud components install kubectl
 
       - name: Deploy new image
         run: |
