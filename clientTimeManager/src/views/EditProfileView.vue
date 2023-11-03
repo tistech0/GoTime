@@ -10,6 +10,7 @@ let data = reactive({
     email: 'thisIsASuperTest@test.fr',
     contractTime: 50,
     role: 'user',
+    password: '123456',
   },
 });
 
@@ -52,7 +53,7 @@ const { mobile } = useDisplay()
         </div>
         <!-- edit button -->
         <div class="col-start-5 flex place-content-end mr-5">
-          <v-btn @click="$router.push('editprofile')" icon>
+          <v-btn icon>
             <v-icon>mdi-square-edit-outline</v-icon>
           </v-btn>
         </div>
