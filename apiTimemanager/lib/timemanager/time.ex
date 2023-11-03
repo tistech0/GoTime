@@ -6,6 +6,14 @@ defmodule Timemanager.Time do
   import Ecto.Query, warn: false
   alias Timemanager.Repo
 
+  alias Timemanager.Account.User
+
+  alias Timemanager.Team.Team_user
+
+  alias Timemanager.Teams.Team
+
+  alias Timemanager.Time.WorkingTimes
+
   alias Timemanager.Time.Clock
 
   @doc """
@@ -124,8 +132,6 @@ defmodule Timemanager.Time do
   def change_clock(%Clock{} = clock, attrs \\ %{}) do
     Clock.changeset(clock, attrs)
   end
-
-  alias Timemanager.Time.WorkingTimes
 
   @doc """
   Returns the list of working_time.
@@ -246,4 +252,64 @@ end
   def change_working_times(%WorkingTimes{} = working_times, attrs \\ %{}) do
     WorkingTimes.changeset(working_times, attrs)
   end
+
+  @doc """
+  Get all user linked to a team_id.
+
+  ## Examples
+
+      iex> get_list_team_link_manager(team_id)
+      [%Team_user{}, ...]
+
+  """
+  def get_list_user_link_team(team_id) do
+    query =
+      from(tu in Timemanager.Team.Team_user,
+        where: tu.team_id == ^team_id,
+        join: u in Timemanager.Account.User,
+        on: u.id == tu.user_id,
+        select: u
+      )
+
+    users = Repo.all(query)
+  end
+
+  @doc """
+  Get hours and minutes between two dates.
+  ## Examples
+
+      iex> calculate_day_and_night_hours(date1, date2)
+      {day_hours, night_hours}
+
+  """
+  def calculate_day_and_night_hours(date1, date2) do
+    total_diff = NaiveDateTime.diff(date2, date1, :minute)
+
+    night_minutes = calculate_night_hours(date1, date2)
+    day_minutes = total_diff - night_minutes
+
+    {convert_to_hours(day_minutes), convert_to_hours(night_minutes)}
+  end
+
+  defp calculate_night_hours(from_datetime, to_datetime) do
+    night_start_hour = 21
+    night_end_hour = 6
+
+    total_minutes = NaiveDateTime.diff(to_datetime, from_datetime, :minute)
+
+    night_minutes = Enum.count(0..total_minutes-1, fn minute ->
+      current_hour = rem(minute + NaiveDateTime.to_time(from_datetime).hour * 60, 24 * 60) |> div(60)
+      current_hour >= night_start_hour or current_hour < night_end_hour
+    end)
+
+    night_minutes
+  end
+
+  defp convert_to_hours(minutes) do
+    hours = div(minutes, 60)
+    remaining_minutes = rem(minutes, 60)
+
+    hours + remaining_minutes / 60.0
+  end
+
 end
