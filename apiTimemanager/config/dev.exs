@@ -4,7 +4,7 @@ import System
 # Configure your database
 config :timemanager, Timemanager.Repo,
   username: System.get_env("DATABASE_USERNAME"),
-  password: System.get_env("DATABASE_PASSWORD"),
+  password: System.get_env("POSTGRES_PASSWORD"),
   database: System.get_env("DATABASE_NAME"),
   hostname: System.get_env("DATABASE_HOSTNAME"),
   stacktrace: true,
