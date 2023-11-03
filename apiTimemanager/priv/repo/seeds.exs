@@ -84,24 +84,24 @@ end)
 working_times_list = [
   %{
     start: "2023-10-25 20:48:13",
-    end: "2023-10-25 20:46:13",
+    end: "2023-10-26 05:46:13",
     valueDay: 0.0,
-    valueNight: 5.0,
+    valueNight: 9.0,
     status: "validated",
     user_id: 1
   },
   %{
     start: "2023-11-25 09:23:45",
     end: "2023-11-25 18:30:31",
-    valueDay: 4.0,
-    valueNight: 1.0,
+    valueDay: 9.1,
+    valueNight: 0.0,
     status: "validated",
     user_id: 1
   },
   %{
     start: "2023-12-25 10:21:25",
     end: "2023-12-25 17:49:56",
-    valueDay: 3.0,
+    valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
     user_id: 1
@@ -109,7 +109,7 @@ working_times_list = [
   %{
     start: "2023-10-25 20:48:13",
     end: "2023-10-25 20:48:37",
-    valueDay: 3.1,
+    valueDay: 0.0,
     valueNight: 0.0,
     status: "validated",
     user_id: 2
@@ -117,7 +117,7 @@ working_times_list = [
   %{
     start: "2023-11-25 09:23:45",
     end: "2023-11-25 18:30:31",
-    valueDay: 6.1,
+    valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
     user_id: 2
@@ -125,23 +125,23 @@ working_times_list = [
   %{
     start: "2023-12-25 10:21:25",
     end: "2023-12-25 17:49:56",
-    valueDay: 5.1,
+    valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
     user_id: 2
   },
   %{
-    start: "2023-10-25 20:48:13",
-    end: "2023-10-25 20:48:37",
-    valueDay: 1.5,
-    valueNight: 6.0,
+    start: "2023-10-25 18:48:13",
+    end: "2023-10-25 23:48:37",
+    valueDay: 2.2,
+    valueNight: 2.8,
     status: "validated",
     user_id: 3
   },
   %{
     start: "2023-11-25 09:23:45",
     end: "2023-11-25 18:30:31",
-    valueDay: 7.1,
+    valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
     user_id: 3
@@ -149,7 +149,7 @@ working_times_list = [
   %{
     start: "2023-12-25 10:21:25",
     end: "2023-12-25 17:49:56",
-    valueDay: 7.1,
+    valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
     user_id: 3
