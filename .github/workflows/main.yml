@@ -15,6 +15,10 @@ jobs:
 
       - name: Build and Run Docker Containers
         run: |
+          export DATABASE_NAME=$DATABASE_NAME
+          export DATABASE_USERNAME=$DATABASE_USERNAME
+          export DATABASE_PASSWORD=$DATABASE_PASSWORD
+          
           # Build and run containers using docker-compose
           docker-compose -f docker-compose.yaml build
           docker-compose -f docker-compose.yaml up -d
