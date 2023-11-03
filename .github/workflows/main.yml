@@ -88,7 +88,7 @@ jobs:
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
-          gcloud container clusters get-credentials gotime --zone europe-west9-a --project gotime-403610  
+          gcloud container clusters get-credentials gotime --zone europe-west9 --project gotime-403610  
 
       - name: Deploie new image
         run: |
