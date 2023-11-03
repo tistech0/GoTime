@@ -35,11 +35,22 @@ defmodule TimemanagerWeb.UserAuth do
     token = Account.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
 
+    # Return the user informations and its role.
+    login_response =
+      %{
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        time_contract: user.time_contract,
+        role: Roles.get_role!(user.role_id).role
+      }
+
+
     conn
     |> renew_session()
     |> put_session(:user_token, token)
     |> maybe_write_remember_me_cookie(token, params)
-    |> json(%{message: "Welcome back!"})
+    |> json(%{data: login_response})
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do

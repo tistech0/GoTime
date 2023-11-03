@@ -188,6 +188,11 @@ defmodule Timemanager.Account do
   """
   def generate_user_session_token(user) do
     {token, user_token} = UserToken.build_session_token(user)
+
+    # Delete previous session token
+    query = UserToken.user_and_contexts_query(user, :all)
+    Repo.delete_all(query)
+
     Repo.insert!(user_token)
     token
   end
