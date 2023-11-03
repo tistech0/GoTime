@@ -18,12 +18,17 @@ defmodule TimemanagerWeb.ClockController do
         current_status = clock.status
 
         if current_status do
-          end_time = DateTime.utc_now()
+          end_time = DateTime.utc_now() |> DateTime.to_naive()
           start_time = clock.time
+
+          {day_hours, night_hours} = Time.calculate_day_and_night_hours(start_time, end_time)
 
           working_time_params = %{
             "start" => start_time,
-            "end" => end_time
+            "end" => end_time,
+            "valueDay" => day_hours,
+            "valueNight" => night_hours,
+            "status" => "validated"
           }
           with {:ok, %Timemanager.Time.WorkingTimes{} = working_times} <-
             Time.create_working_times(working_time_params, user_id) do
