@@ -9,11 +9,13 @@ services:
   #     - "8081:8081"
   #   environment:
   #     MIX_ENV: dev
-  #     PGDATABASE: timemanager_dev
-  #     PGUSER: postgres
-  #     PGPASSWORD: postgres
+  #     PGDATABASE: ${DATABASE_NAME}
+  #     PGUSER: ${DATABASE_USERNAME}
+  #     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+  #    env_file:
+  #      - .env
   #   depends_on:
-  #     - db
+  #     - postgres-service
 
   api:
     build:
@@ -23,18 +25,22 @@ services:
       - "4000:4000"
     environment:
       MIX_ENV: dev
-      PGDATABASE: timemanager_dev
-      PGUSER: postgres
-      PGPASSWORD: postgres
+      PGDATABASE: ${DATABASE_NAME}
+      PGUSER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    env_file:
+      - .env
     depends_on:
-      - db
+      - postgres-service
 
-  db:
+  postgres-service:
     image: postgres:16
     environment:
-      POSTGRES_DB: timemanager_dev
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    env_file:
+      - .env
 
   adminer: 
     image: adminer
