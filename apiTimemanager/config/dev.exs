@@ -3,12 +3,14 @@ import Config
 # Configure your database
 config :timemanager, Timemanager.Repo,
   username: "postgres",
-  password: "postgres",
-  hostname: "db",
+  password: "tim3m4n4ger",
+  hostname: "postgres-service",
   database: "timemanager_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  queue_target: 5000, # in milliseconds
+  queue_interval: 1000 # in milliseconds
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
