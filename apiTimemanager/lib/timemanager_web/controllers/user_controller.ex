@@ -8,9 +8,7 @@ defmodule TimemanagerWeb.UserController do
   alias Timemanager.Team
   alias Timemanager.Teams
 
-  @super_admin_role "SuperAdmin"
-  @admin_role "Admin"
-  @user_role "User"
+  require RoleEnum
 
   action_fallback TimemanagerWeb.FallbackController
 
@@ -31,10 +29,10 @@ defmodule TimemanagerWeb.UserController do
     # Chek if the current user's role to control the action
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
     role = cond do
-      current_user_role == @super_admin_role -> # Can create users with any role
+      current_user_role == RoleEnum.role(:super_admin_role) -> # Can create users with any role
         Roles.get_role_by_role(user_params["role"])
-      true -> # Admin can only create users with the @user_role role
-        Roles.get_role_by_role(@user_role)
+      true -> # Admin can only create users with the User role
+        Roles.get_role_by_role(RoleEnum.role(:user_role))
     end
 
     # Send an error if the role given doesn't exist.
@@ -110,9 +108,9 @@ defmodule TimemanagerWeb.UserController do
   """
   def update_user_role(conn, %{"userID" => id, "role" => role}) do
 
-    # check that the user connected is a @super_admin_role
+    # check that the user connected is a Super Admin
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
-    if current_user_role != @super_admin_role do
+    if current_user_role != RoleEnum.role(:super_admin_role) do
       error_template(conn, 401, "You are not allowed to update this user's role.")
     end
     user = Account.get_user!(id)
@@ -148,8 +146,8 @@ defmodule TimemanagerWeb.UserController do
       error_template(conn, 403, "You are no allowed to delete yourself")
     end
 
-    # If the user has the @user_role, terminate the def
-    if Roles.get_role!(user.role_id).role != @user_role do
+    # If the user has the User role, terminate the def
+    if Roles.get_role!(user.role_id).role != RoleEnum.role(:user_role) do
       # get user's managed team
       teams_managed = Teams.get_list_team_link_manager(user.id)
       # if list isn't empty, send error because the user is manages at least one team. Manager should be replaced before deleting

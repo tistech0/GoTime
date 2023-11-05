@@ -97,7 +97,7 @@ defmodule TimemanagerWeb.Router do
   scope "/api/roles", TimemanagerWeb do
     pipe_through [:api, :require_authenticated_user]
 
-    get("/", RoleController, :index)
+    get("/", RoleController, :get_roles_list_for_current_user)
   end
 
 

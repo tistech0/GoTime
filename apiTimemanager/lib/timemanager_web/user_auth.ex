@@ -8,6 +8,8 @@ defmodule TimemanagerWeb.UserAuth do
   alias Timemanager.Account
   alias Timemanager.Roles
 
+  require RoleEnum
+
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
   # the token expiry itself in UserToken.
@@ -15,9 +17,6 @@ defmodule TimemanagerWeb.UserAuth do
   @remember_me_cookie "_timemanager_web_user_remember_me"
   @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
 
-  @super_admin_role "SuperAdmin"
-  @admin_role "Admin"
-  @user_role "User"
 
   @doc """
   Logs the user in.
@@ -155,7 +154,7 @@ defmodule TimemanagerWeb.UserAuth do
 
 
   def require_admin_role(conn, _opts) do
-    if Roles.get_role!(conn.assigns[:current_user].role_id).role == @user_role do
+    if Roles.get_role!(conn.assigns[:current_user].role_id).role == RoleEnum.role(:user_role) do
       conn
       |> put_status(401)
       |> json(%{error: "You are not authorized."})
@@ -166,7 +165,7 @@ defmodule TimemanagerWeb.UserAuth do
   end
 
   def require_super_admin_role(conn, _opts) do
-    if Roles.get_role!(conn.assigns[:current_user].role_id).role != @super_admin_role do
+    if Roles.get_role!(conn.assigns[:current_user].role_id).role != RoleEnum.role(:super_admin_role) do
       conn
       |> put_status(401)
       |> json(%{error: "You are not authorized."})
