@@ -6,6 +6,8 @@ import SelectOne from '../form/SelectOne.vue';
 import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
+import type { Item } from "../../types/items";
+import { transformData } from "../../utils/utils";
 
 
 
@@ -18,6 +20,9 @@ const listTeam = [
     {id:4, name:"name4"}
 ]
 
+// Initialize the list of roles as a list of Item
+let listRoles = ref<Item[]>( []);
+
 
 const registerFormData = ref({
     user: {
@@ -27,9 +32,25 @@ const registerFormData = ref({
         confirmPassword: "",
         time_contract: 0,
         team: 0, // Is the selected team id
+        role: 0 // Is the selected role id
     }
 })
 
+// Fetch the roles list the user has access to. 
+async function getRoleList() {
+    const response = await fetch("http://localhost:4000/api/roles/", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    listRoles.value = transformData(data.data, "id", "role");
+    console.log(listRoles)
+}
+
+getRoleList();
 
 // Form submition for creating a new account
 async function handleSubmit() {
@@ -78,6 +99,7 @@ async function handleSubmit() {
             <TextField label="Confirm Password" input-type="password" v-model="registerFormData.user.confirmPassword" />
             <TextField label="Contract time" input-type="number" hint="The employee's weekly hours" v-model.number="registerFormData.user.time_contract" />
             <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team" v-model="registerFormData.user.team" />
+            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the" v-model="registerFormData.user.role" />
             <Button buttonName="Create Account" type="submit" @click=handleSubmit()></Button>
         </form>
     </div>
