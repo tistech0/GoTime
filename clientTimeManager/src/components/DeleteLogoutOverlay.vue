@@ -21,9 +21,13 @@ defineExpose({openPopup, closePopup});
   <div class="fixed inset-0 flex items-center justify-center z-50" v-if="showPopup">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="bg-white p-6 rounded-lg shadow-lg z-10">
-      <v-icon>mdi-window-close</v-icon>
-      <h1 class="text-black font-semibold m-7">{{ props.title }}</h1>
-      <p class="font-semibold m-4">{{ props.description }}</p>
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-black font-semibold m-7">{{ props.title }}</h1>
+          <p class="font-semibold m-4">{{ props.description }}</p>
+        </div>
+        <v-icon class="mt-2" @click="closePopup">mdi-window-close</v-icon>
+      </div>
       <Button buttonName="Validate" @on-click="closePopup"/>
     </div>
   </div>
