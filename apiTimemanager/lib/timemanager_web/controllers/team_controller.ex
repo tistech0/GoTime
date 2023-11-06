@@ -41,9 +41,22 @@ defmodule TimemanagerWeb.TeamController do
     end
   end
 
+  @doc """
+    This def gets the team the user given in parameter manages.
+    This def is only accessible for the superadmin as he can see all teams.
+  """
   def getTeamLinkManager(conn, %{"userID" => id}) do
     teams = Teams.get_list_team_link_manager(id)
-    IO.inspect(teams)
     render(conn, :render_team_link_manager, teams: teams)
   end
+
+  @doc """
+    This def gets the team the current user manages.
+  """
+  def get_Team_Current_User_Manager(conn, _params) do
+    current_user = conn.assigns[:current_user]
+    teams = Teams.get_list_team_link_manager(current_user.id)
+    render(conn, :render_team_link_manager, teams: teams)
+  end
+
 end
