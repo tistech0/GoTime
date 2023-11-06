@@ -119,7 +119,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    run: vue-app
+    run: gotime-client
   ports:
     - protocol: TCP
       port: 8081
