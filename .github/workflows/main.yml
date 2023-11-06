@@ -82,6 +82,10 @@ jobs:
           cd apiTimemanager
           docker build -t eu.gcr.io/gotime-403610/gotime-api:latest .
           docker push eu.gcr.io/gotime-403610/gotime-api:latest
+          
+          cd clientTimeManager
+          docker build -t eu.gcr.io/gotime-403610/gotime-client:latest .
+          docker push eu.gcr.io/gotime-403610/gotime-client:latest
 
       - name: Install kubectl
         run: |
