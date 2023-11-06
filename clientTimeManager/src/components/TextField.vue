@@ -1,4 +1,3 @@
-e
 <script setup lang="ts">
 import { ref, defineEmits, defineProps } from 'vue';
 
