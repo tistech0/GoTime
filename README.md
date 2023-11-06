@@ -1,3 +1,4 @@
+![workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
