@@ -1,4 +1,4 @@
-![workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+![workflow](https://github.com/tistech0/GoTime/actions/workflows/main.yml/badge.svg)
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
