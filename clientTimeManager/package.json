@@ -17,11 +17,14 @@
   "dependencies": {
     "@mdi/font": "^7.3.67",
     "@vueuse/core": "^10.5.0",
+    "apexcharts": "^3.44.0",
     "mdi": "^2.2.43",
     "pinia": "^2.1.7",
     "radix-vue": "^1.0.2",
     "vue": "^3.3.4",
+    "vue-apexcharts": "^1.6.2",
     "vue-router": "^4.2.5",
+    "vue3-apexcharts": "^1.4.4",
     "vuetify": "^3.3.23"
   },
   "devDependencies": {
