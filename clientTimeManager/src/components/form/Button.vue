@@ -21,9 +21,9 @@ const { mobile } = useDisplay()
     justify-content:center;
 }
 .small-width-button {
-    width: 50%;
+    @apply w-1/2
 }
 .full-width-button {
-    width: 100%;
+    @apply w-full
 }
 </style>
