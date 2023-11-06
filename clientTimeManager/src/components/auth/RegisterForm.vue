@@ -14,14 +14,10 @@ import { transformData } from "../../utils/utils";
 const { lg, mobile } = useDisplay()
 
 // fetch the user's managed teams in stead of this static code. 
-const listTeam = [
-    {id:2, name:"name2"},
-    {id:3, name:"name3"},
-    {id:4, name:"name4"}
-]
+const listTeam = ref<Item[]>([]);
 
 // Initialize the list of roles as a list of Item
-let listRoles = ref<Item[]>( []);
+let listRoles = ref<Item[]>([]);
 
 
 const registerFormData = ref({
@@ -36,9 +32,11 @@ const registerFormData = ref({
     }
 })
 
-// Fetch the roles list the user has access to. 
+/**
+ * This function gets the list of roles from the api and assign the value to the listRoles
+ */
 async function getRoleList() {
-    const response = await fetch("http://localhost:4000/api/roles/", {
+    const response = await fetch("http://localhost:4000/api/roles", {
         method: "GET",
         credentials: "include",
         headers: {
@@ -47,10 +45,27 @@ async function getRoleList() {
     });
     const data = await response.json();
     listRoles.value = transformData(data.data, "id", "role");
-    console.log(listRoles)
 }
 
+// Fetch the role list the user has access to.
 getRoleList();
+
+
+async function getTeamList() {
+    const response = await fetch("http://localhost:4000/api/teams/manage", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    listTeam.value = data.data;
+}
+
+// Fetch the team list the user has access to.
+getTeamList();
+
 
 // Form submition for creating a new account
 async function handleSubmit() {
