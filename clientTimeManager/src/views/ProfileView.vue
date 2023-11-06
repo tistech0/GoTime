@@ -13,6 +13,11 @@ let data = reactive({
   },
 });
 
+// fetch data from API
+// get api/users/:id (id = me)
+
+
+
 import { useDisplay } from 'vuetify';
 const { mobile } = useDisplay()
 
