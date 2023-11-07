@@ -1,4 +1,4 @@
-# IntelliJ project files
+.env
 .idea
 *.iml
 out
