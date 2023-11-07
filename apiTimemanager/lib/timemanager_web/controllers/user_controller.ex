@@ -124,7 +124,7 @@ defmodule TimemanagerWeb.UserController do
     # check that the user connected is the user it is trying to update
     current_user_id = conn.assigns[:current_user].id
     if current_user_id != String.to_integer(id) do
-      error_template(conn, 401, "You are not allowed to update this user.")
+      error_template(conn, 403, "You are not allowed to update this user.")
     end
     user = Account.get_user!(id)
 
@@ -141,7 +141,7 @@ defmodule TimemanagerWeb.UserController do
     # check that the user connected is a Super Admin
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
     if current_user_role != RoleEnum.role(:super_admin_role) do
-      error_template(conn, 401, "You are not allowed to update this user's role.")
+      error_template(conn, 403, "You are not allowed to update this user's role.")
     end
     user = Account.get_user!(id)
 
