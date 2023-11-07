@@ -13,7 +13,9 @@ module.exports = {
       customSecondary: 'var(--secondary-pink)',
       darkPrimary: 'var(--primary-blue-dark)',
       lightPrimary: 'var(--primary-blue-light)',
-      customGrey: 'var(--grey)', 
+      customGrey: 'var(--grey)',
+      successLight: 'var(--success-green-light)',
+      errorLight: 'var(--error-red-light)',
       ...colors
     }
   },
