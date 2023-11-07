@@ -4,7 +4,7 @@ defmodule TimemanagerWeb.TeamController do
   alias Timemanager.Teams
   alias Timemanager.Teams.Team
 
-  action_fallback TimemanagerWeb.FallbackController
+  action_fallback(TimemanagerWeb.FallbackController)
 
   def index(conn, _params) do
     teams = Teams.list_teams()
@@ -58,5 +58,4 @@ defmodule TimemanagerWeb.TeamController do
     teams = Teams.get_list_team_link_manager(current_user.id)
     render(conn, :render_team_link_manager, teams: teams)
   end
-
 end
