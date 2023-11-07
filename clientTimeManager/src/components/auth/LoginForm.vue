@@ -2,7 +2,7 @@
 
 import { ref } from 'vue';
 import TextField from '../form/TextField.vue';
-import Button from '../form/Button.vue';
+import CustomButton from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
 import { useUserStore } from '@/stores/user'
@@ -62,7 +62,7 @@ async function handleSubmit() {
         <form :class="!lg ? 'text-input' : ''">
             <TextField label="Enter your Email" inputType="email" v-model="loginFormData.user.email" />
             <TextField label="Enter your Password" inputType="password" v-model="loginFormData.user.password" />
-            <Button buttonName="Login" type="submit" @click=handleSubmit()></Button>
+            <CustomButton buttonName="Login" btn-color="blue" type="submit" @click=handleSubmit()></CustomButton>
         </form>
     </div>
 </template>
