@@ -14,7 +14,7 @@ services:
       PGUSER: postgres
       PGPASSWORD: postgres
     depends_on:
-      - db
+      - postgres-service
 
   api:
     build:
