@@ -2,13 +2,14 @@ defmodule Timemanager.Time.WorkingTimes do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "working_time" do
     field :end, :naive_datetime
     field :start, :naive_datetime
     field :valueDay, :float
     field :valueNight, :float
     field :status, :string
-    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
+    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id, type: :binary_id
 
     timestamps(type: :utc_datetime)
   end

@@ -9,11 +9,12 @@ defmodule Timemanager.Account.UserToken do
   @confirm_validity_in_days 7
   @session_validity_in_days 60
 
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "users_tokens" do
     field :token, :binary
     field :context, :string
     field :sent_to, :string
-    belongs_to :user, Timemanager.Account.User
+    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id, type: :binary_id
 
     timestamps(updated_at: false)
   end
