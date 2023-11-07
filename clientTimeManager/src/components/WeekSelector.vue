@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   data() {
@@ -39,16 +39,10 @@ export default defineComponent({
       this.currentDate.setDate(this.currentDate.getDate() + 6);
       this.checkCurrentDate();
       this.oneWeekAgo = new Date(this.currentDate);
-      this.oneWeekAgo.setDate(this.oneWeekAgo.getDate() + 6);
+      this.oneWeekAgo.setDate(this.oneWeekAgo.getDate() - 6);
     },
     checkCurrentDate() {
-      if (this.formatDate(this.currentDate) === this.formatDate(new Date())) {
-        // Hide the arrow when currentDate is the actual date
-        this.shouldShowArrow = false;
-      } else {
-        // Show the arrow when currentDate is not the actual date
-        this.shouldShowArrow = true;
-      }
+      this.shouldShowArrow = this.formatDate(this.currentDate) !== this.formatDate(new Date());
       this.$emit('week-updated', this.currentDate);
     },
   },
