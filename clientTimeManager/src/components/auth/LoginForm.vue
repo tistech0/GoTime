@@ -6,11 +6,15 @@ import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router';
+import { useSnackbarStore } from '@/stores/snackbarStore';
+
 
 
 const { lg, mobile } = useDisplay()
-
 const storedUser = useUserStore()
+const snackbarStore = useSnackbarStore();
+const router = useRouter();
 
 const loginFormData = ref({
     user: {
@@ -35,13 +39,15 @@ async function handleSubmit() {
         });
         
     if (!response.ok) {
-        console.log(response)
+        const error = await response.json();
+        snackbarStore.showSnackbar(error.error, 2000, 'error');
+        return
     }
     // Get the data in json format
     const data = await response.json();
-
     // Replace all the user data contained in the storedUser
-    storedUser.$state = data.data; 
+    storedUser.$state = data.data;
+    router.push({name : 'home'})
 }
 </script>
 
