@@ -7,7 +7,7 @@ import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
 import type { Item } from "../../types/items";
-import { transformData } from "../../utils/utils";
+import { transformData, errorHandling } from "../../utils/utils";
 import { useRouter } from 'vue-router';
 import { useSnackbarStore } from '@/stores/snackbarStore';
 
@@ -39,9 +39,8 @@ const registerFormData = ref({
     }
 })
 
-/**<TextField v-if="data.user.role == 'User' || data.user.role == 'Admin'" :disable=true label="Role"
-                inputType="role" v-model="data.user.role" />
-              <TextField v-else label="Role" inputType="role" v-model="data.user.role" />ist of roles from the api and assign the value to the listRoles
+/**
+ *  This function fetchs the list of roles from the api and assign the value to the listRoles
  */
 async function getRoleList() {
     const response = await fetch("http://localhost:4000/api/roles", {
@@ -51,11 +50,8 @@ async function getRoleList() {
             'Content-Type': 'application/json'
         }
     });
-
-    if (response.status == 401) {
-        const error = await response.json();
-        snackbarStore.showSnackbar(error.error, 2000, 'error');
-        router.push({name : 'login'})
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
         return
     }
     const data = await response.json();
@@ -65,7 +61,9 @@ async function getRoleList() {
 // Fetch the role list the user has access to.
 getRoleList();
 
-
+/**
+ *  This function fetchs the list of teams from the api and assign the value to the listTeam
+ */
 async function getTeamList() {
     const response = await fetch("http://localhost:4000/api/teams/manage", {
         method: "GET",
@@ -74,11 +72,8 @@ async function getTeamList() {
             'Content-Type': 'application/json'
         }
     });
-
-    if (response.status == 401) {
-        const error = await response.json();
-        snackbarStore.showSnackbar(error.error, 2000, 'error');
-        router.push({name : 'login'})
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
         return
     }
     const data = await response.json();
@@ -105,7 +100,8 @@ async function handleSubmit() {
         });
         
     if (!response.ok) {
-        console.log(response)
+        errorHandling(response, snackbarStore, router);
+        return
     }
     const data = await response.json();
 

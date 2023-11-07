@@ -5,8 +5,9 @@ import TextField from '../form/TextField.vue';
 import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
-import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router';
+import { errorHandling } from "../../utils/utils";
+import { useUserStore } from '@/stores/user'
 import { useSnackbarStore } from '@/stores/snackbarStore';
 
 
@@ -39,8 +40,7 @@ async function handleSubmit() {
         });
         
     if (!response.ok) {
-        const error = await response.json();
-        snackbarStore.showSnackbar(error.error, 2000, 'error');
+        errorHandling(response, snackbarStore, router);
         return
     }
     // Get the data in json format

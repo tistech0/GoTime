@@ -124,7 +124,7 @@ defmodule TimemanagerWeb.UserController do
     current_user_id = conn.assigns[:current_user].id
 
     if current_user_id != String.to_integer(id) do
-      error_template(conn, 403, "You are not allowed to update this user.")
+      error_template(conn, 400, "You are not allowed to update this user.")
     end
 
     user = Account.get_user!(id)
@@ -142,7 +142,7 @@ defmodule TimemanagerWeb.UserController do
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
 
     if current_user_role != RoleEnum.role(:super_admin_role) do
-      error_template(conn, 403, "You are not allowed to update this user's role.")
+      error_template(conn, 400, "You are not allowed to update this user's role.")
     end
 
     user = Account.get_user!(id)
@@ -175,7 +175,7 @@ defmodule TimemanagerWeb.UserController do
 
     # Check user isn't trying to delete itself
     if current_user.id == user.id do
-      error_template(conn, 403, "You are no allowed to delete yourself")
+      error_template(conn, 400, "You are no allowed to delete yourself")
     end
 
     # If the user has the User role, terminate the def
@@ -187,7 +187,7 @@ defmodule TimemanagerWeb.UserController do
       if teams_managed != [] do
         error_template(
           conn,
-          403,
+          400,
           "The user manages teams. You should replace the manager before deleting this user."
         )
       end
