@@ -34,6 +34,7 @@ Enum.each(roles_list, fn role ->
       # If the role doesn't exist, create it
       role_changeset = Role.changeset(%Role{}, %{role: role.role})
       Repo.insert!(role_changeset)
+
     _ ->
       # Role already exists, do nothing
       IO.puts("Role '#{role.role}' already exists.")
@@ -81,6 +82,7 @@ Enum.each(users_list, fn user ->
       # If the user doesn't exist, create it
       user_changeset = Timemanager.Account.User.seeds_changeset(%Timemanager.Account.User{}, user)
       Repo.insert!(user_changeset)
+
     _ ->
       # User already exists, do nothing
       IO.puts("User '#{user.username}' already exists.")
@@ -177,8 +179,11 @@ Enum.each(working_times_list, fn working_time ->
   case existing_working_time do
     nil ->
       # If the working_time doesn't exist, create it
-      working_time_changeset = Timemanager.Time.WorkingTimes.changeset(%Timemanager.Time.WorkingTimes{}, working_time)
+      working_time_changeset =
+        Timemanager.Time.WorkingTimes.changeset(%Timemanager.Time.WorkingTimes{}, working_time)
+
       Repo.insert!(working_time_changeset)
+
     _ ->
       # Working_time already exists, do nothing
       IO.puts("Working_time '#{working_time.start}' already exists.")
@@ -214,13 +219,14 @@ Enum.each(clocks_list, fn clock ->
       # If the clock doesn't exist, create it
       clock_changeset = Timemanager.Time.Clock.changeset(%Timemanager.Time.Clock{}, clock)
       Repo.insert!(clock_changeset)
+
     _ ->
       # Clock already exists, do nothing
       IO.puts("Clock '#{clock.time}' already exists.")
   end
 end)
 
-#List of teams to be inserted
+# List of teams to be inserted
 teams_list = [
   %{
     name: "Team 1",
@@ -250,6 +256,7 @@ Enum.each(teams_list, fn team ->
       # If the team doesn't exist, create it
       team_changeset = Timemanager.Teams.Team.changeset(%Timemanager.Teams.Team{}, team)
       Repo.insert!(team_changeset)
+
     _ ->
       # Team already exists, do nothing
       IO.puts("Team '#{team.name}' already exists.")
@@ -262,7 +269,7 @@ teams_uuid = %{
   "Team 4" => Repo.get_by(Timemanager.Teams.Team, name: "Team 4").id
 }
 
-#List of team_members to be inserted
+# List of team_members to be inserted
 team_members_list = [
   %{
     team_id: teams_uuid["Team 1"],
@@ -306,8 +313,11 @@ Enum.each(team_members_list, fn team_member ->
   case existing_team_member do
     nil ->
       # If the team_member doesn't exist, create it
-      team_member_changeset = Timemanager.Team.Team_user.changeset(%Timemanager.Team.Team_user{}, team_member)
+      team_member_changeset =
+        Timemanager.Team.Team_user.changeset(%Timemanager.Team.Team_user{}, team_member)
+
       Repo.insert!(team_member_changeset)
+
     _ ->
       # Team_member already exists, do nothing
       IO.puts("Team_member '#{team_member.team_id}' already exists.")

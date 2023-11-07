@@ -15,7 +15,7 @@ defmodule Timemanager.Repo.Migrations.CreateWorkingTime do
       add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
-    create index(:working_time, [:user_id])
+    create(index(:working_time, [:user_id]))
 
     execute(
       "ALTER TABLE working_time ADD CONSTRAINT valid_status CHECK (status = 'validated' OR status = 'waiting' OR status = 'refused')"

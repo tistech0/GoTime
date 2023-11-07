@@ -11,7 +11,7 @@ defmodule Timemanager.Repo.Migrations.CreateTeamUsers do
       add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
-    create index(:team_users, [:team_id])
-    create index(:team_users, [:user_id])
+    create(index(:team_users, [:team_id]))
+    create(index(:team_users, [:user_id]))
   end
 end

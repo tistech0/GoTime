@@ -1,3 +1,6 @@
 {
-  "elixirLS.projectDir": "apiTimemanager"
+    "java.project.sourcePaths": [
+        "clientTimeManager/src/assets"
+    ]
 }
+

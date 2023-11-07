@@ -2,7 +2,7 @@ defmodule Timemanager.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do
-    execute "CREATE EXTENSION IF NOT EXISTS citext", ""
+    execute("CREATE EXTENSION IF NOT EXISTS citext", "")
 
     create table(:users, primary_key: false) do
       add :id, :uuid, primary_key: true
@@ -16,8 +16,8 @@ defmodule Timemanager.Repo.Migrations.CreateUsersAuthTables do
       add(:updated_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
-    create index(:users, [:role_id])
-    create unique_index(:users, [:email])
+    create(index(:users, [:role_id]))
+    create(unique_index(:users, [:email]))
 
     create table(:users_tokens, primary_key: false) do
       add :id, :uuid, primary_key: true
@@ -29,7 +29,7 @@ defmodule Timemanager.Repo.Migrations.CreateUsersAuthTables do
       add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
     end
 
-    create index(:users_tokens, [:user_id])
-    create unique_index(:users_tokens, [:context, :token])
+    create(index(:users_tokens, [:user_id]))
+    create(unique_index(:users_tokens, [:context, :token]))
   end
 end

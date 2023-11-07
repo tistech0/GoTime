@@ -4,7 +4,7 @@ defmodule Timemanager.Roles.Role do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "roles" do
-    field :role, :string
+    field(:role, :string)
 
     timestamps(type: :utc_datetime)
   end
