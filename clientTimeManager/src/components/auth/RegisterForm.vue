@@ -8,12 +8,17 @@ import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
 import type { Item } from "../../types/items";
 import { transformData } from "../../utils/utils";
+import { useRouter } from 'vue-router';
+import { useSnackbarStore } from '@/stores/snackbarStore';
 
 
 
 const { lg, mobile } = useDisplay()
+const router = useRouter();
+const snackbarStore = useSnackbarStore();
 
-// fetch the user's managed teams in stead of this static code. 
+
+// Initialize the list of teams as a list of Item
 const listTeam = ref<Item[]>([]);
 
 // Initialize the list of roles as a list of Item
@@ -45,6 +50,13 @@ async function getRoleList() {
             'Content-Type': 'application/json'
         }
     });
+
+    if (response.status == 401) {
+        const error = await response.json();
+        snackbarStore.showSnackbar(error.error, 2000, 'error');
+        router.push({name : 'login'})
+        return
+    }
     const data = await response.json();
     listRoles.value = transformData(data.data, "id", "role");
 }
@@ -61,6 +73,13 @@ async function getTeamList() {
             'Content-Type': 'application/json'
         }
     });
+
+    if (response.status == 401) {
+        const error = await response.json();
+        snackbarStore.showSnackbar(error.error, 2000, 'error');
+        router.push({name : 'login'})
+        return
+    }
     const data = await response.json();
     listTeam.value = data.data;
 }
