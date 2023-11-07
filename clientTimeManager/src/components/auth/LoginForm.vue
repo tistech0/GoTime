@@ -26,7 +26,7 @@ async function handleSubmit() {
     // TODO: Encrypt password with bcrypt
   const apiUrl = process.env.VUE_APP_API_URL;
 
-  console.log(apiUrl)
+  console.log(process.env)
 
   const response = await fetch(`${apiUrl}/api/users/log_in`, {
     method: 'POST',
