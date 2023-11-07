@@ -8,17 +8,11 @@ export default defineConfig({
   server: {
     port: 8081,
     host: "0.0.0.0",
-    proxy: {
-      '/api': {
-        target: process.env.NODE_ENV === 'production' ? `http://${process.env.VUE_APP_API_HOST}:4000` : 'http://localhost:4000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
   },
   resolve: {
     alias: {
       '@': '/src'
     }
-  }
+  },
+  base: process.env.NODE_ENV === 'production' ? 'gotime-api-service' : 'localhost'
 })
