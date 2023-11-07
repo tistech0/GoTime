@@ -24,7 +24,7 @@ const loginFormData = ref({
 async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
-  const apiUrl = process.env.GOTIME_API_URL;
+  const apiUrl = process.env.VUE_APP_API_URL;
 
   console.log(apiUrl)
 
