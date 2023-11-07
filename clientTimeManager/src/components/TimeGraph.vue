@@ -5,9 +5,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted } from 'vue';
+  import { defineComponent, ref, toRefs, onMounted, computed } from 'vue';
 import ApexCharts from 'apexcharts';
 import WeekSelector from "@/components/WeekSelector.vue";
+import { useDisplay } from 'vuetify';
 
 export default defineComponent({
   components: {WeekSelector},
@@ -24,21 +25,15 @@ export default defineComponent({
   setup(props) {
     const { start, end } = toRefs(props);
 
-    let categories: string[] = [];
+    let categories: Date[] = [];
 
     function initCategories(start: Date, end: Date): void {
-      let currentDate = new Date(start);
+      let currentDate = new Date(end);
       const newCategories = [];
 
       for (let i = 0; i < 7; i++) {
-        newCategories.push(
-            currentDate.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            }) + ' GMT'
-        );
-        currentDate.setDate(currentDate.getDate() - 1);
+        newCategories.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
       }
       categories = newCategories;
     }
@@ -83,10 +78,11 @@ export default defineComponent({
       },
     ]
 
-    let min = [1, 2, 3, 2, 4];
-    let max = [6, 7, 8, 4, 7];
+    let min = [1, 2, 3, 2, 4, 0, 0];
+    let max = [6, 7, 8, 4, 7, 0, 0];
     let series = createSeries(data);
 
+    const display = useDisplay();
     function createSeries(data: any) {
       let series = [];
       let day: any = [];
@@ -117,12 +113,21 @@ export default defineComponent({
     const options = {
       series: series,
       chart: {
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: false,
+            zoom: false,
+            zoomin: false,
+            zoomout: false,
+            pan: false,
+            reset: false,
+          },
+        },
         type: 'bar',
         height: 350,
         stacked: true,
-      },
-      toolbar: {
-        show: false,
       },
       responsive: [
         {
@@ -148,7 +153,7 @@ export default defineComponent({
             total: {
               enabled: true,
               formatter: function (val: number, opts: any) {
-                return "Mini:" + min[opts.seriesIndex] + "h "+ "Max:" + max[opts.seriesIndex] + "h";
+                return display.mobile.value ? '' : "Mini:" + min[opts.dataPointIndex] + "h "+ "Max:" + max[opts.dataPointIndex] + "h";
               },
               style: {
                 fontSize: '13px',
@@ -159,8 +164,13 @@ export default defineComponent({
         },
       },
       xaxis: {
-        type: 'datetime',
+        type: 'category',
         categories: categories,
+        labels: {
+          formatter: function (val: Date) {
+            return val.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short' });
+          },
+        },
       },
       legend: {
         position: 'right',
