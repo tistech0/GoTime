@@ -68,7 +68,7 @@ async function handleSubmit() {
         <form :class="!lg ? 'text-input' : ''">
             <TextField label="Enter your Email" inputType="email" v-model="loginFormData.user.email" />
             <TextField label="Enter your Password" inputType="password" v-model="loginFormData.user.password" />
-            <Button buttonName="Login" type="submit" @click=handleSubmit()></Button>
+            <Button btnColor="blue" buttonName="Login" type="submit" @click=handleSubmit()></Button>
         </form>
     </div>
 </template>

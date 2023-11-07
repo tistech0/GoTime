@@ -22,3 +22,8 @@ RUN mix do deps.get, deps.update --all, deps.compile
 # Expose the Phoenix port
 EXPOSE 4000
 
+ENV MIX_ENV=dev \
+    DATABASE_NAME=timemanager_dev \
+    DATABASE_USERNAME=postgres \
+    POSTGRES_PASSWORD=${DATABASE_PASSWORD} \
+    DATABASE_HOSTNAME=postgres-service

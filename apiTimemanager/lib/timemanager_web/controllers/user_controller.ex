@@ -10,7 +10,7 @@ defmodule TimemanagerWeb.UserController do
 
   require RoleEnum
 
-  action_fallback TimemanagerWeb.FallbackController
+  action_fallback(TimemanagerWeb.FallbackController)
 
   @doc """
     This def gets the list of users
@@ -120,12 +120,13 @@ defmodule TimemanagerWeb.UserController do
     If the id provided is diferent than the id of the current user, throw an error
   """
   def update(conn, %{"userID" => id, "user" => user_params}) do
-
     # check that the user connected is the user it is trying to update
     current_user_id = conn.assigns[:current_user].id
+
     if current_user_id != String.to_integer(id) do
       error_template(conn, 403, "You are not allowed to update this user.")
     end
+
     user = Account.get_user!(id)
 
     with {:ok, %User{} = user} <- Account.update_user(user, user_params) do
@@ -137,12 +138,13 @@ defmodule TimemanagerWeb.UserController do
     This def updates only the user role. It will only work for a SuperAdmin
   """
   def update_user_role(conn, %{"userID" => id, "role" => role}) do
-
     # check that the user connected is a Super Admin
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+
     if current_user_role != RoleEnum.role(:super_admin_role) do
       error_template(conn, 403, "You are not allowed to update this user's role.")
     end
+
     user = Account.get_user!(id)
 
     new_role = Roles.get_role_by_role(role)
@@ -180,9 +182,14 @@ defmodule TimemanagerWeb.UserController do
     if Roles.get_role!(user.role_id).role != RoleEnum.role(:user_role) do
       # get user's managed team
       teams_managed = Teams.get_list_team_link_manager(user.id)
+
       # if list isn't empty, send error because the user is manages at least one team. Manager should be replaced before deleting
       if teams_managed != [] do
-        error_template(conn, 403, "The user manages teams. You should replace the manager before deleting this user.")
+        error_template(
+          conn,
+          403,
+          "The user manages teams. You should replace the manager before deleting this user."
+        )
       end
     end
 

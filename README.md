@@ -1,3 +1,4 @@
+![workflow](https://github.com/tistech0/GoTime/actions/workflows/main.yml/badge.svg)
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
@@ -186,6 +187,34 @@ You must install:
 
       <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
 
+### Initialisation mobil app
+
+1. Install capacitor
+
+   ```sh
+   npm install -g @capacitor/cli
+   npx cap init Gotime eu.gotime.app --web-dir=dist
+   ```
+2. Build the app
+   ```sh
+   npm run build
+   ```
+3. Install the native platforms 
+   ```sh
+   npm i @capacitor/ios @capacitor/android
+   npx cap add android
+   npx cap add ios
+   ```   
+4. Sync the app
+   ```sh
+    npx cap sync
+   ```
+
+### Generate the apk android
+
+1. Open the android project in android studio
+2. Build the project
+3. Generate the apk
 ---
 
 <!-- HOW TO USE IT -->

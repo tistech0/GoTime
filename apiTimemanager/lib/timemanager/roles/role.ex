@@ -3,7 +3,7 @@ defmodule Timemanager.Roles.Role do
   import Ecto.Changeset
 
   schema "roles" do
-    field :role, :string
+    field(:role, :string)
 
     timestamps(type: :utc_datetime)
   end
