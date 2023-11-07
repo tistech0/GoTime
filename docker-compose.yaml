@@ -13,7 +13,7 @@ services:
   #     PGUSER: postgres
   #     PGPASSWORD: postgres
   #   depends_on:
-  #     - db
+  #     - postgres-service
 
   api:
     build:
@@ -27,9 +27,9 @@ services:
       PGUSER: postgres
       PGPASSWORD: postgres
     depends_on:
-      - db
+      - postgres-service
 
-  db:
+  postgres-service:
     image: postgres:16
     environment:
       POSTGRES_DB: timemanager_dev
