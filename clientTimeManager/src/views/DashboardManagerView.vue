@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BottomNav from '@/components/BottomNav.vue';
 import Sidebar from '@/components/SideBar.vue';
-import ManagerGraph from '@/components/ManagerGraph.vue';
+import TimeGraph from '@/components/TimeGraph.vue';
 import { useDisplay } from 'vuetify';
 
 
@@ -27,7 +27,7 @@ let series = [
   <BottomNav v-if="mobile" />
   <Sidebar v-else />
   <v-main class="w-full h-full grid grid-cols-5 grid-flow-row-dense">
-    <ManagerGraph :min="min" :max="max" :series="series" class="col-span-3" />
+    <TimeGraph :min="min" :max="max" :series="series" class="col-span-3" />
   </v-main>
 </template>
 
