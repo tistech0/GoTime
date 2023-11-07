@@ -3,9 +3,8 @@ defmodule Timemanager.Team.Team_user do
   import Ecto.Changeset
 
   schema "team_users" do
-
-    belongs_to :team, Timemanager.Team.Team, foreign_key: :team_id
-    belongs_to :user, Timemanager.Team.User, foreign_key: :user_id
+    belongs_to :team, Timemanager.Teams.Team, foreign_key: :team_id
+    belongs_to :user, Timemanager.Account.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end

@@ -6,7 +6,6 @@ defmodule Timemanager.Account.UserToken do
   @hash_algorithm :sha256
   @rand_size 32
 
-
   @confirm_validity_in_days 7
   @session_validity_in_days 60
 
@@ -60,7 +59,6 @@ defmodule Timemanager.Account.UserToken do
 
     {:ok, query}
   end
-
 
   @doc """
   Returns the token struct for the given token value and context.
