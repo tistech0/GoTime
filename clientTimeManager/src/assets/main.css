@@ -16,8 +16,8 @@ h1 {
   font-size: 2rem;
   font-weight: regular;
   margin-bottom: 1rem;
-  color: var(--primary-blue);
   text-align: center;
+  font-weight: 600;
 }
 
 @media (hover: hover) {
