@@ -5,7 +5,7 @@ services:
   web:
     build:
       context: ./clientTimeManager
-      dockerfile: clientTimeManager/Dockerfile.dev
+      dockerfile: Dockerfile.dev
     ports:
       - "8081:8081"
     environment:
