@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   web:
     build:
       context: ./clientTimeManager
@@ -10,8 +9,8 @@ services:
       - "8081:8081"
     environment:
       MIX_ENV: dev
-      PGDATABASE: timemanager_dev
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      PGDATABASE: ${DATABASE_NAME}
+      PGUSER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     depends_on:
       - postgres-service
