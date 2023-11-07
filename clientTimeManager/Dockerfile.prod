@@ -1,6 +1,8 @@
 # Use a specific Node.js version
 FROM node:21 as build-stage
 
+ENV GOTIME_API_URL=http://gotime-api-service
+
 # Set the working directory inside the container
 WORKDIR /app
 

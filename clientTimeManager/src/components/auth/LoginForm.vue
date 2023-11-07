@@ -24,8 +24,9 @@ const loginFormData = ref({
 async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
+  const apiUrl = process.env.GOTIME_API_URL;
 
-  const response = await fetch("/api/users/log_in", {
+  const response = await fetch(`${apiUrl}/api/users/log_in`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -33,7 +34,7 @@ async function handleSubmit() {
     },
     body: JSON.stringify(loginFormData.value)
   });
-        
+
     if (!response.ok) {
         console.log(response)
     }
