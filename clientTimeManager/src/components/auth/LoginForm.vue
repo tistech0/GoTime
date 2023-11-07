@@ -24,9 +24,9 @@ const loginFormData = ref({
 async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
-  const apiUrl = process.env.VUE_APP_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  console.log(process.env)
+  console.log(apiUrl)
 
   const response = await fetch(`${apiUrl}/api/users/log_in`, {
     method: 'POST',
