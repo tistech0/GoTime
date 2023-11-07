@@ -25,14 +25,14 @@ async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
 
-    const response = await fetch("/api/users/log_in", {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginFormData.value)
-        });
+  const response = await fetch("/api/users/log_in", {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(loginFormData.value)
+  });
         
     if (!response.ok) {
         console.log(response)
