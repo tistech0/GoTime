@@ -24,13 +24,15 @@ defmodule TimemanagerWeb.UserController do
   @doc """
   This def creates a new user with the User default role
   """
-  def register(conn, %{"user" => user_params}) do
+  def register(conn, %{"user" => user_params, "team" => team_params}) do
+
+    current_user = conn.assigns[:current_user]
 
     # Chek if the current user's role to control the action
-    current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+    current_user_role = Roles.get_role!(current_user.role_id).role
     role = cond do
       current_user_role == RoleEnum.role(:super_admin_role) -> # Can create users with any role
-        Roles.get_role_by_role(user_params["role"])
+        Roles.get_role(user_params["role_id"])
       true -> # Admin can only create users with the User role
         Roles.get_role_by_role(RoleEnum.role(:user_role))
     end
@@ -40,18 +42,19 @@ defmodule TimemanagerWeb.UserController do
       error_template(conn, 400, "Invalid role")
     end
 
-    # Assign the role id to the user
-    user_params_with_role = Map.put(user_params, "role_id", role.id)
-
-    case Account.register_user(user_params_with_role) do
+    case Account.register_user(user_params) do
       {:ok, user} ->
+        team_id = team_params["id"]
+        if !is_nil(team_id) and is_integer(team_id) do
+          add_user_to_team(team_id, current_user_role, user.id, current_user.id) # Add user to team once the user is inserted
+        end
         conn
         |> put_status(:created)
         |> render(:show, user: user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         error_msg = changeset_error_message(changeset)
-        error_template(conn, 403, error_msg)
+        error_template(conn, 400, error_msg)
       end
   end
 
@@ -62,6 +65,33 @@ defmodule TimemanagerWeb.UserController do
     errors
     |> Enum.map(fn {field, {message, _values}} -> "#{field} #{message}" end)
     |> Enum.join(", ")
+  end
+
+
+  defp add_user_to_team(team_id, role, user_id, current_user_id) do
+
+    if role == RoleEnum.role(:super_admin_role) do
+      # Add user to the team as a super admin, so it could be any team as long as it exists
+      team = Teams.get_team(team_id)
+
+      if !is_nil(team) do
+        team_to_create = %{
+          team_id: team.id,
+          user_id: user_id
+        }
+        Team.create_team_user(team_to_create)
+      end
+    else
+      # Add user to the team as an admin so it can only be a managed team
+      team = Teams.get_team(team_id)
+      if !is_nil(team) and team.manager_id == current_user_id do
+        team_to_create = %{
+          team_id: team.id,
+          user_id: user_id
+        }
+        Team.create_team_user(team_to_create)
+      end
+    end
   end
 
   @doc """
