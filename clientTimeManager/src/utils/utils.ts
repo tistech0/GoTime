@@ -27,7 +27,7 @@ export function transformData(data: any[], idAttr: string, nameAttr: string): It
  */
 export async function errorHandling(response: Response, snackbarStore: Store, router: Router) {
   if (response.status == 500) {
-    snackbarStore.showSnackbar('Une erreur est survenue. Veuillez contacter un administrateur.', 2000, 'error');
+    snackbarStore.showSnackbar('An error occurred. Please contact an administrator.', 2000, 'error');
     return
   }
   const error = await response.json();

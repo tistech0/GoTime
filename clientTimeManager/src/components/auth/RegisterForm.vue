@@ -89,6 +89,12 @@ async function handleSubmit() {
 
     // Encrypt password with bcrypt
 
+    // Check the two password are equals
+    if(registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
+        snackbarStore.showSnackbar('Both password need to be the same', 2000, 'error');
+        return
+    }
+
     // Create the new account
     const response = await fetch("http://localhost:4000/api/users", {
             method: 'POST',
