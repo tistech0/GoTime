@@ -154,11 +154,9 @@ defmodule Timemanager.Account do
     if User.valid_password?(user, password), do: user
   end
 
-
   def get_user_by_email_and_username(email, username) do
     if user = Repo.get_by(User, email: email, username: username), do: user
   end
-
 
   ## User registration
 
@@ -179,7 +177,6 @@ defmodule Timemanager.Account do
     |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
-
 
   ## Session
 
@@ -212,5 +209,4 @@ defmodule Timemanager.Account do
     Repo.delete_all(UserToken.token_and_context_query(token, "session"))
     :ok
   end
-
 end

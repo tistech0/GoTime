@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify';
-const props = defineProps<{ buttonName: string }>()
+
+const props = defineProps<{ buttonName: string, btnColor: string }>()
+
 const emit = defineEmits(["onClick"]);
 
 const { mobile } = useDisplay()
@@ -9,7 +11,8 @@ const { mobile } = useDisplay()
 
 <template>
     <div class="button">
-        <v-btn :class="mobile ? 'full-width-button' : 'small-width-button' " color="var(--primary-blue)" @click="$emit('onClick')">
+        <v-btn :class="mobile ? 'full-width-button' : 'small-width-button'"
+            :color="btnColor == 'blue' ? 'var(--primary-blue)' : 'var(--secondary-pink)'" @click="$emit('onClick')">
             {{ props.buttonName }}
         </v-btn>
     </div>
@@ -18,11 +21,13 @@ const { mobile } = useDisplay()
 <style scoped>
 .button {
     display: flex;
-    justify-content:center;
+    justify-content: center;
 }
+
 .small-width-button {
     @apply w-1/2
 }
+
 .full-width-button {
     @apply w-full
 }
