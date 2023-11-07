@@ -52,10 +52,11 @@ export default defineComponent({
 <style scoped>
 .selector-wrapper {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin: 1rem 0;
-  width: 250px;
+  min-width: 150px;
+  max-width: 260px;
   margin-left: auto;
   margin-right: 50px;
 }
