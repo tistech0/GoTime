@@ -1,8 +1,6 @@
 # Use a specific Node.js version
 FROM node:21 as build-stage
 
-ENV VUE_APP_API_URL=http://gotime-api-service:4000
-
 # Set the working directory inside the container
 WORKDIR /app
 
