@@ -7,11 +7,12 @@ const { mobile } = useDisplay()
 <template>
   <BottomNav v-if="mobile" />
   <Sidebar v-else />
-  <v-main class="w-full h-full grid grid-cols-5 grid-flow-row-dense">
-    <Timer class=" col-span-2"/>
-    <div class="data-wrapper col-span-3">
+  <v-main class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense">
+    <Timer class="md:col-span-2"/>
+    <div class="data-wrapper md:col-span-3">
       <WeekSelector @week-updated="updateWeek"/>
       <TimeGraph :start="start" :end="end" :key="`${start}-${end}`"/>
+      <hr>
     </div>
   </v-main>
 </template>
@@ -40,11 +41,22 @@ export default {
       this.start = new Date(currentDate);
       this.end = new Date(currentDate);
       this.end.setDate(this.end.getDate() - 6);
-      console.log("start: start", this.start, "end: ", this.end);
     }
   }
 };
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #333;
+  margin: 1rem 0;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+</style>
