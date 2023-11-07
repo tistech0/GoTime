@@ -9,7 +9,7 @@ import myImage from '../../assets/Logo-GoTime.png';
 import type { Item } from "../../types/items";
 import { transformData, errorHandling } from "../../utils/utils";
 import { useRouter } from 'vue-router';
-import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useSnackbarStore } from '@/stores/snackbar';
 
 
 

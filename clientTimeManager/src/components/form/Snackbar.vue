@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useSnackbarStore } from '@/stores/snackbar';
 
 const snackbarStore = useSnackbarStore();
 const isOpen = computed(() => snackbarStore.isOpen);

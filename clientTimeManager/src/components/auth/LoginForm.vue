@@ -8,7 +8,7 @@ import myImage from '../../assets/Logo-GoTime.png';
 import { useRouter } from 'vue-router';
 import { errorHandling } from "../../utils/utils";
 import { useUserStore } from '@/stores/user'
-import { useSnackbarStore } from '@/stores/snackbarStore';
+import { useSnackbarStore } from '@/stores/snackbar';
 
 
 
