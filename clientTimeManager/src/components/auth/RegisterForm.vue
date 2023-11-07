@@ -27,8 +27,10 @@ const registerFormData = ref({
         password: "",
         confirmPassword: "",
         time_contract: 0,
-        team: 0, // Is the selected team id
-        role: 0 // Is the selected role id
+        role_id: 0 // Is the selected role id
+    },
+    team : {
+        id: 0 // Is the selected team id
     }
 })
 
@@ -73,21 +75,21 @@ async function handleSubmit() {
     // Encrypt password with bcrypt
 
     // Create the new account
-    // const response = await fetch("http://localhost:4000/api/users", {
-    //         method: 'POST',
-    //         credentials: 'include',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(registerFormData.value)
-    //     });
+    const response = await fetch("http://localhost:4000/api/users", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registerFormData.value)
+        });
         
-    // if (!response.ok) {
-    //     console.log(response)
-    // }
-    // const data = await response.json();
+    if (!response.ok) {
+        console.log(response)
+    }
+    const data = await response.json();
 
-    console.log(registerFormData.value);
+    console.log(data);
 
 }
 
@@ -113,8 +115,8 @@ async function handleSubmit() {
             <TextField label="Password" inputType="password" v-model="registerFormData.user.password" />
             <TextField label="Confirm Password" input-type="password" v-model="registerFormData.user.confirmPassword" />
             <TextField label="Contract time" input-type="number" hint="The employee's weekly hours" v-model.number="registerFormData.user.time_contract" />
-            <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team" v-model="registerFormData.user.team" />
-            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the" v-model="registerFormData.user.role" />
+            <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team" v-model="registerFormData.team.id" />
+            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the" v-model="registerFormData.user.role_id" />
             <Button buttonName="Create Account" type="submit" @click=handleSubmit()></Button>
         </form>
     </div>
