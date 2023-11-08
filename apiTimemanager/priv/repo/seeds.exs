@@ -41,6 +41,14 @@ Enum.each(roles_list, fn role ->
   end
 end)
 
+# Map of roles to be used in the users list
+roles_uuids = %{
+  "User" => Repo.get_by(Role, role: "User").id,
+  "Admin" => Repo.get_by(Role, role: "Admin").id,
+  "SuperAdmin" => Repo.get_by(Role, role: "SuperAdmin").id
+}
+
+
 # List of users to be inserted
 users_list = [
   %{
@@ -48,27 +56,26 @@ users_list = [
     email: "admin@email.com",
     hashed_password: Bcrypt.hash_pwd_salt("admin"),
     time_contract: 40.0,
-    role_id: 2
+    role_id: roles_uuids["Admin"]
   },
   %{
     username: "user",
     email: "user@email.com",
     hashed_password: Bcrypt.hash_pwd_salt("user"),
     time_contract: 35.0,
-    role_id: 1
+    role_id: roles_uuids["User"]
   },
   %{
     username: "superadmin",
     email: "superadmin@email.com",
     hashed_password: Bcrypt.hash_pwd_salt("superadmin"),
     time_contract: 40,
-    role_id: 3
+    role_id: roles_uuids["SuperAdmin"]
   }
 ]
-
 Enum.each(users_list, fn user ->
   # Check if the user already exists in the database
-  existing_user = Repo.get_by(Timemanager.Account.User, user)
+  existing_user = Repo.get_by(Timemanager.Account.User, username: user.username)
 
   case existing_user do
     nil ->
@@ -82,6 +89,12 @@ Enum.each(users_list, fn user ->
   end
 end)
 
+users_uuid= %{
+  "admin" => Repo.get_by(Timemanager.Account.User, username: "admin").id,
+  "user" => Repo.get_by(Timemanager.Account.User, username: "user").id,
+  "superadmin" => Repo.get_by(Timemanager.Account.User, username: "superadmin").id
+}
+
 # List of working_times to be inserted
 working_times_list = [
   %{
@@ -90,7 +103,7 @@ working_times_list = [
     valueDay: 0.0,
     valueNight: 9.0,
     status: "validated",
-    user_id: 1
+    user_id: users_uuid["admin"]
   },
   %{
     start: "2023-11-25 09:23:45",
@@ -98,7 +111,7 @@ working_times_list = [
     valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
-    user_id: 1
+    user_id: users_uuid["admin"]
   },
   %{
     start: "2023-12-25 10:21:25",
@@ -106,7 +119,7 @@ working_times_list = [
     valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
-    user_id: 1
+    user_id: users_uuid["admin"]
   },
   %{
     start: "2023-10-25 20:48:13",
@@ -114,7 +127,7 @@ working_times_list = [
     valueDay: 0.0,
     valueNight: 0.0,
     status: "validated",
-    user_id: 2
+    user_id: users_uuid["user"]
   },
   %{
     start: "2023-11-25 09:23:45",
@@ -122,7 +135,7 @@ working_times_list = [
     valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
-    user_id: 2
+    user_id: users_uuid["user"]
   },
   %{
     start: "2023-12-25 10:21:25",
@@ -130,7 +143,7 @@ working_times_list = [
     valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
-    user_id: 2
+    user_id: users_uuid["user"]
   },
   %{
     start: "2023-10-25 18:48:13",
@@ -138,7 +151,7 @@ working_times_list = [
     valueDay: 2.2,
     valueNight: 2.8,
     status: "validated",
-    user_id: 3
+    user_id: users_uuid["superadmin"]
   },
   %{
     start: "2023-11-25 09:23:45",
@@ -146,7 +159,7 @@ working_times_list = [
     valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
-    user_id: 3
+    user_id: users_uuid["superadmin"]
   },
   %{
     start: "2023-12-25 10:21:25",
@@ -154,8 +167,8 @@ working_times_list = [
     valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
-    user_id: 3
-  }
+    user_id: users_uuid["superadmin"]
+  },
 ]
 
 Enum.each(working_times_list, fn working_time ->
@@ -182,17 +195,17 @@ clocks_list = [
   %{
     time: "2023-10-25 20:48:13",
     status: false,
-    user_id: 1
+    user_id: users_uuid["admin"]
   },
   %{
     time: "2023-11-25 09:23:45",
     status: true,
-    user_id: 2
+    user_id: users_uuid["user"]
   },
   %{
     time: "2023-12-25 10:21:25",
     status: false,
-    user_id: 3
+    user_id: users_uuid["superadmin"]
   }
 ]
 
@@ -217,20 +230,20 @@ end)
 teams_list = [
   %{
     name: "Team 1",
-    manager_id: 1
+    manager_id: users_uuid["admin"]
   },
   %{
     name: "Team 2",
-    manager_id: 3
+    manager_id: users_uuid["superadmin"]
   },
   %{
     name: "Team 3",
-    manager_id: 3
+    manager_id: users_uuid["superadmin"]
   },
   %{
     name: "Team 4",
-    manager_id: 1
-  }
+    manager_id: users_uuid["admin"]
+  },
 ]
 
 Enum.each(teams_list, fn team ->
@@ -249,41 +262,47 @@ Enum.each(teams_list, fn team ->
       IO.puts("Team '#{team.name}' already exists.")
   end
 end)
+teams_uuid = %{
+  "Team 1" => Repo.get_by(Timemanager.Teams.Team, name: "Team 1").id,
+  "Team 2" => Repo.get_by(Timemanager.Teams.Team, name: "Team 2").id,
+  "Team 3" => Repo.get_by(Timemanager.Teams.Team, name: "Team 3").id,
+  "Team 4" => Repo.get_by(Timemanager.Teams.Team, name: "Team 4").id
+}
 
 # List of team_members to be inserted
 team_members_list = [
   %{
-    team_id: 1,
-    user_id: 1
+    team_id: teams_uuid["Team 1"],
+    user_id: users_uuid["admin"]
   },
   %{
-    team_id: 1,
-    user_id: 3
+    team_id: teams_uuid["Team 1"],
+    user_id: users_uuid["superadmin"]
   },
   %{
-    team_id: 2,
-    user_id: 1
+    team_id: teams_uuid["Team 2"],
+    user_id: users_uuid["admin"]
   },
   %{
-    team_id: 2,
-    user_id: 2
+    team_id: teams_uuid["Team 2"],
+    user_id: users_uuid["user"]
   },
   %{
-    team_id: 3,
-    user_id: 1
+    team_id: teams_uuid["Team 3"],
+    user_id: users_uuid["admin"]
   },
   %{
-    team_id: 3,
-    user_id: 2
+    team_id: teams_uuid["Team 3"],
+    user_id: users_uuid["user"]
   },
   %{
-    team_id: 4,
-    user_id: 1
+    team_id: teams_uuid["Team 4"],
+    user_id: users_uuid["admin"]
   },
   %{
-    team_id: 4,
-    user_id: 3
-  }
+    team_id: teams_uuid["Team 4"],
+    user_id: users_uuid["superadmin"]
+  },
 ]
 
 Enum.each(team_members_list, fn team_member ->

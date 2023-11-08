@@ -156,8 +156,8 @@ defmodule TimemanagerWeb.UserAuth do
   def require_admin_role(conn, _opts) do
     if Roles.get_role!(conn.assigns[:current_user].role_id).role == RoleEnum.role(:user_role) do
       conn
-      |> put_status(401)
-      |> json(%{error: "You are not authorized."})
+      |> put_status(403)
+      |> json(%{error: "You are not authorized to access this page."})
       |> halt()
     else
       conn
@@ -167,8 +167,8 @@ defmodule TimemanagerWeb.UserAuth do
   def require_super_admin_role(conn, _opts) do
     if Roles.get_role!(conn.assigns[:current_user].role_id).role != RoleEnum.role(:super_admin_role) do
       conn
-      |> put_status(401)
-      |> json(%{error: "You are not authorized."})
+      |> put_status(403)
+      |> json(%{error: "You are not authorized to access this page."})
       |> halt()
     else
       conn

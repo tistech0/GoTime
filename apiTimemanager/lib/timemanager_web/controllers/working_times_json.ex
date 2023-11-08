@@ -34,6 +34,32 @@ defmodule TimemanagerWeb.WorkingTimesJSON do
   end
 
   defp data(
+          %{
+            user_id: _,
+            username: _,
+            id: _,
+            start: _,
+            end: _,
+            valueDay: _,
+            valueNight: _,
+            status: _
+          } = working_times_users
+       ) do
+    %{
+      id: working_times_users.id,
+      start: working_times_users.start,
+      end: working_times_users.end,
+      valueDay: working_times_users.valueDay,
+      valueNight: working_times_users.valueNight,
+      status: working_times_users.status,
+      user: %{
+        id: working_times_users.user_id,
+        username: working_times_users.username
+      }
+    }
+  end
+
+  defp data(
          %{
            day: _,
            average: _,
