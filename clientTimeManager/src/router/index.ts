@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import DashboardView from "../views/DashboardView.vue";
 import LoginView from "../views/LoginView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import ValidateTimeView from "../views/ValidateTimeView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
-import RegisterView from "@/views/RegisterView.vue";
 import DashboardManagerViewVue from "@/views/DashboardManagerView.vue";
 
 const router = createRouter({
@@ -38,6 +38,11 @@ const router = createRouter({
       path: "/manager",
       name: "manager",
       component: DashboardManagerViewVue,
+    },
+    {
+      path: "/validate-time",
+      name: "validate-time",
+      component: ValidateTimeView,
     },
   ],
 });
