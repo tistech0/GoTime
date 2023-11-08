@@ -5,9 +5,10 @@ import Button from '../form/Button.vue';
 import type { Item } from "../../types/items";
 import SelectOne from '../form/SelectOne.vue';
 import { useDisplay } from 'vuetify';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 let listRoles = ref<Item[]>([]);
-
 const { mobile } = useDisplay()
 
 
@@ -35,7 +36,7 @@ let data = reactive({
         </div>
         <!-- icon -->
         <div class="col-start-1 flex place-content-end mr-5">
-            <v-btn @click="$router.push('profile')" icon>
+            <v-btn @click="router.push({ name: 'about' })" icon>
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
         </div>

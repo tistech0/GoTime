@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const { smAndUp } = useDisplay()
 </script>
 
@@ -8,26 +9,26 @@ const { smAndUp } = useDisplay()
     <v-bottom-navigation>
 
 
-        <v-btn @click="$router.push('/')" value="favorites">
+        <v-btn @click="router.push({ name: 'home' })" value="favorites">
             <v-icon> mdi-view-dashboard-outline</v-icon>
 
             <span v-if="smAndUp">Dashboard</span>
         </v-btn>
-        <v-btn @click="$router.push('/')" value="favorites">
+        <v-btn @click="router.push({ name: 'manage-team' })" value="favorites">
             <v-icon> mdi-account-group-outline</v-icon>
 
             <span v-if="smAndUp">Manage Team</span>
         </v-btn>
-        <v-btn @click="$router.push('create-account')" value="Add Employee">
+        <v-btn @click="router.push({ name: 'register' })" value="Add Employee">
             <v-icon>mdi-account-plus-outline</v-icon>
 
             <span v-if="smAndUp">Add employee</span>
         </v-btn>
-        <v-btn @click="$router.push('validate-time')" value="Approve Time">
+        <v-btn @click="router.push({ name: 'validate-time' })" value="Approve Time">
             <v-icon>mdi-account-check-outline</v-icon>
             <span v-if="smAndUp">Approve Time</span>
         </v-btn>
-        <v-btn @click="$router.push('profile')">
+        <v-btn @click="router.push({ name: 'about' })">
             <v-icon>mdi-account-outline</v-icon>
             <span v-if="smAndUp">Profile</span>
         </v-btn>
