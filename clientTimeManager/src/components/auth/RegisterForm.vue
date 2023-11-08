@@ -34,7 +34,7 @@ const registerFormData = ref({
         time_contract: 0,
         role_id: 0 // Is the selected role id
     },
-    team : {
+    team: {
         id: 0 // Is the selected team id
     }
 })
@@ -90,21 +90,21 @@ async function handleSubmit() {
     // Encrypt password with bcrypt
 
     // Check the two password are equals
-    if(registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
+    if (registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
         snackbarStore.showSnackbar('Both password need to be the same', 2000, 'error');
         return
     }
 
     // Create the new account
     const response = await fetch("http://localhost:4000/api/users", {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(registerFormData.value)
-        });
-        
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(registerFormData.value)
+    });
+
     if (!response.ok) {
         errorHandling(response, snackbarStore, router);
         return
@@ -135,8 +135,8 @@ async function handleSubmit() {
             <TextField label="Contract time" input-type="number" hint="The employee's weekly hours"
                 v-model.number="registerFormData.user.time_contract" />
             <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team"
-                v-model="registerFormData.team.id" />
-            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the"
+                v-model="registerFormData.team.id" :clearable=true />
+            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the" :clearable=false
                 v-model="registerFormData.user.role_id" />
             <Button btnColor="blue" buttonName="Create Account" type="submit" @click=handleSubmit()></Button>
         </form>
