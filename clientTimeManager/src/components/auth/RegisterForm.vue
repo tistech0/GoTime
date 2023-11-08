@@ -32,10 +32,10 @@ const registerFormData = ref({
         password: "",
         confirmPassword: "",
         time_contract: 0,
-        role_id: 0 // Is the selected role id
+        role_id: "" // Is the selected role id
     },
     team : {
-        id: 0 // Is the selected team id
+        id: "" // Is the selected team id
     }
 })
 
