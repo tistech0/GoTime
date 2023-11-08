@@ -16,6 +16,8 @@ import { useSnackbarStore } from '@/stores/snackbar';
 const { lg, mobile } = useDisplay()
 const router = useRouter();
 const snackbarStore = useSnackbarStore();
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 
 // Initialize the list of teams as a list of Item
@@ -43,7 +45,7 @@ const registerFormData = ref({
  *  This function fetchs the list of roles from the api and assign the value to the listRoles
  */
 async function getRoleList() {
-    const response = await fetch("http://localhost:4000/api/roles", {
+    const response = await fetch(`${apiUrl}/api/roles`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -65,7 +67,7 @@ getRoleList();
  *  This function fetchs the list of teams from the api and assign the value to the listTeam
  */
 async function getTeamList() {
-    const response = await fetch("http://localhost:4000/api/teams/manage", {
+    const response = await fetch(`${apiUrl}/api/teams/manage`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -96,7 +98,7 @@ async function handleSubmit() {
     }
 
     // Create the new account
-    const response = await fetch("http://localhost:4000/api/users", {
+    const response = await fetch(`${apiUrl}/api/users`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -109,10 +111,6 @@ async function handleSubmit() {
         errorHandling(response, snackbarStore, router);
         return
     }
-    const data = await response.json();
-
-    console.log(data);
-
 }
 
 

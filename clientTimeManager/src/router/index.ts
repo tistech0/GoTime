@@ -47,7 +47,7 @@ const router = createRouter({
     },
     {
       path: "/validate-time",
-      name: routesNames.validateTime,
+      name: routeNames.validateTime,
       component: ValidateTimeView,
     },
   ],
