@@ -5,8 +5,8 @@ export interface TableStats {
   end: Date;
   valueDay: number;
   valueNight: number;
-  // user: {
-  //   user_id: string;
-  //   username: string;
-  // };
+  user: {
+    id: string;
+    username: string;
+  };
 }

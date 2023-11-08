@@ -9,7 +9,7 @@ let workingTimesList = ref<TableStats[]>([]);
 
 const fetchData = async () => {
     try {
-        const response = await fetch('http://localhost:4000/api/stats/team/workingtimes/all/1?start=2022-10-25 20:48:13&end=2025-10-25 20:48:37',
+        const response = await fetch('http://localhost:4000/api/stats/team/workingtimes/all/1698aa5e-cc4e-4814-9dd1-5b1a80c14839?start=2022-10-25 20:48:13&end=2025-10-25 20:48:37',
             {
                 method: "GET",
                 credentials: "include",
@@ -78,8 +78,7 @@ fetchData();
             <template v-else>
                 <tr v-for="item in workingTimesList" :key="item.id">
                     <td>
-                        <!-- {{ item.user.username }} -->
-                        MACHIN CHOSE
+                        {{ item.user.username }}
                     </td>
                     <td>
                         {{

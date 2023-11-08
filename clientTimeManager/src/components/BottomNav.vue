@@ -6,24 +6,28 @@ const { smAndUp } = useDisplay()
 
 <template>
     <v-bottom-navigation>
-        <v-btn value="recent">
-            <v-icon>mdi-home-outline</v-icon>
 
-            <span v-if="smAndUp">Home</span>
-        </v-btn>
 
-        <v-btn value="favorites">
-            <v-icon>mdi-view-dashboard-outline</v-icon>
+        <v-btn @click="$router.push('/')" value="favorites">
+            <v-icon> mdi-view-dashboard-outline</v-icon>
 
             <span v-if="smAndUp">Dashboard</span>
         </v-btn>
+        <v-btn @click="$router.push('/')" value="favorites">
+            <v-icon> mdi-account-group-outline</v-icon>
 
-        <v-btn value="nearby">
+            <span v-if="smAndUp">Manage Team</span>
+        </v-btn>
+        <v-btn @click="$router.push('create-account')" value="Add Employee">
             <v-icon>mdi-account-plus-outline</v-icon>
 
             <span v-if="smAndUp">Add employee</span>
         </v-btn>
-        <v-btn>
+        <v-btn @click="$router.push('validate-time')" value="Approve Time">
+            <v-icon>mdi-account-check-outline</v-icon>
+            <span v-if="smAndUp">Approve Time</span>
+        </v-btn>
+        <v-btn @click="$router.push('profile')">
             <v-icon>mdi-account-outline</v-icon>
             <span v-if="smAndUp">Profile</span>
         </v-btn>
