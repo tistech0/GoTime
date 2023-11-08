@@ -26,9 +26,9 @@ const vuetify = createVuetify({
     mobileBreakpoint: "md",
     thresholds: {
       xs: 0,
-      sm: 340,
-      md: 540,
-      lg: 800,
+      sm: 640,
+      md: 768,
+      lg: 1024,
       xl: 1280,
     },
   },

@@ -10,7 +10,7 @@ defmodule TimemanagerWeb.UserController do
 
   require RoleEnum
 
-  action_fallback TimemanagerWeb.FallbackController
+  action_fallback(TimemanagerWeb.FallbackController)
 
   @doc """
     This def gets the list of users
@@ -24,13 +24,15 @@ defmodule TimemanagerWeb.UserController do
   @doc """
   This def creates a new user with the User default role
   """
-  def register(conn, %{"user" => user_params}) do
+  def register(conn, %{"user" => user_params, "team" => team_params}) do
+
+    current_user = conn.assigns[:current_user]
 
     # Chek if the current user's role to control the action
-    current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+    current_user_role = Roles.get_role!(current_user.role_id).role
     role = cond do
       current_user_role == RoleEnum.role(:super_admin_role) -> # Can create users with any role
-        Roles.get_role_by_role(user_params["role"])
+        Roles.get_role(user_params["role_id"])
       true -> # Admin can only create users with the User role
         Roles.get_role_by_role(RoleEnum.role(:user_role))
     end
@@ -40,18 +42,19 @@ defmodule TimemanagerWeb.UserController do
       error_template(conn, 400, "Invalid role")
     end
 
-    # Assign the role id to the user
-    user_params_with_role = Map.put(user_params, "role_id", role.id)
-
-    case Account.register_user(user_params_with_role) do
+    case Account.register_user(user_params) do
       {:ok, user} ->
+        team_id = team_params["id"]
+        if !is_nil(team_id) and is_integer(team_id) do
+          add_user_to_team(team_id, current_user_role, user.id, current_user.id) # Add user to team once the user is inserted
+        end
         conn
         |> put_status(:created)
         |> render(:show, user: user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         error_msg = changeset_error_message(changeset)
-        error_template(conn, 403, error_msg)
+        error_template(conn, 400, error_msg)
       end
   end
 
@@ -62,6 +65,33 @@ defmodule TimemanagerWeb.UserController do
     errors
     |> Enum.map(fn {field, {message, _values}} -> "#{field} #{message}" end)
     |> Enum.join(", ")
+  end
+
+
+  defp add_user_to_team(team_id, role, user_id, current_user_id) do
+
+    if role == RoleEnum.role(:super_admin_role) do
+      # Add user to the team as a super admin, so it could be any team as long as it exists
+      team = Teams.get_team(team_id)
+
+      if !is_nil(team) do
+        team_to_create = %{
+          team_id: team.id,
+          user_id: user_id
+        }
+        Team.create_team_user(team_to_create)
+      end
+    else
+      # Add user to the team as an admin so it can only be a managed team
+      team = Teams.get_team(team_id)
+      if !is_nil(team) and team.manager_id == current_user_id do
+        team_to_create = %{
+          team_id: team.id,
+          user_id: user_id
+        }
+        Team.create_team_user(team_to_create)
+      end
+    end
   end
 
   @doc """
@@ -90,12 +120,13 @@ defmodule TimemanagerWeb.UserController do
     If the id provided is diferent than the id of the current user, throw an error
   """
   def update(conn, %{"userID" => id, "user" => user_params}) do
-
     # check that the user connected is the user it is trying to update
     current_user_id = conn.assigns[:current_user].id
+
     if current_user_id != String.to_integer(id) do
-      error_template(conn, 401, "You are not allowed to update this user.")
+      error_template(conn, 400, "You are not allowed to update this user.")
     end
+
     user = Account.get_user!(id)
 
     with {:ok, %User{} = user} <- Account.update_user(user, user_params) do
@@ -107,12 +138,13 @@ defmodule TimemanagerWeb.UserController do
     This def updates only the user role. It will only work for a SuperAdmin
   """
   def update_user_role(conn, %{"userID" => id, "role" => role}) do
-
     # check that the user connected is a Super Admin
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+
     if current_user_role != RoleEnum.role(:super_admin_role) do
-      error_template(conn, 401, "You are not allowed to update this user's role.")
+      error_template(conn, 400, "You are not allowed to update this user's role.")
     end
+
     user = Account.get_user!(id)
 
     new_role = Roles.get_role_by_role(role)
@@ -143,16 +175,21 @@ defmodule TimemanagerWeb.UserController do
 
     # Check user isn't trying to delete itself
     if current_user.id == user.id do
-      error_template(conn, 403, "You are no allowed to delete yourself")
+      error_template(conn, 400, "You are no allowed to delete yourself")
     end
 
     # If the user has the User role, terminate the def
     if Roles.get_role!(user.role_id).role != RoleEnum.role(:user_role) do
       # get user's managed team
       teams_managed = Teams.get_list_team_link_manager(user.id)
+
       # if list isn't empty, send error because the user is manages at least one team. Manager should be replaced before deleting
       if teams_managed != [] do
-        error_template(conn, 403, "The user manages teams. You should replace the manager before deleting this user.")
+        error_template(
+          conn,
+          400,
+          "The user manages teams. You should replace the manager before deleting this user."
+        )
       end
     end
 

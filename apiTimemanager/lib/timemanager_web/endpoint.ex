@@ -48,9 +48,13 @@ defmodule TimemanagerWeb.Endpoint do
   plug(Plug.MethodOverride)
   plug(Plug.Head)
   plug(Plug.Session, @session_options)
-  plug(CORSPlug, origin: [
-    "http://localhost:8081",
-    "http://localhost:8080"
-  ])
+
+  plug(CORSPlug,
+    origin: [
+      "http://localhost:8081",
+      "http://localhost:8080"
+    ]
+  )
+
   plug(TimemanagerWeb.Router)
 end

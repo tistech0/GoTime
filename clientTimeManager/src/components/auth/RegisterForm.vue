@@ -7,13 +7,18 @@ import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
 import type { Item } from "../../types/items";
-import { transformData } from "../../utils/utils";
+import { transformData, errorHandling } from "../../utils/utils";
+import { useRouter } from 'vue-router';
+import { useSnackbarStore } from '@/stores/snackbar';
 
 
 
 const { lg, mobile } = useDisplay()
+const router = useRouter();
+const snackbarStore = useSnackbarStore();
 
-// fetch the user's managed teams in stead of this static code. 
+
+// Initialize the list of teams as a list of Item
 const listTeam = ref<Item[]>([]);
 
 // Initialize the list of roles as a list of Item
@@ -27,13 +32,15 @@ const registerFormData = ref({
         password: "",
         confirmPassword: "",
         time_contract: 0,
-        team: 0, // Is the selected team id
-        role: 0 // Is the selected role id
+        role_id: 0 // Is the selected role id
+    },
+    team : {
+        id: 0 // Is the selected team id
     }
 })
 
 /**
- * This function gets the list of roles from the api and assign the value to the listRoles
+ *  This function fetchs the list of roles from the api and assign the value to the listRoles
  */
 async function getRoleList() {
     const response = await fetch("http://localhost:4000/api/roles", {
@@ -43,6 +50,10 @@ async function getRoleList() {
             'Content-Type': 'application/json'
         }
     });
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
+        return
+    }
     const data = await response.json();
     listRoles.value = transformData(data.data, "id", "role");
 }
@@ -50,7 +61,9 @@ async function getRoleList() {
 // Fetch the role list the user has access to.
 getRoleList();
 
-
+/**
+ *  This function fetchs the list of teams from the api and assign the value to the listTeam
+ */
 async function getTeamList() {
     const response = await fetch("http://localhost:4000/api/teams/manage", {
         method: "GET",
@@ -59,6 +72,10 @@ async function getTeamList() {
             'Content-Type': 'application/json'
         }
     });
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
+        return
+    }
     const data = await response.json();
     listTeam.value = data.data;
 }
@@ -72,22 +89,29 @@ async function handleSubmit() {
 
     // Encrypt password with bcrypt
 
-    // Create the new account
-    // const response = await fetch("http://localhost:4000/api/users", {
-    //         method: 'POST',
-    //         credentials: 'include',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(registerFormData.value)
-    //     });
-        
-    // if (!response.ok) {
-    //     console.log(response)
-    // }
-    // const data = await response.json();
+    // Check the two password are equals
+    if(registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
+        snackbarStore.showSnackbar('Both password need to be the same', 2000, 'error');
+        return
+    }
 
-    console.log(registerFormData.value);
+    // Create the new account
+    const response = await fetch("http://localhost:4000/api/users", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registerFormData.value)
+        });
+        
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
+        return
+    }
+    const data = await response.json();
+
+    console.log(data);
 
 }
 
@@ -97,11 +121,7 @@ async function handleSubmit() {
 <template>
     <div class="grid grid-cols-1 register">
         <div v-if="mobile" class="logo-container">
-            <v-img
-                aspect-ratio="1/1"
-                cover
-                width="9rem"
-                :src="myImage">
+            <v-img aspect-ratio="1/1" cover width="9rem" :src="myImage">
             </v-img>
         </div>
         <div>
@@ -112,10 +132,13 @@ async function handleSubmit() {
             <TextField label="Username" inputType="text" v-model="registerFormData.user.username" />
             <TextField label="Password" inputType="password" v-model="registerFormData.user.password" />
             <TextField label="Confirm Password" input-type="password" v-model="registerFormData.user.confirmPassword" />
-            <TextField label="Contract time" input-type="number" hint="The employee's weekly hours" v-model.number="registerFormData.user.time_contract" />
-            <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team" v-model="registerFormData.user.team" />
-            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the" v-model="registerFormData.user.role" />
-            <Button buttonName="Create Account" type="submit" @click=handleSubmit()></Button>
+            <TextField label="Contract time" input-type="number" hint="The employee's weekly hours"
+                v-model.number="registerFormData.user.time_contract" />
+            <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team"
+                v-model="registerFormData.team.id" />
+            <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the"
+                v-model="registerFormData.user.role_id" />
+            <Button btnColor="blue" buttonName="Create Account" type="submit" @click=handleSubmit()></Button>
         </form>
     </div>
 </template>
@@ -126,9 +149,11 @@ async function handleSubmit() {
     font-size: 1rem;
     text-align: center;
 }
+
 .register {
     margin: 1rem 1rem;
 }
+
 .text-input {
     padding: 0 1rem 0 1rem;
 }

@@ -2,13 +2,15 @@ defmodule Timemanager.Account.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "users" do
+
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :time_contract, :float
     field :username, :string
-    belongs_to :role, Timemanager.Account.Role, foreign_key: :role_id
+    belongs_to :role, Timemanager.Account.Role, foreign_key: :role_id, type: :binary_id
 
     timestamps(type: :utc_datetime)
   end
@@ -42,7 +44,6 @@ defmodule Timemanager.Account.User do
     |> cast(attrs, [:role_id])
     |> validate_required([:role_id])
   end
-
 
   @doc """
   A user changeset for registration.
@@ -95,7 +96,7 @@ defmodule Timemanager.Account.User do
 
   defp validate_password(changeset, opts) do
     changeset
-      |> validate_required([:password])
+    |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
     # Examples of additional password validation:
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
@@ -130,8 +131,6 @@ defmodule Timemanager.Account.User do
       changeset
     end
   end
-
-
 
   @doc """
   Verifies the password.

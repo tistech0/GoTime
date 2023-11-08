@@ -10,25 +10,25 @@ const { mobile } = useDisplay()
 </script>
 
 <template>
-  <div class="button">
-    <v-btn :class="mobile ? 'full-width-button' : 'small-width-button'"
-           :color="btnColor == 'blue' ? 'var(--primary-blue)' : 'var(--secondary-pink)'" @click="$emit('onClick')">
-      {{ props.buttonName }}
-    </v-btn>
-  </div>
+    <div class="button">
+        <v-btn :class="mobile ? 'full-width-button' : 'small-width-button'"
+            :color="btnColor == 'blue' ? 'var(--primary-blue)' : 'var(--secondary-pink)'" @click="$emit('onClick')">
+            {{ props.buttonName }}
+        </v-btn>
+    </div>
 </template>
 
 <style scoped>
 .button {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .small-width-button {
-  @apply w-1/2
+    @apply w-1/2
 }
 
 .full-width-button {
-  @apply w-full
+    @apply w-full
 }
 </style>
