@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router';
 const snackbarStore = useSnackbarStore();
 const router = useRouter();
 const { mobile } = useDisplay()
-
+const apiUrl = import.meta.env.VITE_API_URL;
 
 
 
@@ -38,7 +38,7 @@ const queryEndTime = ref<string>("2025-11-08 10:01:56");
  *  This function fetchs the list of teams from the api and assign the value to the listTeam
  */
 async function getTeamList() {
-    const response = await fetch("http://localhost:4000/api/teams/manage", {
+    const response = await fetch(`${apiUrl}/api/teams/manage`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -68,7 +68,7 @@ const fetchData = async () => {
     console.log("THIS IS A FETCH" + queryUuid.value);
 
     try {
-        const response = await fetch(`http://localhost:4000/api/stats/team/workingtimes/all/${queryUuid.value}?start=${queryStartTime.value}&end=${queryEndTime.value}`,
+        const response = await fetch(`${apiUrl}/api/stats/team/workingtimes/all/${queryUuid.value}?start=${queryStartTime.value}&end=${queryEndTime.value}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -107,27 +107,34 @@ const fetchData = async () => {
         v-model="queryUuid" @update:modelValue="fetchData()" :clearable=false />
 
 
-    <v-table class="col-span-3 col-start-2 " fixed-header height="500px">
+    <v-table :class="{ dwm: mobile }" class="col-span-3 col-start-2" fixed-header height="500px">
         <thead class="drop-shadow-md">
             <tr>
                 <th class="text-left">
                     Name
                 </th>
-                <th class="text-left">
-                    Start
-                </th>
-                <th class="text-left">
-                    End
-                </th>
-                <th class="text-left">
-                    Day
-                </th>
-                <th class="text-left">
-                    Night
-                </th>
-                <th class="text-left">
-                    Total
-                </th>
+                <template v-if=mobile>
+                    <th class="text-left">
+                        Time
+                    </th>
+                </template>
+                <template v-else>
+                    <th class="text-left">
+                        Start
+                    </th>
+                    <th class="text-left">
+                        End
+                    </th>
+                    <th class="text-left">
+                        Day
+                    </th>
+                    <th class="text-left">
+                        Night
+                    </th>
+                    <th class="text-left">
+                        Total
+                    </th>
+                </template>
                 <th class="text-left">
                     Operation
                 </th>
@@ -146,37 +153,62 @@ const fetchData = async () => {
                     <td>
                         {{ item.user.username }}
                     </td>
-                    <td>
-                        {{
-                            item.start.toLocaleString("en", {
-                                month: "short",
-                                day: "numeric",
-                                hour: "numeric",
-                                minute: "numeric",
-                                year: "numeric",
-                            })
-                        }}
-                    </td>
-                    <td>
-                        {{
-                            item.end.toLocaleString("en", {
-                                month: "short",
-                                day: "numeric",
-                                hour: "numeric",
-                                minute: "numeric",
-                                year: "numeric",
-                            })
-                        }}
-                    </td>
-                    <td>{{ (Math.round(item.valueDay * 100) / 100).toFixed(2) }} h</td>
-                    <td>{{ (Math.round(item.valueNight * 100) / 100).toFixed(2) }} h</td>
-                    <td>
-                        <!-- sum valueDay and valueNight -->
-                        {{
-                            (Math.round((item.valueDay + item.valueNight) * 100) / 100).toFixed(2)
+                    <template v-if=mobile>
+                        <td>
+                            {{
+                                item.start.toLocaleString("en", {
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    year: "numeric",
+                                })
+                            }}
+                            <br />
+                            {{
+                                item.end.toLocaleString("en", {
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    year: "numeric",
+                                })
+                            }}
+                        </td>
+                    </template>
+                    <template v-else>
+                        <td>
+                            {{
+                                item.start.toLocaleString("en", {
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    year: "numeric",
+                                })
+                            }}
+                        </td>
+                        <td>
+                            {{
+                                item.end.toLocaleString("en", {
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    year: "numeric",
+                                })
+                            }}
+                        </td>
+                        <td>{{ (Math.round(item.valueDay * 100) / 100).toFixed(2) }} h</td>
+                        <td>{{ (Math.round(item.valueNight * 100) / 100).toFixed(2) }} h</td>
+                        <td>
+                            <!-- sum valueDay and valueNight -->
+                            {{
+                                (Math.round((item.valueDay + item.valueNight) * 100) / 100).toFixed(2)
 
-                        }}
-                    </td>
+                            }}
+                        </td>
+                    </template>
                     <td>
                         <v-icon class="mr-2">
                             mdi-check
@@ -190,3 +222,9 @@ const fetchData = async () => {
         </tbody>
     </v-table>
 </template>
+
+<style scoped>
+.dwm {
+    @apply col-span-6 m-2;
+}
+</style>
