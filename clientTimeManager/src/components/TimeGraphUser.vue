@@ -12,8 +12,6 @@ import {useDisplay} from 'vuetify';
 
 interface DataProps {
   categories: Date[];
-  min: number[];
-  max: number[];
   series: any[];
   chart: any;
   options: any;
