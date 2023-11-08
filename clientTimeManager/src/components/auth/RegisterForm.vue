@@ -7,13 +7,18 @@ import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
 import type { Item } from "../../types/items";
-import { transformData } from "../../utils/utils";
+import { transformData, errorHandling } from "../../utils/utils";
+import { useRouter } from 'vue-router';
+import { useSnackbarStore } from '@/stores/snackbar';
 
 
 
 const { lg, mobile } = useDisplay()
+const router = useRouter();
+const snackbarStore = useSnackbarStore();
 
-// fetch the user's managed teams in stead of this static code. 
+
+// Initialize the list of teams as a list of Item
 const listTeam = ref<Item[]>([]);
 
 // Initialize the list of roles as a list of Item
@@ -27,14 +32,15 @@ const registerFormData = ref({
         password: "",
         confirmPassword: "",
         time_contract: 0,
-        team: 0, // Is the selected team id
-        role: 0 // Is the selected role id
+        role_id: 0 // Is the selected role id
+    },
+    team : {
+        id: 0 // Is the selected team id
     }
 })
 
-/**<TextField v-if="data.user.role == 'User' || data.user.role == 'Admin'" :disable=true label="Role"
-                inputType="role" v-model="data.user.role" />
-              <TextField v-else label="Role" inputType="role" v-model="data.user.role" />ist of roles from the api and assign the value to the listRoles
+/**
+ *  This function fetchs the list of roles from the api and assign the value to the listRoles
  */
 async function getRoleList() {
     const response = await fetch("http://localhost:4000/api/roles", {
@@ -44,6 +50,10 @@ async function getRoleList() {
             'Content-Type': 'application/json'
         }
     });
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
+        return
+    }
     const data = await response.json();
     listRoles.value = transformData(data.data, "id", "role");
 }
@@ -51,7 +61,9 @@ async function getRoleList() {
 // Fetch the role list the user has access to.
 getRoleList();
 
-
+/**
+ *  This function fetchs the list of teams from the api and assign the value to the listTeam
+ */
 async function getTeamList() {
     const response = await fetch("http://localhost:4000/api/teams/manage", {
         method: "GET",
@@ -60,6 +72,10 @@ async function getTeamList() {
             'Content-Type': 'application/json'
         }
     });
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
+        return
+    }
     const data = await response.json();
     listTeam.value = data.data;
 }
@@ -73,22 +89,29 @@ async function handleSubmit() {
 
     // Encrypt password with bcrypt
 
+    // Check the two password are equals
+    if(registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
+        snackbarStore.showSnackbar('Both password need to be the same', 2000, 'error');
+        return
+    }
+
     // Create the new account
-    // const response = await fetch("http://localhost:4000/api/users", {
-    //         method: 'POST',
-    //         credentials: 'include',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(registerFormData.value)
-    //     });
+    const response = await fetch("http://localhost:4000/api/users", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registerFormData.value)
+        });
+        
+    if (!response.ok) {
+        errorHandling(response, snackbarStore, router);
+        return
+    }
+    const data = await response.json();
 
-    // if (!response.ok) {
-    //     console.log(response)
-    // }
-    // const data = await response.json();
-
-    console.log(registerFormData.value);
+    console.log(data);
 
 }
 
@@ -112,9 +135,9 @@ async function handleSubmit() {
             <TextField label="Contract time" input-type="number" hint="The employee's weekly hours"
                 v-model.number="registerFormData.user.time_contract" />
             <SelectOne label="Select a team" :itemList=listTeam hint="Assign the employee to a team"
-                v-model="registerFormData.user.team" />
+                v-model="registerFormData.team.id" />
             <SelectOne label="Select a role" :itemList=listRoles hint="Assign a role to the"
-                v-model="registerFormData.user.role" />
+                v-model="registerFormData.user.role_id" />
             <Button btnColor="blue" buttonName="Create Account" type="submit" @click=handleSubmit()></Button>
         </form>
     </div>

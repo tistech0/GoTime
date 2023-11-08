@@ -38,6 +38,11 @@ defmodule Timemanager.Roles do
   def get_role!(id), do: Repo.get!(Role, id)
 
   @doc """
+    This def gets the role by its id without throwing an error
+  """
+  def get_role(id), do: Repo.get(Role, id)
+
+  @doc """
     Gets a role by its role name.
 
     Raises `Ecto.NoResultsError` if the Role does not exist.
