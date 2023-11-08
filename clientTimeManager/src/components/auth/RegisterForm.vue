@@ -10,6 +10,7 @@ import type { Item } from "../../types/items";
 import { transformData, errorHandling } from "../../utils/utils";
 import { useRouter } from 'vue-router';
 import { useSnackbarStore } from '@/stores/snackbar';
+import { Role } from '../../constants/RoleEnum'
 
 
 
@@ -57,7 +58,12 @@ async function getRoleList() {
         return
     }
     const data = await response.json();
-    listRoles.value = transformData(data.data, "id", "role");
+    // Set the enum values for the roles
+    const dataWithFormattedRole = data.data.map((role: any) => ({
+        id: role.id,
+        role: Role[role.role as keyof typeof Role] || role.role, // Use the enum value if available, or the original value
+    }));
+    listRoles.value = transformData(dataWithFormattedRole, "id", "role");
 }
 
 // Fetch the role list the user has access to.
