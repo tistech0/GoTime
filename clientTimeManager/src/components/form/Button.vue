@@ -12,7 +12,8 @@ const { mobile } = useDisplay()
 <template>
     <div class="button">
         <v-btn :class="mobile ? 'full-width-button' : 'small-width-button'"
-            :color="btnColor == 'blue' ? 'var(--primary-blue)' : 'var(--secondary-pink)'" @click="$emit('onClick')">
+            :color="btnColor == 'blue' ? 'var(--primary-blue)' : 'var(--secondary-pink)'" @click="$emit('onClick')"
+        class="text-white">
             {{ props.buttonName }}
         </v-btn>
     </div>
