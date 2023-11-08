@@ -20,27 +20,32 @@
 </template>
 
 <script lang="ts">
+import type { Clock } from '@/types/clock';
 
 export default {
   data() {
     return {
       clock: "00:00:00",
+      clockData: null as unknown as Clock,
       isTicking: false,
-      intervalId: null,
+      intervalId: 0 as unknown as NodeJS.Timeout,
       user: {
         username: 'john',
         surname: 'doe'
-      }
+      },
+      startTime: new Date(),
+      userId: '48f4ced2-3455-4fd4-9719-e842b20abead'
     }
   },
   methods: {
-    updateClock() {
+    async updateClock() {
       this.isTicking = !this.isTicking;
       if (this.isTicking) {
         this.startTime = new Date();
+        await this.updateClockApi()
         this.clock = '00:00:00';
         this.intervalId = setInterval(() => {
-          let elapsedTime = new Date() - this.startTime;
+          let elapsedTime: number = (new Date() as Date).getTime() - (this.startTime as Date).getTime();
           let seconds = Math.floor((elapsedTime / 1000) % 60);
           let minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
           let hours = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);
@@ -50,7 +55,63 @@ export default {
         }, 1000);
       } else {
         clearInterval(this.intervalId);
+        this.clock = '00:00:00';
+        await this.updateClockApi();
       }
+    },
+    async getClock() {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(`${apiUrl}/api/clocks/${this.userId}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      return await response.json();
+    },
+    async updateClockApi() {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(`${apiUrl}/api/clocks/${this.userId}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          clock: {
+            time: this.formatDate(this.startTime)
+          }
+        })
+      });
+      return await response.json();
+    },
+    formatDate(date: Date) {
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      const hours = ('0' + date.getHours()).slice(-2);
+      const minutes = ('0' + date.getMinutes()).slice(-2);
+      const seconds = ('0' + date.getSeconds()).slice(-2);
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+  },
+  async mounted() {
+    this.clockData = await this.getClock().then((data) => data.data);
+    this.isTicking = this.clockData.status;
+    if (this.isTicking) {
+      this.startTime = new Date(this.clockData.time);
+      this.intervalId = setInterval(() => {
+        let elapsedTime: number = (new Date() as Date).getTime() - (this.startTime as Date).getTime();
+        let seconds = Math.floor((elapsedTime / 1000) % 60);
+        let minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
+        let hours = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);
+        this.clock = (hours < 10 ? '0' + hours : hours) + ':' +
+            (minutes < 10 ? '0' + minutes : minutes) + ':' +
+            (seconds < 10 ? '0' + seconds : seconds);
+      }, 1000);
     }
   }
 }
