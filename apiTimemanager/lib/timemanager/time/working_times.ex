@@ -22,8 +22,6 @@ defmodule Timemanager.Time.WorkingTimes do
   end
 
   def changeset(working_times, attrs, user_id) do
-    user_id = String.to_integer(user_id)
-
     working_times
     |> cast(attrs, [:start, :end, :valueDay, :valueNight, :status])
     |> validate_required([:start, :end, :valueDay, :valueNight, :status])
