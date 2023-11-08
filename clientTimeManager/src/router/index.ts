@@ -8,7 +8,7 @@ import RegisterView from "@/views/RegisterView.vue";
 import { useUserStore } from '@/stores/user';
 import { Role } from '../constants/RoleEnum'
 
-const routeNames = {
+export const routeNames = {
   home: 'home',
   login: 'login',
   register: 'register',
@@ -60,15 +60,28 @@ router.beforeEach((to, from) => {
   const userStore = useUserStore();
 
   const isAuthenticated = userStore.isAuthenticated;
+  const currentUser = userStore.user
 
   // Check the user is connected otherwise redirect to login
-  if (!isAuthenticated && to.name !== routeNames.login) { // Need to specify with name different than login or there will be an infinity loop
+  if ((!isAuthenticated || currentUser == null) &&
+       to.name !== routeNames.login) { // Need to specify with name different than login or there will be an infinity loop
     return { name: routeNames.login }
   }
 
+  // Redirect to home if trying to login when already logged in
+  if(isAuthenticated && 
+    currentUser != null && 
+    to.name === routeNames.login) {
+    return { name: routeNames.home }
+  }
+
+
   // Check user roles and grant access or not to pages
-  const currentUserRole = userStore.user
-  if(currentUserRole != null && currentUserRole.role == Role.User) {
+
+  // Get the role enum value
+  const userRoleEnumValue = Role[currentUser?.role as keyof typeof Role];
+
+  if(userRoleEnumValue != Role.Admin && userRoleEnumValue != Role.SuperAdmin) {
     switch(to.name) {
       case 'otherRouteToRestrict': // Write real routes to also redirect to home when wrong access.
       case routeNames.register: {
