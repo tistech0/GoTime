@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import DashboardView from "../views/DashboardView.vue";
 import LoginView from "../views/LoginView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import ValidateTimeView from "../views/ValidateTimeView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import { useUserStore } from '@/stores/user';
@@ -12,8 +13,8 @@ const routeNames = {
   login: 'login',
   register: 'register',
   profile: 'about',
-  editprofile: 'editprofile',
-
+  editProfile: 'editprofile',
+  validateTime: 'validate-time'
 }
 
 const router = createRouter({
@@ -31,7 +32,7 @@ const router = createRouter({
     },
     {
       path: "/editprofile",
-      name: routeNames.editprofile,
+      name: routeNames.editProfile,
       component: EditProfileView,
     },
     {
@@ -43,6 +44,11 @@ const router = createRouter({
       path: "/create-account",
       name: routeNames.register,
       component: RegisterView,
+    },
+    {
+      path: "/validate-time",
+      name: routesNames.validateTime,
+      component: ValidateTimeView,
     },
   ],
 });

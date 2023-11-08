@@ -29,16 +29,17 @@ const loginFormData = ref({
 async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-    const response = await fetch("http://localhost:4000/api/users/log_in", {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginFormData.value)
-        });
-        
+  const response = await fetch(`${apiUrl}/api/users/log_in`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(loginFormData.value)
+  });
+
     if (!response.ok) {
         errorHandling(response, snackbarStore, router);
         return

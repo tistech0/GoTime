@@ -53,7 +53,10 @@ defmodule TimemanagerWeb.Endpoint do
     origin: [
       "http://localhost:8081",
       "http://localhost:8080"
-    ]
+    ],
+    allow_headers: ["content-type", "authorization"],
+    allow_methods: ["GET", "POST", "PUT", "DELETE"],
+    max_age: 86400
   )
 
   plug(TimemanagerWeb.Router)
