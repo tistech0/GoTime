@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BottomNav from '@/components/BottomNav.vue';
 import Sidebar from '@/components/SideBar.vue';
-import TimeGraph from '@/components/TimeGraph.vue';
+import TimeGraph from '@/components/TimeGraphUser.vue';
 import { useDisplay } from 'vuetify';
 
 
