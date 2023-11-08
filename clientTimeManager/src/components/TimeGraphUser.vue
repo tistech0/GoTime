@@ -15,7 +15,7 @@ interface DataProps {
   series: any[];
   chart: any;
   options: any;
-  display: DisplayInstance;
+  display: any;
 }
 
 export default {
