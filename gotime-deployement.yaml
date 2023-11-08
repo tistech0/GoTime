@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      run: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              value: timemanager_dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    run: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotime-api
+spec:
+  selector:
+    matchLabels:
+      run: gotime-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: gotime-api
+    spec:
+      containers:
+        - name: gotime-api
+          image: eu.gcr.io/gotime-403610/gotime-api:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: DB_HOST
+              value: postgres-service
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: DB_NAME
+              value: timemanager_dev
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gotime-api-service
+spec:
+  type: LoadBalancer
+  selector:
+    run: gotime-api
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotime-client
+spec:
+  selector:
+    matchLabels:
+      run: gotime-client
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: gotime-client
+    spec:
+      containers:
+        - name: gotime-client
+          image: eu.gcr.io/gotime-403610/gotime-client:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: VUE_APP_API_URL
+              value: http://gotime-api-service:4000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gotime-client-service
+spec:
+  type: LoadBalancer
+  selector:
+    run: gotime-client
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081

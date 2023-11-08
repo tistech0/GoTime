@@ -22,5 +22,4 @@ defmodule TimemanagerWeb.Team_userJSON do
       user_id: team_user.user_id
     }
   end
-
 end

@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { Item } from "../../types/items";
 import { ref, defineEmits, defineProps } from 'vue';
 
-const props = defineProps({ label: String, itemList: Array, hint: { type: String, default: "" }, modelValue: [String, Number] })
+const props = defineProps({ label: String, itemList: Array<Item>, hint: { type: String, default: "" }, modelValue: [String, Number] })
 const emit = defineEmits(["update:modelValue"]);
 
 const selectedValue = ref();

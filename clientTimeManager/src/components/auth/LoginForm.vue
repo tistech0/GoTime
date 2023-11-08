@@ -5,10 +5,12 @@ import TextField from '../form/TextField.vue';
 import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
+import { useUserStore } from '@/stores/user'
 
 
 const { lg, mobile } = useDisplay()
 
+const storedUser = useUserStore()
 
 const loginFormData = ref({
     user: {
@@ -35,13 +37,12 @@ async function handleSubmit() {
     if (!response.ok) {
         console.log(response)
     }
+    // Get the data in json format
     const data = await response.json();
 
-    console.log(data);
-
+    // Replace all the user data contained in the storedUser
+    storedUser.$state = data.data; 
 }
-
-
 </script>
 
 <template>

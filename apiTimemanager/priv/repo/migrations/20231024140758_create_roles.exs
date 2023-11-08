@@ -2,7 +2,8 @@ defmodule Timemanager.Repo.Migrations.CreateRoles do
   use Ecto.Migration
 
   def change do
-    create table(:roles) do
+    create table(:roles, primary_key: false) do
+      add :id, :uuid, primary_key: true
       add(:role, :string, default: "User", null: false)
 
       add(:inserted_at, :utc_datetime, default: fragment("now()"), null: false)
