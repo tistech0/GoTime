@@ -1,6 +1,4 @@
 {
-    "java.project.sourcePaths": [
-        "clientTimeManager/src/assets"
-    ]
+  "java.project.sourcePaths": ["clientTimeManager/src/assets"]
 }
 
