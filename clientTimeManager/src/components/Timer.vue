@@ -24,8 +24,9 @@
 export default {
   data() {
     return {
-      clock: 0.0,
+      clock: "00:00:00",
       isTicking: false,
+      intervalId: null,
       user: {
         username: 'john',
         surname: 'doe'
@@ -35,7 +36,21 @@ export default {
   methods: {
     updateClock() {
       this.isTicking = !this.isTicking;
-      console.log("is ticking")
+      if (this.isTicking) {
+        this.startTime = new Date();
+        this.clock = '00:00:00';
+        this.intervalId = setInterval(() => {
+          let elapsedTime = new Date() - this.startTime;
+          let seconds = Math.floor((elapsedTime / 1000) % 60);
+          let minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
+          let hours = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);
+          this.clock = (hours < 10 ? '0' + hours : hours) + ':' +
+              (minutes < 10 ? '0' + minutes : minutes) + ':' +
+              (seconds < 10 ? '0' + seconds : seconds);
+        }, 1000);
+      } else {
+        clearInterval(this.intervalId);
+      }
     }
   }
 }
