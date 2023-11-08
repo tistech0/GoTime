@@ -94,8 +94,16 @@ defmodule TimemanagerWeb.WorkingTimesController do
           end_time
         )
       end)
+      # add username and user_id to working times
+      |> Enum.map(fn working_times ->
+        %{id: working_times.id, start: working_times.start, end: working_times.end, valueDay: working_times.valueDay, valueNight: working_times.valueNight, status: working_times.status,username: get_user(working_times.user_id).username, user_id: working_times.user_id}
+      end)
     # Finally, render the working times list (if needed)
     render(conn, :render_working_times_list, working_times: working_times)
+  end
+
+  def get_user(user_id) do
+    Timemanager.Repo.get!(Timemanager.Account.User, user_id)
   end
 
   def getTeamAverageHoursPerDay(conn, %{"teamID" => team_id, "start" => start_time, "end" => end_time}) do

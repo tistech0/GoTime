@@ -12,6 +12,7 @@ spec:
       labels:
         run: postgres
     spec:
+      restartPolicy: Always
       containers:
         - name: postgres
           image: postgres:latest
@@ -54,6 +55,7 @@ spec:
       labels:
         run: gotime-api
     spec:
+      restartPolicy: Always
       containers:
         - name: gotime-api
           image: eu.gcr.io/gotime-403610/gotime-api:latest
@@ -103,14 +105,15 @@ spec:
       labels:
         run: gotime-client
     spec:
+      restartPolicy: Always
       containers:
         - name: gotime-client
           image: eu.gcr.io/gotime-403610/gotime-client:latest
           ports:
             - containerPort: 8081
-          env:
-            - name: VUE_APP_API_URL
-              value: http://gotime-api-service:4000
+          envFrom:
+            - configMapRef:
+                name: vue-config
 ---
 apiVersion: v1
 kind: Service

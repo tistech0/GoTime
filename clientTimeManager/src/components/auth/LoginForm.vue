@@ -5,12 +5,17 @@ import TextField from '../form/TextField.vue';
 import Button from '../form/Button.vue';
 import { useDisplay } from 'vuetify';
 import myImage from '../../assets/Logo-GoTime.png';
+import { useRouter } from 'vue-router';
+import { errorHandling } from "../../utils/utils";
 import { useUserStore } from '@/stores/user'
+import { useSnackbarStore } from '@/stores/snackbar';
+
 
 
 const { lg, mobile } = useDisplay()
-
 const storedUser = useUserStore()
+const snackbarStore = useSnackbarStore();
+const router = useRouter();
 
 const loginFormData = ref({
     user: {
@@ -24,24 +29,28 @@ const loginFormData = ref({
 async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-    const response = await fetch("http://localhost:4000/api/users/log_in", {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginFormData.value)
-        });
-        
+  console.log(apiUrl)
+
+  const response = await fetch(`${apiUrl}/api/users/log_in`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(loginFormData.value)
+  });
+
     if (!response.ok) {
-        console.log(response)
+        errorHandling(response, snackbarStore, router);
+        return
     }
     // Get the data in json format
     const data = await response.json();
-
     // Replace all the user data contained in the storedUser
-    storedUser.$state = data.data; 
+    storedUser.$state = data.data;
+    router.push({name : 'home'})
 }
 </script>
 
@@ -62,7 +71,7 @@ async function handleSubmit() {
         <form :class="!lg ? 'text-input' : ''">
             <TextField label="Enter your Email" inputType="email" v-model="loginFormData.user.email" />
             <TextField label="Enter your Password" inputType="password" v-model="loginFormData.user.password" />
-            <Button buttonName="Login" type="submit" @click=handleSubmit()></Button>
+            <Button btnColor="blue" buttonName="Login" type="submit" @click=handleSubmit()></Button>
         </form>
     </div>
 </template>

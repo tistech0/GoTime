@@ -38,6 +38,12 @@ defmodule Timemanager.Teams do
   def get_team!(id), do: Repo.get!(Team, id)
 
   @doc """
+    This def gets the team by id without throwing an error if not found.
+  """
+  def get_team(id), do: Repo.get(Team, id)
+
+
+  @doc """
   Creates a team.
 
   ## Examples

@@ -16,3 +16,25 @@ export function transformData(data: any[], idAttr: string, nameAttr: string): It
       name: item[nameAttr],
     }));
 }
+
+
+/**
+ * This function handles generically errors returned from the api.
+ * 
+ * @param response is the HttpResponse object fetch from the api
+ * @param snackbarStore is the snackbarStore from pinia of type <Store ...>
+ * @param router is the router from vue of type 'Router'
+ */
+export async function errorHandling(response: Response, snackbarStore: any, router: any) {
+  if (response.status == 500) {
+    snackbarStore.showSnackbar('An error occurred. Please contact an administrator.', 2000, 'error');
+    return
+  }
+  const error = await response.json();
+  snackbarStore.showSnackbar(error.error, 2000, 'error');
+  if (response.status == 401) {
+    router.push({name : 'login'})
+  } else if(response.status == 403) {
+    router.push({name : 'home'})
+  }
+}

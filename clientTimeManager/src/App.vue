@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import { useDisplay } from 'vuetify';
+import Snackbar from './components/form/Snackbar.vue';
+
 
 
 const { mobile } = useDisplay()
@@ -9,6 +11,7 @@ const { mobile } = useDisplay()
 <template>
   <v-layout>
     <router-view />
+    <Snackbar  />
   </v-layout>
 </template>
 
