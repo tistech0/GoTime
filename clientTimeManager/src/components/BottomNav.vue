@@ -14,7 +14,7 @@ const { smAndUp } = useDisplay()
 
             <span v-if="smAndUp">Dashboard</span>
         </v-btn>
-        <v-btn @click="router.push({ name: 'manage-team' })" value="favorites">
+        <v-btn @click="router.push({ name: 'manager' })" value="favorites">
             <v-icon> mdi-account-group-outline</v-icon>
 
             <span v-if="smAndUp">Manage Team</span>
