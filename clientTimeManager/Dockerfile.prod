@@ -1,0 +1,32 @@
+# Use a specific Node.js version
+FROM node:21 as build-stage
+
+ENV VITE_API_URL=http://34.163.234.235:4000
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Install app dependencies
+RUN npm install
+
+# Copy the rest of the app source code to the container
+COPY . .
+
+# Build the app for production
+RUN npm run build
+
+# production stage
+FROM nginx:stable-alpine as production-stage
+
+# Copy the built app to the nginx server
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Expose the port that the nginx server will run on
+EXPOSE 8081
+
+# Start the nginx server
+CMD ["nginx", "-g", "daemon off;"]
