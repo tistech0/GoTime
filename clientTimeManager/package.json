@@ -23,6 +23,7 @@
     "@vueuse/core": "^10.5.0",
     "mdi": "^2.2.43",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "radix-vue": "^1.0.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5",

@@ -13,7 +13,7 @@ import { useSnackbarStore } from '@/stores/snackbar';
 
 
 const { lg, mobile } = useDisplay()
-const storedUser = useUserStore()
+const userStore = useUserStore()
 const snackbarStore = useSnackbarStore();
 const router = useRouter();
 
@@ -46,7 +46,7 @@ async function handleSubmit() {
     // Get the data in json format
     const data = await response.json();
     // Replace all the user data contained in the storedUser
-    storedUser.$state = data.data;
+    userStore.loginUser(data.data)
     router.push({name : 'home'})
 }
 </script>
