@@ -61,3 +61,4 @@ defmodule TimemanagerWeb.Endpoint do
 
   plug(TimemanagerWeb.Router)
 end
+
