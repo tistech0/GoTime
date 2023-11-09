@@ -1,19 +1,20 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-import TextField from '../form/TextField.vue';
-import Button from '../form/Button.vue';
+import TextField from '@/components/form/TextField.vue';
+import Button from '@/components/form/Button.vue';
 import { useDisplay } from 'vuetify';
-import myImage from '../../assets/Logo-GoTime.png';
+import myImage from '@/assets/Logo-GoTime.png';
 import { useRouter } from 'vue-router';
-import { errorHandling } from "../../utils/utils";
-import { useUserStore } from '@/stores/user'
+import { errorHandling } from "@/utils/utils";
+import { useUserStore } from '@/stores/user';
 import { useSnackbarStore } from '@/stores/snackbar';
+import { routeNames } from '@/router/index';
 
 
 
 const { lg, mobile } = useDisplay()
-const storedUser = useUserStore()
+const userStore = useUserStore()
 const snackbarStore = useSnackbarStore();
 const router = useRouter();
 
@@ -47,8 +48,8 @@ async function handleSubmit() {
     // Get the data in json format
     const data = await response.json();
     // Replace all the user data contained in the storedUser
-    storedUser.$state = data.data;
-    router.push({name : 'home'})
+    userStore.loginUser(data.data)
+    router.push({name : routeNames.home})
 }
 </script>
 

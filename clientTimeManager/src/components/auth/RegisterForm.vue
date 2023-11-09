@@ -10,12 +10,15 @@ import type { Item } from "../../types/items";
 import { transformData, errorHandling } from "../../utils/utils";
 import { useRouter } from 'vue-router';
 import { useSnackbarStore } from '@/stores/snackbar';
+import { Role } from '../../constants/RoleEnum'
 
 
 
 const { lg, mobile } = useDisplay()
 const router = useRouter();
 const snackbarStore = useSnackbarStore();
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 
 // Initialize the list of teams as a list of Item
@@ -32,10 +35,10 @@ const registerFormData = ref({
         password: "",
         confirmPassword: "",
         time_contract: 0,
-        role_id: 0 // Is the selected role id
+        role_id: "" // Is the selected role id
     },
-    team: {
-        id: 0 // Is the selected team id
+    team : {
+        id: "" // Is the selected team id
     }
 })
 
@@ -43,7 +46,7 @@ const registerFormData = ref({
  *  This function fetchs the list of roles from the api and assign the value to the listRoles
  */
 async function getRoleList() {
-    const response = await fetch("http://localhost:4000/api/roles", {
+    const response = await fetch(`${apiUrl}/api/roles`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -55,7 +58,12 @@ async function getRoleList() {
         return
     }
     const data = await response.json();
-    listRoles.value = transformData(data.data, "id", "role");
+    // Set the enum values for the roles
+    const dataWithFormattedRole = data.data.map((role: any) => ({
+        id: role.id,
+        role: Role[role.role as keyof typeof Role] || role.role, // Use the enum value if available, or the original value
+    }));
+    listRoles.value = transformData(dataWithFormattedRole, "id", "role");
 }
 
 // Fetch the role list the user has access to.
@@ -65,7 +73,7 @@ getRoleList();
  *  This function fetchs the list of teams from the api and assign the value to the listTeam
  */
 async function getTeamList() {
-    const response = await fetch("http://localhost:4000/api/teams/manage", {
+    const response = await fetch(`${apiUrl}/api/teams/manage`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -92,27 +100,27 @@ async function handleSubmit() {
     // Check the two password are equals
     if (registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
         snackbarStore.showSnackbar('Both password need to be the same', 2000, 'error');
+        registerFormData.value.user.confirmPassword = ""
         return
     }
+    // Reset confirm password as it is unfiltered by phoenix and useless
+    registerFormData.value.user.confirmPassword = ""
+
+    console.log(registerFormData.value)
 
     // Create the new account
-    const response = await fetch("http://localhost:4000/api/users", {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(registerFormData.value)
-    });
-
+    const response = await fetch(`${apiUrl}/api/users`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registerFormData.value)
+        });
     if (!response.ok) {
         errorHandling(response, snackbarStore, router);
         return
     }
-    const data = await response.json();
-
-    console.log(data);
-
 }
 
 

@@ -25,6 +25,7 @@
     "apexcharts": "^3.44.0",
     "mdi": "^2.2.43",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "radix-vue": "^1.0.2",
     "vue": "^3.3.4",
     "vue-apexcharts": "^1.6.2",
