@@ -3,6 +3,8 @@ FROM node:21 as build-stage
 # Set the working directory inside the container
 WORKDIR /app
 
+ENV VITE_API_URL=http://gotime-api-service:4000
+
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
