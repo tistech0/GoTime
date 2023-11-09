@@ -47,9 +47,13 @@ defmodule TimemanagerWeb.Team_userController do
     conn
     |> put_status(:ok)
     |> json(%{
-      "teams" => Enum.map(team_user, &%{
-        "name" => &1.name
-      })
+      "teams" =>
+        Enum.map(
+          team_user,
+          &%{
+            "name" => &1.name
+          }
+        )
     })
   end
 end

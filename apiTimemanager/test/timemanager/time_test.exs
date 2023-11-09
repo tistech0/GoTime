@@ -92,14 +92,19 @@ defmodule Timemanager.TimeTest do
       working_times = working_times_fixture()
       update_attrs = %{end: ~N[2023-10-24 14:13:00], start: ~N[2023-10-24 14:13:00]}
 
-      assert {:ok, %WorkingTimes{} = working_times} = Time.update_working_times(working_times, update_attrs)
+      assert {:ok, %WorkingTimes{} = working_times} =
+               Time.update_working_times(working_times, update_attrs)
+
       assert working_times.end == ~N[2023-10-24 14:13:00]
       assert working_times.start == ~N[2023-10-24 14:13:00]
     end
 
     test "update_working_times/2 with invalid data returns error changeset" do
       working_times = working_times_fixture()
-      assert {:error, %Ecto.Changeset{}} = Time.update_working_times(working_times, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Time.update_working_times(working_times, @invalid_attrs)
+
       assert working_times == Time.get_working_times!(working_times.id)
     end
 

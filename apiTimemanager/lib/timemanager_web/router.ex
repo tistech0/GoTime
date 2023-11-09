@@ -59,7 +59,6 @@ defmodule TimemanagerWeb.Router do
     - `GET /api/stats/team/workingtimes/average/:teamID`: Returns the average working hours per day for a specific team within a start and end time. (Role: admin)
   """
 
-
   ## Working Times routes
 
   scope "/api/workingtimes", TimemanagerWeb do

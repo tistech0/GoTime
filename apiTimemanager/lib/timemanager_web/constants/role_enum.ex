@@ -4,5 +4,5 @@ defmodule RoleEnum do
   @doc """
     This enum defines all the possible role values.
   """
-  defenum :role, user_role: "User", admin_role: "Admin", super_admin_role: "SuperAdmin"
+  defenum(:role, user_role: "User", admin_role: "Admin", super_admin_role: "SuperAdmin")
 end
