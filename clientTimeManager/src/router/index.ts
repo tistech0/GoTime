@@ -5,7 +5,6 @@ import RegisterView from "@/views/RegisterView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import ValidateTimeView from "../views/ValidateTimeView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
-import RegisterView from "@/views/RegisterView.vue";
 import DashboardManagerViewVue from "@/views/DashboardManagerView.vue";
 import { useUserStore } from '@/stores/user';
 import { Role } from '../constants/RoleEnum'
