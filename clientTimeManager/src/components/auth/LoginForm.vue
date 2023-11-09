@@ -31,7 +31,7 @@ async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
   const apiUrl = import.meta.env.VITE_API_URL;
-
+  console.log(`${apiUrl}/api/users/log_in`)
   const response = await fetch(`${apiUrl}/api/users/log_in`, {
     method: 'POST',
     credentials: 'include',

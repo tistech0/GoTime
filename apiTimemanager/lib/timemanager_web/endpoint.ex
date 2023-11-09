@@ -52,7 +52,7 @@ defmodule TimemanagerWeb.Endpoint do
   plug(CORSPlug,
     origin: [
       "http://localhost:8081",
-      "http://34.155.133.157"
+      "http://34.163.234.235"
     ],
     allow_headers: ["content-type", "authorization"],
     allow_methods: ["GET", "POST", "PUT", "DELETE"],
@@ -61,3 +61,4 @@ defmodule TimemanagerWeb.Endpoint do
 
   plug(TimemanagerWeb.Router)
 end
+
