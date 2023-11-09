@@ -1,16 +1,41 @@
 import { defineStore } from 'pinia'
+import type { User } from '../types/user'
 
 /**
- * This defines the pinia store for the current connected user. Its all the values stored and the getters to get specific ones.
+ * This defines the pinia store for the current connected user.
+ * The data are persisted in the local sotrage
  */
-export const useUserStore = defineStore('user', {
-  state: () => ({id: 0, username: '', email: '', role: '', time_contract: 0.0}),
+export const useUserStore = defineStore({
+  id: 'user',
+  state: () => ({
+    user: null as User | null,
+    isAuthenticated: false
+    }),
   getters: {
-      getUser: (state) => state,
-      getId: (state) => state.id,
-      getUsername: (state) => state.username,
-      getEmail: (state) => state.email,
-      getRole: (state) => state.role,
-      getContractTime: (state) => state.time_contract,
-  }
+      getUser: (state) => state.user,
+      getIsAuthenticated: (state) => state.isAuthenticated
+  },
+  actions: {
+    /**
+     * This function sets in the userStore all the values needed on the current_user
+     * It also sets the user as connected.
+     * The state is persisted through the app because we set it to the localstorage
+     * 
+     * @param currentUser is the user returned on login
+     */
+    loginUser(currentUser: User) {
+      this.user = currentUser;
+      this.isAuthenticated = true;
+    },
+
+    /**
+     * This function sets all the values concerning the user back to its original state
+     * We remove it from the local storage.
+     */
+    logoutUser() {
+      this.user = null;
+      this.isAuthenticated = false;
+    }
+  },
+  persist: true,
 })

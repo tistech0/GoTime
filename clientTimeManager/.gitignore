@@ -26,3 +26,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+/src/views/DevView.vue

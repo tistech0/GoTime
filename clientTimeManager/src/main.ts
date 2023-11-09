@@ -2,10 +2,13 @@ import "./assets/main.css";
 import "@mdi/font/css/materialdesignicons.css";
 
 import { createApp } from "vue";
-import { createPinia } from "pinia";
-
 import App from "./App.vue";
 import router from "./router";
+
+// Pinia
+import { createPinia } from "pinia";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
 
 // Vuetify
 import "vuetify/styles";
@@ -13,6 +16,9 @@ import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+
+// ApexCharts
+import VueApexCharts from "vue3-apexcharts";
 
 const app = createApp(App);
 
@@ -37,9 +43,14 @@ const vuetify = createVuetify({
     },
   },
 });
+const pinia = createPinia();
 
-app.use(createPinia());
+// Use the plugin that persists data for pinia stores
+pinia.use(piniaPluginPersistedstate);
+
+app.use(pinia);
 app.use(router);
 app.use(vuetify);
+app.use(VueApexCharts);
 
 app.mount("#app");

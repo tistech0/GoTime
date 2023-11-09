@@ -109,14 +109,9 @@ defmodule TimemanagerWeb.Router do
   ## Authentication routes
 
   scope "/api/users", TimemanagerWeb do
-    pipe_through([:api, :redirect_if_user_is_authenticated])
-
-    post("/log_in", UserSessionController, :create)
-  end
-
-  scope "/api/users", TimemanagerWeb do
     pipe_through([:api])
 
+    post("/log_in", UserSessionController, :create)
     delete("/log_out", UserSessionController, :delete)
   end
 
