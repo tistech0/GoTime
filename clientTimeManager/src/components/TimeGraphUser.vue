@@ -119,9 +119,6 @@ export default {
             },
           },
         ],
-        dataLabel: {
-          enabled: true,
-        },
         plotOptions: {
           bar: {
             horizontal: false,
