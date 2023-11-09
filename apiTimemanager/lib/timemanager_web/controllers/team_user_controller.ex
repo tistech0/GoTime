@@ -15,7 +15,6 @@ defmodule TimemanagerWeb.Team_userController do
     with {:ok, %Team_user{} = team_user} <- Team.create_team_user(team_user_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/team_users/#{team_user}")
       |> render(:show, team_user: team_user)
     end
   end

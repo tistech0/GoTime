@@ -17,7 +17,6 @@ defmodule TimemanagerWeb.RoleController do
     with {:ok, %Role{} = role} <- Roles.create_role(role_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/roles/#{role}")
       |> render(:show, role: role)
     end
   end

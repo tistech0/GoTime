@@ -31,7 +31,7 @@ defmodule TimemanagerWeb.UserAuth do
   """
   def log_in_user(conn, user, params \\ %{}) do
     token = Account.generate_user_session_token(user)
-    user_return_to = get_session(conn, :user_return_to)
+    get_session(conn, :user_return_to)
 
     # Return the user informations and its role.
     login_response =
@@ -162,10 +162,4 @@ defmodule TimemanagerWeb.UserAuth do
     conn
     |> put_session(:user_token, token)
   end
-
-  defp maybe_store_return_to(%{method: "GET"} = conn) do
-    put_session(conn, :user_return_to, current_path(conn))
-  end
-
-  defp maybe_store_return_to(conn), do: conn
 end

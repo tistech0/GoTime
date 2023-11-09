@@ -9,7 +9,7 @@ defmodule Timemanager.Account.User do
     field :hashed_password, :string, redact: true
     field :time_contract, :float
     field :username, :string
-    belongs_to :role, Timemanager.Account.Role, foreign_key: :role_id, type: :binary_id
+    belongs_to :role, Timemanager.Roles.Role, foreign_key: :role_id, type: :binary_id
 
     timestamps(type: :utc_datetime)
   end

@@ -65,9 +65,8 @@ defmodule TimemanagerWeb.UserController do
     end
   end
 
-  @doc """
-    This defp is used to extract the error message from the changeset.
-  """
+
+  #This defp is used to extract the error message from the changeset.
   defp changeset_error_message(%Ecto.Changeset{errors: errors}) do
     errors
     |> Enum.map(fn {field, {message, _values}} -> "#{field} #{message}" end)
@@ -218,10 +217,10 @@ defmodule TimemanagerWeb.UserController do
     end
   end
 
-  @doc """
-    This private def is an error template to return.
-    It accepts the conn, and HttpErrorCode and a message
-  """
+
+#    This private def is an error template to return.
+#    It accepts the conn, and HttpErrorCode and a message
+
   defp error_template(conn, error_code, message) do
     conn
     |> put_status(error_code)

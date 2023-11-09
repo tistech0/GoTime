@@ -80,6 +80,9 @@ defmodule TimemanagerWeb.Router do
   scope "/api/teams/manage", TimemanagerWeb do
     pipe_through([:api, :require_authenticated_user, :require_admin_role])
     get("/", TeamController, :get_Team_Current_User_Manager)
+
+    pipe_through([:require_super_admin_role])
+    get("/:userID", TeamController, :getTeamLinkManager)
   end
 
   scope "/api/teams", TimemanagerWeb do
@@ -89,9 +92,6 @@ defmodule TimemanagerWeb.Router do
     post("/", TeamController, :create)
     put("/:teamID", TeamController, :update)
     delete("/:teamID", TeamController, :delete)
-
-    pipe_through([:require_super_admin_role])
-    get("/:userID", TeamController, :getTeamLinkManager)
   end
 
   ## Team user routes

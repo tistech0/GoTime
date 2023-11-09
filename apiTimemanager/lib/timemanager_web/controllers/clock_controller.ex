@@ -37,7 +37,6 @@ defmodule TimemanagerWeb.ClockController do
                      Time.create_working_times(working_time_params, user_id) do
                 conn
                 |> put_status(:created)
-                |> put_resp_header("location", ~p"/api/working_time/#{working_times}")
                 |> json(TimemanagerWeb.WorkingTimesJSON.show(%{working_times: working_times}))
               end
 
@@ -60,9 +59,7 @@ defmodule TimemanagerWeb.ClockController do
 
         with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params_with_status, user_id) do
           conn
-          # Utilisez :created pour indiquer qu'une nouvelle ressource a été créée.
           |> put_status(:created)
-          |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
           |> render(:show, clock: clock)
         end
     end
@@ -74,7 +71,6 @@ defmodule TimemanagerWeb.ClockController do
     with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params, user_id) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/clocks/#{clock.id}")
       |> render(:show, clock: clock)
     end
   end

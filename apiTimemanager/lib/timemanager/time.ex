@@ -6,12 +6,6 @@ defmodule Timemanager.Time do
   import Ecto.Query, warn: false
   alias Timemanager.Repo
 
-  alias Timemanager.Account.User
-
-  alias Timemanager.Team.Team_user
-
-  alias Timemanager.Teams.Team
-
   alias Timemanager.Time.WorkingTimes
 
   alias Timemanager.Time.Clock
@@ -181,7 +175,7 @@ defmodule Timemanager.Time do
       from w in WorkingTimes,
         where: w.user_id == ^user_id and w.start >= ^start_time and w.end <= ^end_time
 
-    results = Repo.all(query)
+    Repo.all(query)
   end
 
   @doc """
@@ -272,7 +266,7 @@ defmodule Timemanager.Time do
         select: u
       )
 
-    users = Repo.all(query)
+    Repo.all(query)
   end
 
   @doc """

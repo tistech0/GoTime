@@ -3,10 +3,8 @@ defmodule Timemanager.Account.UserToken do
   import Ecto.Query
   alias Timemanager.Account.UserToken
 
-  @hash_algorithm :sha256
   @rand_size 32
 
-  @confirm_validity_in_days 7
   @session_validity_in_days 60
 
   @primary_key {:id, :binary_id, autogenerate: true}
