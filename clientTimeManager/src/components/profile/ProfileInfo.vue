@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import Button from '../form/Button.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 let data = reactive({
     user: {
@@ -24,7 +26,7 @@ let data = reactive({
         </div>
         <!-- edit button -->
         <div class="col-start-5 flex place-content-end mr-5">
-            <v-btn @click="$router.push('editprofile')" icon>
+            <v-btn @click="router.push({ name: 'editprofile' })" icon>
                 <v-icon>mdi-square-edit-outline</v-icon>
             </v-btn>
         </div>

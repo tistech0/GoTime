@@ -1,4 +1,7 @@
 <script setup lang="ts">
+
+// FETCH USER CONNECTED
+
 </script>
 
 <template>
