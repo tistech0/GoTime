@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits, defineProps } from 'vue';
 
-const props = defineProps({ label: String, inputType: String, hint: { type: String, default: "" }, modelValue: [String, Number], disable: { type: Boolean, default: false } })
 const emit = defineEmits(["update:modelValue"]);
 
 const inputValue = ref("");
@@ -13,9 +12,25 @@ const handleChange = () => {
 </script>
 
 <template>
-    <div>
-        <v-text-field bg-color="var(--primary-blue-light)" :label=props.label :type=props.inputType clearable
-            :disabled="props.disable" v-model=inputValue variant="solo-filled" :hint=props.hint @input="handleChange">
-        </v-text-field>
-    </div>
+  <div>
+    <v-text-field bg-color="var(--primary-blue-light)" :label=label :type=inputType clearable
+                  :disabled="disable" v-model=localInputValue variant="solo-filled" :hint=hint @input="handleChange">
+    </v-text-field>
+  </div>
 </template>
+
+<script lang="ts">
+export default {
+  props: ['inputValue', 'label', 'inputType', 'disable', 'hint'],
+  data() {
+    return {
+      localInputValue: this.inputValue,
+    };
+  },
+  watch: {
+    inputValue(newVal) {
+      this.localInputValue = newVal;
+    },
+  },
+};
+</script>

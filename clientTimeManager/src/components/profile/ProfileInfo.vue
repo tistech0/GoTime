@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
 import Button from '../form/Button.vue';
-
-let data = reactive({
-    user: {
-        username: "HGefbolij",
-        email: 'thisIsASuperTest@test.fr',
-        contractTime: 50,
-        role: 'user',
-    },
-});
+import { useRouter } from 'vue-router';
+const router = useRouter();
 </script>
 
 <template>
@@ -17,14 +9,14 @@ let data = reactive({
         <div class="col-start-3">
             <!-- avatar username -->
             <div class="grid place-content-center -mt-20">
-                <img src="https://api.dicebear.com/7.x/notionists/svg?seed={{ data.user.username }}" alt="profile picture"
+                <img src="https://api.dicebear.com/7.x/notionists/svg?seed={{ user.username }}" alt="profile picture"
                     class="w-40 h-40 rounded-ful pb-7" />
-                <p class="text-center font-semibold">{{ data.user.username }}</p>
+                <p class="text-center font-semibold">{{ user?.username }}</p>
             </div>
         </div>
         <!-- edit button -->
         <div class="col-start-5 flex place-content-end mr-5">
-            <v-btn @click="$router.push('editprofile')" icon>
+            <v-btn @click="router.push({ name: 'editprofile' })" icon>
                 <v-icon>mdi-square-edit-outline</v-icon>
             </v-btn>
         </div>
@@ -35,7 +27,7 @@ let data = reactive({
                 <v-icon class="">mdi-email</v-icon>
                 <div>
                     <p class="font-semibold">Email</p>
-                    <p>{{ data.user.email }}</p>
+                    <p>{{ user?.email }}</p>
                 </div>
             </div>
             <!-- contract time -->
@@ -43,7 +35,7 @@ let data = reactive({
                 <v-icon class="">mdi-briefcase-account-outline</v-icon>
                 <div>
                     <p class="font-semibold">Contract</p>
-                    <p>{{ data.user.contractTime }}</p>
+                    <p>{{ user?.time_contract }}</p>
                 </div>
             </div>
             <!-- role -->
@@ -51,7 +43,7 @@ let data = reactive({
                 <v-icon>mdi-account-star-outline</v-icon>
                 <div>
                     <p class="font-semibold">Role</p>
-                    <p>{{ data.user.role }}</p>
+                    <p>{{ user?.role }}</p>
                 </div>
             </div>
         </div>
@@ -61,3 +53,17 @@ let data = reactive({
         </div>
     </div>
 </template>
+
+<script lang="ts">
+import { useUserStore } from "@/stores/user";
+
+export default {
+  data() {
+    const user = useUserStore().getUser;
+
+    return {
+      user : user,
+    }
+  },
+}
+</script>
