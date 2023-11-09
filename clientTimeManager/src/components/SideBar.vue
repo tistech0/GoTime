@@ -2,7 +2,9 @@
 import { ref } from "vue";
 import myImage from "../assets/Logo-GoTime.png";
 import DeleteLogoutOverlay from "./overlay/DeleteLogoutOverlay.vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const logoutPopupVisible = ref(false);
 
 const logout = () => {
@@ -29,32 +31,33 @@ const logout = () => {
 
     <v-list density="compact" nav>
       <v-list-item
-        @click=""
+        @click="router.push({ name: 'home' })"
         prepend-icon="mdi-view-dashboard-outline"
         title="Dashboard"
       ></v-list-item>
       <v-list-item
-        @click=""
+        @click="router.push({ name: 'about' })"
         prepend-icon="mdi-account-outline"
         title="Profile"
       ></v-list-item>
       <v-list-item
-        @click=""
+        @click="router.push({ name: 'manager' })"
         prepend-icon="mdi-account-group-outline"
         title="Manage Team"
       ></v-list-item>
+      <!-- TODO: open create team overlay -->
       <v-list-item
         @click=""
         prepend-icon="mdi-account-multiple-plus-outline"
         title="Create Team"
       ></v-list-item>
       <v-list-item
-        @click=""
+        @click="router.push({ name: 'register' })"
         prepend-icon="mdi-account-plus-outline"
         title="Add employee"
       ></v-list-item>
       <v-list-item
-        @click=""
+        @click="router.push({ name: 'validate-time' })"
         prepend-icon="mdi-account-check-outline"
         title="Approve Time"
       ></v-list-item>

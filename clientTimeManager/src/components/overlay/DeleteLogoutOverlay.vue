@@ -16,7 +16,7 @@ const { mobile } = useDisplay();
 </script>
 
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-2">
+  <div class="fixed inset-0 flex items-center justify-center z-10">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div
       :class="{
