@@ -17,7 +17,6 @@ defmodule TimemanagerWeb.RoleController do
     with {:ok, %Role{} = role} <- Roles.create_role(role_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/roles/#{role}")
       |> render(:show, role: role)
     end
   end
@@ -48,12 +47,14 @@ defmodule TimemanagerWeb.RoleController do
   """
   def get_roles_list_for_current_user(conn, _params) do
     current_user_role = Roles.get_role!(conn.assigns[:current_user].role_id).role
+
     roles =
       if RoleEnum.role(:super_admin_role) == current_user_role do
         Roles.list_roles()
       else
         [Roles.get_role_by_role(RoleEnum.role(:user_role))]
       end
+
     render(conn, :index, roles: roles)
   end
 end
