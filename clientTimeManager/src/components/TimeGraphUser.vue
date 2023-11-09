@@ -129,6 +129,11 @@ export default {
             dataLabels: {
               total: {
                 enabled: true,
+                formatter: function (val: number, opts: any) {
+                    const hours = Math.floor(val);
+                    const minutes = Math.round((val - hours) * 60);
+                    return `${hours}h ${minutes}min`;
+                  },
                 style: {
                   fontSize: '13px',
                   fontWeight: 900,
@@ -145,9 +150,6 @@ export default {
               return val.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short' });
             },
           },
-        },
-        noData: {
-          text: "No data available"
         },
         legend: {
           position: 'right',
