@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {useDisplay} from 'vuetify';
 import WeekSelector from "@/components/WeekSelector.vue";
-
 const {mobile} = useDisplay()
 </script>
 
@@ -66,8 +65,8 @@ const {mobile} = useDisplay()
                 })
               }}
             </td>
-            <td>{{ (Math.round(item.valueDay * 100) / 100).toFixed(2) }} h</td>
-            <td>{{ (Math.round(item.valueNight * 100) / 100).toFixed(2) }} h</td>
+            <td>{{ formatHourMin(item.valueDay) }}</td>
+            <td>{{ formatHourMin(item.valueNight) }}</td>
             <td>
               <v-icon class="mr-2">
                 mdi-clock-edit-outline
@@ -91,14 +90,18 @@ import Sidebar from '../components/SideBar.vue';
 import Timer from '../components/Timer.vue';
 import TimeGraph from '../components/TimeGraphUser.vue';
 import type { TableStats } from '../types/tableStats';
+import { useUserStore } from "@/stores/user";
 
 export default {
   components: {Timer, BottomNav, Sidebar, TimeGraph},
   data() {
+    const user = useUserStore().getUser;
+
     return {
       start: new Date(),
       end: this.initOneWeekAgo(),
-      workingTimesList: ref<TableStats[]>([])
+      workingTimesList: ref<TableStats[]>([]),
+      userId: user.id
     };
   },
   methods: {
@@ -119,7 +122,7 @@ export default {
         const apiUrl = import.meta.env.VITE_API_URL;
         const startTime = this.formatDate(this.end);
         const endTime = this.formatDate(this.start)
-        const response = await fetch(`${apiUrl}/api/workingtimes/172cae9c-248a-4986-baae-e8f651067ccb?start=${startTime}&end=${endTime}`,
+        const response = await fetch(`${apiUrl}/api/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
             {
               method: "GET",
               credentials: "include",
@@ -133,7 +136,7 @@ export default {
             (w: any) => ({ // TODO: create interface to replace any
               start: new Date(w.start),
               end: new Date(w.end),
-              valueDay: parseFloat(w.valueDay),
+              valueDay: parseFloat(w.valueDay).toFixed(2),
               valueNight: w.valueNight ? parseFloat(w.valueNight) : 0,
             })
         );
@@ -149,6 +152,11 @@ export default {
       const minutes = ('0' + date.getMinutes()).slice(-2);
       const seconds = ('0' + date.getSeconds()).slice(-2);
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+    formatHourMin(value: number) {
+      const hours = Math.floor(value);
+      const minutes = Math.round((value - hours) * 60);
+      return `${hours}h ${minutes}min`;
     }
   },
   mounted() {
