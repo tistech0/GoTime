@@ -42,7 +42,7 @@ export default {
       this.isTicking = !this.isTicking;
       if (this.isTicking) {
         this.startTime = new Date();
-        await this.updateClockApi()
+        await this.updateClockApi(this.startTime)
         this.clock = '00:00:00';
         this.intervalId = setInterval(() => {
           let elapsedTime: number = (new Date() as Date).getTime() - (this.startTime as Date).getTime();
@@ -56,7 +56,7 @@ export default {
       } else {
         clearInterval(this.intervalId);
         this.clock = '00:00:00';
-        await this.updateClockApi();
+        await this.updateClockApi(new Date());
       }
     },
     async getClock() {
@@ -71,7 +71,7 @@ export default {
       });
       return await response.json();
     },
-    async updateClockApi() {
+    async updateClockApi(date: Date) {
       const apiUrl = import.meta.env.VITE_API_URL;
 
       const response = await fetch(`${apiUrl}/api/clocks/${this.userId}`, {
@@ -82,7 +82,7 @@ export default {
         },
         body: JSON.stringify({
           clock: {
-            time: this.formatDate(this.startTime)
+            time: this.formatDate(date)
           }
         })
       });
