@@ -89,7 +89,7 @@ import BottomNav from '../components/BottomNav.vue';
 import Sidebar from '../components/SideBar.vue';
 import Timer from '../components/Timer.vue';
 import TimeGraph from '../components/TimeGraphUser.vue';
-import type { TableStats } from '../types/tableStats';
+import type { TableStats } from '@/types/tableStats';
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -101,7 +101,7 @@ export default {
       start: new Date(),
       end: this.initOneWeekAgo(),
       workingTimesList: ref<TableStats[]>([]),
-      userId: user.id
+      userId: user?.id
     };
   },
   methods: {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
 import Button from '../form/Button.vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -12,7 +11,7 @@ const router = useRouter();
             <div class="grid place-content-center -mt-20">
                 <img src="https://api.dicebear.com/7.x/notionists/svg?seed={{ user.username }}" alt="profile picture"
                     class="w-40 h-40 rounded-ful pb-7" />
-                <p class="text-center font-semibold">{{ user.username }}</p>
+                <p class="text-center font-semibold">{{ user?.username }}</p>
             </div>
         </div>
         <!-- edit button -->
@@ -28,7 +27,7 @@ const router = useRouter();
                 <v-icon class="">mdi-email</v-icon>
                 <div>
                     <p class="font-semibold">Email</p>
-                    <p>{{ user.email }}</p>
+                    <p>{{ user?.email }}</p>
                 </div>
             </div>
             <!-- contract time -->
@@ -36,7 +35,7 @@ const router = useRouter();
                 <v-icon class="">mdi-briefcase-account-outline</v-icon>
                 <div>
                     <p class="font-semibold">Contract</p>
-                    <p>{{ user.time_contract }}</p>
+                    <p>{{ user?.time_contract }}</p>
                 </div>
             </div>
             <!-- role -->
@@ -44,7 +43,7 @@ const router = useRouter();
                 <v-icon>mdi-account-star-outline</v-icon>
                 <div>
                     <p class="font-semibold">Role</p>
-                    <p>{{ user.role }}</p>
+                    <p>{{ user?.role }}</p>
                 </div>
             </div>
         </div>

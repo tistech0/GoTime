@@ -1,6 +1,6 @@
 <template>
     <div class="col-span-5 mt-10 ml-20">
-        <p>Hello <span>{{ user.username }}</span>,</p>
+        <p>Hello <span>{{ user?.username }}</span>,</p>
     </div>
 </template>
 

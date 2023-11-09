@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import type { Clock } from '@/types/clock';
-import Hello from "@/components/Hello.vue";
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -34,10 +33,10 @@ export default {
       isTicking: false,
       intervalId: 0 as unknown as NodeJS.Timeout,
       user: {
-        username: userStore.username,
+        username: userStore?.username,
       },
       startTime: new Date(),
-      userId: userStore.id
+      userId: userStore?.id
     }
   },
   methods: {

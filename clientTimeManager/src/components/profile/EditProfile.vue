@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import TextField from '../TextField.vue';
 import Button from '../form/Button.vue';
-import type { Item } from "../../types/items";
+import type { Item } from "@/types/items";
 import SelectOne from '../form/SelectOne.vue';
 import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
@@ -93,10 +93,10 @@ export default {
       user: user,
       data: {
         user: {
-          username: user.username,
-          email: user.email,
-          contractTime: user.time_contract,
-          role: user.role,
+          username: user?.username,
+          email: user?.email,
+          contractTime: user?.time_contract,
+          role: user?.role,
           password: '******',
         }
       },
