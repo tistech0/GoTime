@@ -45,7 +45,7 @@ defmodule TimemanagerWeb.UserController do
     case Account.register_user(user_params) do
       {:ok, user} ->
         team_id = team_params["id"]
-        if !is_nil(team_id) and is_integer(team_id) do
+        if !is_nil(team_id) and team_id != "" do
           add_user_to_team(team_id, current_user_role, user.id, current_user.id) # Add user to team once the user is inserted
         end
         conn
