@@ -100,8 +100,13 @@ async function handleSubmit() {
     // Check the two password are equals
     if(registerFormData.value.user.password !== registerFormData.value.user.confirmPassword) {
         snackbarStore.showSnackbar('Both password need to be the same', 2000, 'error');
+        registerFormData.value.user.confirmPassword = ""
         return
     }
+    // Reset confirm password as it is unfiltered by phoenix and useless
+    registerFormData.value.user.confirmPassword = ""
+
+    console.log(registerFormData.value)
 
     // Create the new account
     const response = await fetch(`${apiUrl}/api/users`, {
