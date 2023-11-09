@@ -98,72 +98,72 @@ users_uuid= %{
 # List of working_times to be inserted
 working_times_list = [
   %{
-    start: "2023-10-25 20:48:13",
-    end: "2023-10-26 05:46:13",
+    start: "2023-11-05 09:00:54",
+    end: "2023-11-05 12:16:13",
     valueDay: 0.0,
     valueNight: 9.0,
     status: "validated",
     user_id: users_uuid["admin"]
   },
   %{
-    start: "2023-11-25 09:23:45",
-    end: "2023-11-25 18:30:31",
+    start: "2023-11-06 09:00:54",
+    end: "2023-11-06 12:16:13",
     valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["admin"]
   },
   %{
-    start: "2023-12-25 10:21:25",
-    end: "2023-12-25 17:49:56",
+    start: "2023-11-06 14:10:54",
+    end: "2023-11-06 18:02:13",
     valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["admin"]
   },
   %{
-    start: "2023-10-25 20:48:13",
-    end: "2023-10-25 20:48:37",
+    start: "2023-11-05 09:00:54",
+    end: "2023-11-05 12:16:13",
     valueDay: 0.0,
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["user"]
   },
   %{
-    start: "2023-11-25 09:23:45",
-    end: "2023-11-25 18:30:31",
+    start: "2023-11-06 09:00:54",
+    end: "2023-11-06 12:16:13",
     valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["user"]
   },
   %{
-    start: "2023-12-25 10:21:25",
-    end: "2023-12-25 17:49:56",
+    start: "2023-11-06 14:10:54",
+    end: "2023-11-06 18:02:13",
     valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["user"]
   },
   %{
-    start: "2023-10-25 18:48:13",
-    end: "2023-10-25 23:48:37",
+    start: "2023-11-05 09:00:54",
+    end: "2023-11-05 12:16:13",
     valueDay: 2.2,
     valueNight: 2.8,
     status: "validated",
     user_id: users_uuid["superadmin"]
   },
   %{
-    start: "2023-11-25 09:23:45",
-    end: "2023-11-25 18:30:31",
+    start: "2023-11-06 09:00:54",
+    end: "2023-11-06 12:16:13",
     valueDay: 9.1,
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["superadmin"]
   },
   %{
-    start: "2023-12-25 10:21:25",
-    end: "2023-12-25 17:49:56",
+    start: "2023-11-06 14:10:54",
+    end: "2023-11-06 18:02:13",
     valueDay: 7.5,
     valueNight: 0.0,
     status: "validated",
