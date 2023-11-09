@@ -62,7 +62,6 @@ export default {
       let series = [];
       let day: number[] = [];
       let night: number[] = [];
-      console.log(data);
       data.forEach((element) => {
         day.push(element.valueDay);
         night.push(element.valueNight);
