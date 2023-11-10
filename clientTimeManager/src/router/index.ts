@@ -15,9 +15,10 @@ export const routeNames = {
   register: 'register',
   profile: 'about',
   editProfile: 'editprofile',
-  validateTime: 'validate-time'
+  validateTime: 'validate-time',
+  validateTimeUser: 'validate-time/:id',
+  userLook: 'user-look/:id',
 }
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,6 +56,16 @@ const router = createRouter({
     {
       path: "/validate-time",
       name: routeNames.validateTime,
+      component: ValidateTimeView,
+    },
+    {
+      path: "/user-look/:id",
+      name: routeNames.userLook,
+      component: DashboardView,
+    },
+    {
+      path: "/validate-time/:id",
+      name: routeNames.validateTimeUser,
       component: ValidateTimeView,
     },
   ],
