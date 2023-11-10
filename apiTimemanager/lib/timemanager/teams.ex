@@ -121,6 +121,7 @@ defmodule Timemanager.Teams do
       from(t in Team,
         where: t.manager_id == ^manager_id
       )
+
     Repo.all(query)
   end
 end

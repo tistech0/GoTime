@@ -47,6 +47,27 @@ defmodule TimemanagerWeb.WorkingTimesController do
     working_times_params = Map.put(working_times_params, "valueDay", day_hours)
     working_times_params = Map.put(working_times_params, "valueNight", night_hours)
 
+    working_times_params = Map.put(working_times_params, "status", "waiting")
+
+    with {:ok, %WorkingTimes{} = working_times} <-
+           Time.update_working_times(working_times, working_times_params) do
+      render(conn, :show, working_times: working_times)
+    end
+  end
+
+  def updateStatus(conn, %{"id" => id, "working_times" => working_times_params}) do
+    working_times = Time.get_working_times!(id)
+
+    if Map.size(working_times_params) != 1 ||
+         Enum.member?(
+           ["waiting", "validated", "refused"],
+           Map.get(working_times_params, "status")
+         ) == false do
+      conn
+      |> put_status(:bad_request)
+      |> render(TimemanagerWeb.ErrorView, "400.json", %{message: "Bad request"})
+    end
+
     with {:ok, %WorkingTimes{} = working_times} <-
            Time.update_working_times(working_times, working_times_params) do
       render(conn, :show, working_times: working_times)

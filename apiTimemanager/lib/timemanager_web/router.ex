@@ -21,6 +21,7 @@ defmodule TimemanagerWeb.Router do
     - `POST /api/workingtimes/:userID`: Creates a new working time entry for a specific user by ID. (Role: user)
     - `DELETE /api/workingtimes/:id`: Deletes a specific working time entry by ID. (Role: user)
     - `PUT /api/workingtimes/:id`: Updates a specific working time entry by ID. (Role: user)
+    - `PATCH /api/workingtimes/:id`: Updates the status of a specific working time entry by ID. (Role: admin)
 
     # Routes for teams
     - `GET /api/teams/`: Returns a list of all teams. (Role: admin)
@@ -70,7 +71,11 @@ defmodule TimemanagerWeb.Router do
     delete("/:id", WorkingTimesController, :delete)
     put("/:id", WorkingTimesController, :update)
 
-    pipe_through([:require_admin_role, :require_super_admin_role])
+    pipe_through([:require_admin_role])
+
+    patch("/:id", WorkingTimesController, :updateStatus)
+
+    pipe_through([:require_super_admin_role])
 
     get("/", WorkingTimesController, :index)
   end
