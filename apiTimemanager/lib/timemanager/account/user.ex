@@ -35,14 +35,6 @@ defmodule Timemanager.Account.User do
     |> validate_required([:username, :email, :hashed_password, :time_contract, :role_id])
   end
 
-  @doc """
-  Changeset only to update the role
-  """
-  def update_user_role_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:role_id])
-    |> validate_required([:role_id])
-  end
 
   @doc """
   A user changeset for registration.
@@ -75,13 +67,34 @@ defmodule Timemanager.Account.User do
   end
 
   @doc """
-    This def updates the user without changing the role!
+    This def updates the user totally. It is only for the superadmin
   """
-  def update_changeset(user, attrs, opts \\ []) do
+  def update_changeset_total(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
+    |> validate_required([:username, :email, :password, :time_contract, :role_id])
+    |> validate_email(opts)
+    |> validate_password(opts)
+  end
+
+  @doc """
+    This def update changeset only updates the username and password.
+    This is when you try to update yourself and are not a superadmin.
+  """
+  def update_changeset_current_user(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username, :password])
+    |> validate_required([:username, :password])
+    |> validate_password(opts)
+  end
+
+  @doc """
+    This def changeset is updates everything but the role. It is use to update an other user. Only for managers
+  """
+  def update_changeset_other_user(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:username, :email, :password, :time_contract])
-    |> validate_required([:username, :email, :password, :time_contract])
-    |> validate_email(opts)
+    |> validate_required([:username, :password])
     |> validate_password(opts)
   end
 

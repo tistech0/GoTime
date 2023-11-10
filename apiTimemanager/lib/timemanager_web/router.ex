@@ -130,7 +130,6 @@ defmodule TimemanagerWeb.Router do
 
     get("/", UserController, :get_user_by_email_and_username, [:email, :username])
     post("/", UserController, :register)
-    patch("/:userID", UserController, :update_user_role, [:role])
     delete("/:userID", UserController, :delete)
   end
 
