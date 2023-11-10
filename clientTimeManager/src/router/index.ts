@@ -13,8 +13,10 @@ export const routeNames = {
   home: 'home',
   login: 'login',
   register: 'register',
-  profile: 'about',
+  profile: 'profile',
   editProfile: 'editprofile',
+  manageProfile: 'manageProfile',
+  manageEditprofile: 'manageEditprofile',
   validateTime: 'validate-time',
   notFound: 'not-found'
 }
@@ -34,8 +36,18 @@ const router = createRouter({
       component: ProfileView,
     },
     {
-      path: "/editprofile",
+      path: "/edit-profile",
       name: routeNames.editProfile,
+      component: EditProfileView,
+    },
+    {
+      path: "/manage/profile/:id",
+      name: routeNames.manageProfile,
+      component: ProfileView,
+    },
+    {
+      path: "/manage/edit-profile/:id",
+      name: routeNames.manageEditprofile,
       component: EditProfileView,
     },
     {
@@ -95,7 +107,8 @@ router.beforeEach((to, from) => {
 
   if(userRoleEnumValue != Role.Admin && userRoleEnumValue != Role.SuperAdmin) {
     switch(to.name) {
-      case 'otherRouteToRestrict': // Write real routes to also redirect to home when wrong access.
+      case routeNames.manageEditprofile:
+      case routeNames.manageProfile:
       case routeNames.register: {
         return { name: routeNames.home };
       }
