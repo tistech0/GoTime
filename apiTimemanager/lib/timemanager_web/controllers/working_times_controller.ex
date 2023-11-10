@@ -137,6 +137,40 @@ defmodule TimemanagerWeb.WorkingTimesController do
     Timemanager.Repo.get!(Timemanager.Account.User, user_id)
   end
 
+  def getUserHoursPerDay(conn, %{
+        "userID" => user_id,
+        "start" => start_time,
+        "end" => end_time
+      }) do
+    working_times =
+      Timemanager.Time.get_working_times_by_user_id_and_start_and_end_time(
+        user_id,
+        start_time,
+        end_time
+      )
+
+    # Group working times by day
+    working_times_per_day = Enum.group_by(working_times, fn wt -> Date.to_iso8601(wt.start) end)
+    # Calculate average, min and max hours per day
+    hours_per_day_stats =
+      Enum.map(working_times_per_day, fn {day, working_times} ->
+        total_hours =
+          working_times |> Enum.map(fn wt -> wt.valueDay + wt.valueNight end) |> Enum.sum()
+
+        total_day_hours = working_times |> Enum.map(& &1.valueDay) |> Enum.sum()
+        total_night_hours = working_times |> Enum.map(& &1.valueNight) |> Enum.sum()
+
+        %{
+          day: day,
+          total: total_hours,
+          total_day: total_day_hours,
+          total_night: total_night_hours
+        }
+      end)
+
+    render(conn, :render_working_times_list, working_times: hours_per_day_stats)
+  end
+
   def getTeamAverageHoursPerDay(conn, %{
         "teamID" => team_id,
         "start" => start_time,
