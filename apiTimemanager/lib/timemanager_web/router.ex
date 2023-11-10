@@ -56,6 +56,7 @@ defmodule TimemanagerWeb.Router do
     - `GET /api/roles/`: Returns a list of all roles. (Role: admin)
 
     # Stats routes
+    - `GET /api/stats/user/workingtimes/:userID`: Returns the working hours per day for a specific user within a start and end time. (Role: user)
     - `GET /api/stats/team/workingtimes/all/:teamID`: Returns all working times for a specific team within a start and end time. (Role: admin)
     - `GET /api/stats/team/workingtimes/average/:teamID`: Returns the average working hours per day for a specific team within a start and end time. (Role: admin)
   """
