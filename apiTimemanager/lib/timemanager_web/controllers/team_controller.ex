@@ -32,7 +32,7 @@ defmodule TimemanagerWeb.TeamController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"teamID" => id}) do
     team = Teams.get_team!(id)
 
     with {:ok, %Team{}} <- Teams.delete_team(team) do
