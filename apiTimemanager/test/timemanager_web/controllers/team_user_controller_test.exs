@@ -5,12 +5,8 @@ defmodule TimemanagerWeb.Team_userControllerTest do
 
   alias Timemanager.Team.Team_user
 
-  @create_attrs %{
-
-  }
-  @update_attrs %{
-
-  }
+  @create_attrs %{}
+  @update_attrs %{}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
@@ -45,7 +41,10 @@ defmodule TimemanagerWeb.Team_userControllerTest do
   describe "update team_user" do
     setup [:create_team_user]
 
-    test "renders team_user when data is valid", %{conn: conn, team_user: %Team_user{id: id} = team_user} do
+    test "renders team_user when data is valid", %{
+      conn: conn,
+      team_user: %Team_user{id: id} = team_user
+    } do
       conn = put(conn, ~p"/api/team_users/#{team_user}", team_user: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

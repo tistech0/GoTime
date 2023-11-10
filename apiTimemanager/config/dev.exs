@@ -10,8 +10,10 @@ config :timemanager, Timemanager.Repo,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10,
-  queue_target: 5000, # in milliseconds
-  queue_interval: 1000 # in milliseconds
+  # in milliseconds
+  queue_target: 5000,
+  # in milliseconds
+  queue_interval: 1000
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

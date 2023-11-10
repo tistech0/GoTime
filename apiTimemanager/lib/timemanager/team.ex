@@ -128,7 +128,6 @@ defmodule Timemanager.Team do
         on: t.id == tu.team_id,
         select: t
       )
-
-    teams = Repo.all(query)
+    Repo.all(query)
   end
 end

@@ -6,12 +6,6 @@ defmodule Timemanager.Time do
   import Ecto.Query, warn: false
   alias Timemanager.Repo
 
-  alias Timemanager.Account.User
-
-  alias Timemanager.Team.Team_user
-
-  alias Timemanager.Teams.Team
-
   alias Timemanager.Time.WorkingTimes
 
   alias Timemanager.Time.Clock
@@ -77,7 +71,7 @@ defmodule Timemanager.Time do
   """
   def create_clock(attrs \\ %{}, user_id) do
     %Clock{}
-    |> Clock.changeset(attrs,user_id)
+    |> Clock.changeset(attrs, user_id)
     |> Repo.insert()
   end
 
@@ -176,12 +170,13 @@ defmodule Timemanager.Time do
 
   """
 
-def get_working_times_by_user_id_and_start_and_end_time(user_id, start_time, end_time) do
-  query = from w in WorkingTimes,
-      where: w.user_id == ^user_id and w.start >= ^start_time and w.end <= ^end_time
+  def get_working_times_by_user_id_and_start_and_end_time(user_id, start_time, end_time) do
+    query =
+      from w in WorkingTimes,
+        where: w.user_id == ^user_id and w.start >= ^start_time and w.end <= ^end_time
 
-  results = Repo.all(query)
-end
+    Repo.all(query)
+  end
 
   @doc """
   Creates a working_times.
@@ -197,7 +192,7 @@ end
   """
   def create_working_times(attrs \\ %{}, user_id) do
     %WorkingTimes{}
-    |> WorkingTimes.changeset(attrs,user_id)
+    |> WorkingTimes.changeset(attrs, user_id)
     |> Repo.insert()
   end
 
@@ -271,7 +266,7 @@ end
         select: u
       )
 
-    users = Repo.all(query)
+    Repo.all(query)
   end
 
   @doc """
@@ -297,10 +292,13 @@ end
 
     total_minutes = NaiveDateTime.diff(to_datetime, from_datetime, :minute)
 
-    night_minutes = Enum.count(0..total_minutes-1, fn minute ->
-      current_hour = rem(minute + NaiveDateTime.to_time(from_datetime).hour * 60, 24 * 60) |> div(60)
-      current_hour >= night_start_hour or current_hour < night_end_hour
-    end)
+    night_minutes =
+      Enum.count(0..(total_minutes - 1), fn minute ->
+        current_hour =
+          rem(minute + NaiveDateTime.to_time(from_datetime).hour * 60, 24 * 60) |> div(60)
+
+        current_hour >= night_start_hour or current_hour < night_end_hour
+      end)
 
     night_minutes
   end
@@ -311,5 +309,4 @@ end
 
     hours + remaining_minutes / 60.0
   end
-
 end

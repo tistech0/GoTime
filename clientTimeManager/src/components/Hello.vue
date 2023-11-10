@@ -1,15 +1,22 @@
-<script setup lang="ts">
-
-// FETCH USER CONNECTED
-
-</script>
-
 <template>
     <div class="col-span-5 mt-10 ml-20">
-        <p>Hello <span>{{ }}</span>,</p>
+        <p>Hello <span>{{ user?.username }}</span>,</p>
     </div>
 </template>
 
+<script lang="ts">
+import { useUserStore } from "@/stores/user";
+
+export default {
+    data() {
+        const user = useUserStore().getUser;
+
+        return {
+            user: user,
+        }
+    }
+}
+</script>
 
 <style scoped>
 span {

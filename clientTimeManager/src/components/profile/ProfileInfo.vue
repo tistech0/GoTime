@@ -1,47 +1,20 @@
 <script setup lang="ts">
-import { reactive } from "vue";
 import Button from "../form/Button.vue";
 import { useRouter } from "vue-router";
-import DeleteLogoutOverlay from "../overlay/DeleteLogoutOverlay.vue";
-import { ref } from "vue";
 const router = useRouter();
-
-let data = reactive({
-  user: {
-    username: "HGefbolij",
-    email: "thisIsASuperTest@test.fr",
-    contractTime: 50,
-    role: "user",
-  },
-});
-
-const deleteAccountPopupVisible = ref(false);
-
-const deleteAccount = () => {
-  console.log("Account deleted");
-  //   TODO: delete account
-};
 </script>
 
 <template>
-  <DeleteLogoutOverlay
-    ref="popup2"
-    title="Delete account"
-    description="Are you sure you want to delete the account of this user"
-    @action="deleteAccount"
-    v-model:visible="deleteAccountPopupVisible"
-    v-if="deleteAccountPopupVisible"
-  />
   <div class="grid grid-cols-5">
     <div class="col-start-3">
       <!-- avatar username -->
       <div class="grid place-content-center -mt-20">
         <img
-          src="https://api.dicebear.com/7.x/notionists/svg?seed={{ data.user.username }}"
+          src="https://api.dicebear.com/7.x/notionists/svg?seed={{ user.username }}"
           alt="profile picture"
           class="w-40 h-40 rounded-ful pb-7"
         />
-        <p class="text-center font-semibold">{{ data.user.username }}</p>
+        <p class="text-center font-semibold">{{ user?.username }}</p>
       </div>
     </div>
     <!-- edit button -->
@@ -59,7 +32,7 @@ const deleteAccount = () => {
         <v-icon class="">mdi-email</v-icon>
         <div>
           <p class="font-semibold">Email</p>
-          <p>{{ data.user.email }}</p>
+          <p>{{ user?.email }}</p>
         </div>
       </div>
       <!-- contract time -->
@@ -67,7 +40,7 @@ const deleteAccount = () => {
         <v-icon class="">mdi-briefcase-account-outline</v-icon>
         <div>
           <p class="font-semibold">Contract</p>
-          <p>{{ data.user.contractTime }}</p>
+          <p>{{ user?.time_contract }}</p>
         </div>
       </div>
       <!-- role -->
@@ -75,17 +48,27 @@ const deleteAccount = () => {
         <v-icon>mdi-account-star-outline</v-icon>
         <div>
           <p class="font-semibold">Role</p>
-          <p>{{ data.user.role }}</p>
+          <p>{{ user?.role }}</p>
         </div>
       </div>
     </div>
     <!-- Delete account button -->
     <div class="grid col-span-3 col-start-2 mt-10 mb-10">
-      <Button
-        btnColor="pink"
-        buttonName="Delete Account"
-        @click="deleteAccountPopupVisible = true"
-      />
+      <Button btnColor="pink" buttonName="Delete Account" />
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { useUserStore } from "@/stores/user";
+
+export default {
+  data() {
+    const user = useUserStore().getUser;
+
+    return {
+      user: user,
+    };
+  },
+};
+</script>

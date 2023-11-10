@@ -34,16 +34,16 @@ defmodule TimemanagerWeb.WorkingTimesJSON do
   end
 
   defp data(
-          %{
-            user_id: _,
-            username: _,
-            id: _,
-            start: _,
-            end: _,
-            valueDay: _,
-            valueNight: _,
-            status: _
-          } = working_times_users
+         %{
+           user_id: _,
+           username: _,
+           id: _,
+           start: _,
+           end: _,
+           valueDay: _,
+           valueNight: _,
+           status: _
+         } = working_times_users
        ) do
     %{
       id: working_times_users.id,

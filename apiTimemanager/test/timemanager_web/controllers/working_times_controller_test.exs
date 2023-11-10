@@ -49,7 +49,10 @@ defmodule TimemanagerWeb.WorkingTimesControllerTest do
   describe "update working_times" do
     setup [:create_working_times]
 
-    test "renders working_times when data is valid", %{conn: conn, working_times: %WorkingTimes{id: id} = working_times} do
+    test "renders working_times when data is valid", %{
+      conn: conn,
+      working_times: %WorkingTimes{id: id} = working_times
+    } do
       conn = put(conn, ~p"/api/working_time/#{working_times}", working_times: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

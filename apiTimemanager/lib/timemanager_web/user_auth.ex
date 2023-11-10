@@ -17,7 +17,6 @@ defmodule TimemanagerWeb.UserAuth do
   @remember_me_cookie "_timemanager_web_user_remember_me"
   @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
 
-
   @doc """
   Logs the user in.
 
@@ -32,7 +31,7 @@ defmodule TimemanagerWeb.UserAuth do
   """
   def log_in_user(conn, user, params \\ %{}) do
     token = Account.generate_user_session_token(user)
-    user_return_to = get_session(conn, :user_return_to)
+    get_session(conn, :user_return_to)
 
     # Return the user informations and its role.
     login_response =
@@ -43,7 +42,6 @@ defmodule TimemanagerWeb.UserAuth do
         time_contract: user.time_contract,
         role: Roles.get_role!(user.role_id).role
       }
-
 
     conn
     |> renew_session()
@@ -120,7 +118,6 @@ defmodule TimemanagerWeb.UserAuth do
     end
   end
 
-
   @doc """
   Used for routes that require the user to be authenticated.
 
@@ -138,7 +135,6 @@ defmodule TimemanagerWeb.UserAuth do
     end
   end
 
-
   def require_admin_role(conn, _opts) do
     if Roles.get_role!(conn.assigns[:current_user].role_id).role == RoleEnum.role(:user_role) do
       conn
@@ -151,7 +147,8 @@ defmodule TimemanagerWeb.UserAuth do
   end
 
   def require_super_admin_role(conn, _opts) do
-    if Roles.get_role!(conn.assigns[:current_user].role_id).role != RoleEnum.role(:super_admin_role) do
+    if Roles.get_role!(conn.assigns[:current_user].role_id).role !=
+         RoleEnum.role(:super_admin_role) do
       conn
       |> put_status(403)
       |> json(%{error: "You are not authorized to access this page."})
@@ -161,16 +158,8 @@ defmodule TimemanagerWeb.UserAuth do
     end
   end
 
-
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)
   end
-
-  defp maybe_store_return_to(%{method: "GET"} = conn) do
-    put_session(conn, :user_return_to, current_path(conn))
-  end
-
-  defp maybe_store_return_to(conn), do: conn
-
 end
