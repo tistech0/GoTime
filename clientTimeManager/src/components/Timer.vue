@@ -21,20 +21,22 @@
 
 <script lang="ts">
 import type { Clock } from '@/types/clock';
+import { useUserStore } from "@/stores/user";
 
 export default {
   data() {
+    const userStore = useUserStore().getUser;
+
     return {
       clock: "00:00:00",
       clockData: null as unknown as Clock,
       isTicking: false,
       intervalId: 0 as unknown as NodeJS.Timeout,
       user: {
-        username: 'john',
-        surname: 'doe'
+        username: userStore?.username,
       },
       startTime: new Date(),
-      userId: '48f4ced2-3455-4fd4-9719-e842b20abead'
+      userId: userStore?.id
     }
   },
   methods: {
