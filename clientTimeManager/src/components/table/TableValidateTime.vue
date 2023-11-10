@@ -23,7 +23,7 @@ console.log(listTeam);
 
 const queryUuid = ref<string>();
 const queryStartTime = ref<string>("2021-11-08 10:01:56");
-const queryEndTime = ref<string>("2025-11-08 10:01:56");
+const queryEndTime = ref<string>();
 
 ////////////////TEAM///////////////////
 
@@ -49,15 +49,31 @@ async function getTeamList() {
 // Fetch the team list the user has access to.
 getTeamList();
 
+////////////////TIME///////////////////
+let start = new Date();
+start.setFullYear(start.getFullYear() - 1);
+
+let end = new Date();
+
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const day = ("0" + date.getDate()).slice(-2);
+  const hours = ("0" + date.getHours()).slice(-2);
+  const minutes = ("0" + date.getMinutes()).slice(-2);
+  const seconds = ("0" + date.getSeconds()).slice(-2);
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 /**
  *  This function fetchs the list of working times from the api who are waiting for validation for a specific team in a year, a manager can only see the working times of his team
  */
 
-// TODO: a manager can only see the working times of his team
 const fetchData = async () => {
   try {
+    const startTime = formatDate(start);
+    const endTime = formatDate(end);
     const response = await fetch(
-      `${apiUrl}/api/stats/team/workingtimes/all/${queryUuid.value}?start=${queryStartTime.value}&end=${queryEndTime.value}`,
+      `${apiUrl}/api/stats/team/workingtimes/all/${queryUuid.value}?start=${startTime}&end=${endTime}`,
       {
         method: "GET",
         credentials: "include",
