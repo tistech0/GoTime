@@ -18,9 +18,9 @@ const deleteTeamPopupVisible = ref(false);
   <BottomNav v-if="mobile" />
   <Sidebar v-else />
   <DeleteLogoutOverlay
-    ref="deleteTimePopup"
-    title="Delete your time"
-    description="Are you sure you want to delete this time?"
+    ref="deleteTeamPopup"
+    title="Delete the team"
+    description="Are you sure you want to delete this team?"
     @action="deleteTeam(queryUuid)"
     v-model:visible="deleteTeamPopupVisible"
     v-if="deleteTeamPopupVisible"
