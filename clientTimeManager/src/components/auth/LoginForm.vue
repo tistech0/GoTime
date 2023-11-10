@@ -41,7 +41,7 @@ async function handleSubmit() {
   });
 
     if (!response.ok) {
-        errorHandling(response, snackbarStore, router);
+        errorHandling(response, snackbarStore, router, userStore.logoutUser);
         return
     }
     // Get the data in json format

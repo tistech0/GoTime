@@ -11,9 +11,10 @@ import { transformData, errorHandling } from "../../utils/utils";
 import { useRouter } from 'vue-router';
 import { useSnackbarStore } from '@/stores/snackbar';
 import { Role } from '../../constants/RoleEnum'
+import { useUserStore } from '@/stores/user';
 
 
-
+const userStore = useUserStore()
 const { lg, mobile } = useDisplay()
 const router = useRouter();
 const snackbarStore = useSnackbarStore();
@@ -54,7 +55,7 @@ async function getRoleList() {
         }
     });
     if (!response.ok) {
-        errorHandling(response, snackbarStore, router);
+        errorHandling(response, snackbarStore, router, userStore.logoutUser);
         return
     }
     const data = await response.json();
@@ -81,7 +82,7 @@ async function getTeamList() {
         }
     });
     if (!response.ok) {
-        errorHandling(response, snackbarStore, router);
+        errorHandling(response, snackbarStore, router, userStore.logoutUser);
         return
     }
     const data = await response.json();
@@ -118,7 +119,7 @@ async function handleSubmit() {
             body: JSON.stringify(registerFormData.value)
         });
     if (!response.ok) {
-        errorHandling(response, snackbarStore, router);
+        errorHandling(response, snackbarStore, router, userStore.logoutUser);
         return
     }
 }

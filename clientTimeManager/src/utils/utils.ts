@@ -24,8 +24,9 @@ export function transformData(data: any[], idAttr: string, nameAttr: string): It
  * @param response is the HttpResponse object fetch from the api
  * @param snackbarStore is the snackbarStore from pinia of type <Store ...>
  * @param router is the router from vue of type 'Router'
+ * @param onUnauthorized is the onUnauthorized callback used to empty the user store when user is loggedout on serverside.
  */
-export async function errorHandling(response: Response, snackbarStore: any, router: any) {
+export async function errorHandling(response: Response, snackbarStore: any, router: any, onUnauthorized: () => void) {
   if (response.status == 500) {
     snackbarStore.showSnackbar('An error occurred. Please contact an administrator.', 2000, 'error');
     return
@@ -33,6 +34,7 @@ export async function errorHandling(response: Response, snackbarStore: any, rout
   const error = await response.json();
   snackbarStore.showSnackbar(error.error, 2000, 'error');
   if (response.status == 401) {
+    onUnauthorized();
     router.push({name : 'login'})
   } else if(response.status == 403) {
     router.push({name : 'home'})
