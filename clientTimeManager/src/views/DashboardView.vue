@@ -8,10 +8,10 @@ const {mobile} = useDisplay()
   <BottomNav v-if="mobile"/>
   <Sidebar v-else/>
   <v-main class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense">
-    <Timer class="md:col-span-2"/>
-    <div class="data-wrapper md:col-span-3">
+    <Timer class="md:col-span-2" @clock-stoped="actualiseData"/>
+    <div class="data-wrapper md:col-span-3" :key="keyNumber">
       <WeekSelector @week-updated="updateWeek"/>
-      <TimeGraph :key="`${start}-${end}`" :end="end" :start="start" :workingTimeList="workingTimesList"/>
+      <TimeGraph :end="end" :start="start" :workingTimeList="workingTimesList"/>
       <hr v-if="workingTimesList.length > 0">
       <v-table class="" fixed-header>
         <thead class="drop-shadow-md">
@@ -101,7 +101,8 @@ export default {
       start: new Date(),
       end: this.initOneWeekAgo(),
       workingTimesList: ref<TableStats[]>([]),
-      userId: user?.id
+      userId: user?.id,
+      keyNumber: 0
     };
   },
   methods: {
@@ -117,7 +118,6 @@ export default {
       await this.fetchData();
     },
     async fetchData() {
-      this.workingTimesList = [];
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
         const startTime = this.formatDate(this.end);
@@ -157,6 +157,10 @@ export default {
       const hours = Math.floor(value);
       const minutes = Math.round((value - hours) * 60);
       return `${hours}h ${minutes}min`;
+    },
+    actualiseData() {
+      this.keyNumber++;
+      this.fetchData();
     }
   },
   mounted() {
