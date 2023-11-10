@@ -6,6 +6,7 @@ import ProfileView from "../views/ProfileView.vue";
 import ValidateTimeView from "../views/ValidateTimeView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import DashboardManagerViewVue from "@/views/DashboardManagerView.vue";
+import CreateTeamView from "../views/CreateTeamView.vue";
 import { useUserStore } from "@/stores/user";
 import { Role } from "../constants/RoleEnum";
 
@@ -16,6 +17,7 @@ export const routeNames = {
   profile: "about",
   editProfile: "editprofile",
   validateTime: "validate-time",
+  createTeam: "create-team",
 };
 
 const router = createRouter({
@@ -55,6 +57,11 @@ const router = createRouter({
       path: "/validate-time",
       name: routeNames.validateTime,
       component: ValidateTimeView,
+    },
+    {
+      path: "/create-team",
+      name: routeNames.createTeam,
+      component: CreateTeamView,
     },
   ],
 });

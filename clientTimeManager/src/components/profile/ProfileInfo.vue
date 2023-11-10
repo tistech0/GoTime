@@ -1,10 +1,24 @@
 <script setup lang="ts">
 import Button from "../form/Button.vue";
 import { useRouter } from "vue-router";
+import DeleteLogoutOverlay from "../overlay/DeleteLogoutOverlay.vue";
 const router = useRouter();
+const deleteAccountPopupVisible = ref(false);
+const deleteAccount = () => {
+  // TODO: delete account
+  console.log("Account deleted");
+};
 </script>
 
 <template>
+  <DeleteLogoutOverlay
+    ref="deleteAccountPopup"
+    title="Delete account"
+    description="Are you sure you want to delete this account?"
+    @action="deleteAccount"
+    v-model:visible="deleteAccountPopupVisible"
+    v-if="deleteAccountPopupVisible"
+  />
   <div class="grid grid-cols-5">
     <div class="col-start-3">
       <!-- avatar username -->
@@ -37,7 +51,7 @@ const router = useRouter();
       </div>
       <!-- contract time -->
       <div class="grid grid-cols-5 items-center">
-        <v-icon class="">mdi-briefcase-account-outline</v-icon>
+        <v-icon class="">mdi-briefcase-alogoutccount-outline</v-icon>
         <div>
           <p class="font-semibold">Contract</p>
           <p>{{ user?.time_contract }}</p>
@@ -54,13 +68,18 @@ const router = useRouter();
     </div>
     <!-- Delete account button -->
     <div class="grid col-span-3 col-start-2 mt-10 mb-10">
-      <Button btnColor="pink" buttonName="Delete Account" />
+      <Button
+        btnColor="pink"
+        buttonName="Delete Account"
+        @click="deleteAccountPopupVisible = true"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { useUserStore } from "@/stores/user";
+import { ref } from "vue";
 
 export default {
   data() {

@@ -47,7 +47,7 @@ const logout = () => {
       ></v-list-item>
       <!-- TODO: open create team overlay -->
       <v-list-item
-        @click=""
+        @click="router.push({ name: 'create-team' })"
         prepend-icon="mdi-account-multiple-plus-outline"
         title="Create Team"
       ></v-list-item>
