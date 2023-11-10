@@ -22,9 +22,22 @@ const listTeam = ref<Item[]>([]);
 console.log(listTeam);
 
 const queryUuid = ref<string>();
-const queryStartTime = ref<string>("2021-11-08 10:01:56");
-const queryEndTime = ref<string>();
 
+// make time range from 1 year ago to now
+let start = new Date();
+start.setFullYear(start.getFullYear() - 1);
+
+let end = new Date();
+
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const day = ("0" + date.getDate()).slice(-2);
+  const hours = ("0" + date.getHours()).slice(-2);
+  const minutes = ("0" + date.getMinutes()).slice(-2);
+  const seconds = ("0" + date.getSeconds()).slice(-2);
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 ////////////////TEAM///////////////////
 
 /**
@@ -49,21 +62,8 @@ async function getTeamList() {
 // Fetch the team list the user has access to.
 getTeamList();
 
-////////////////TIME///////////////////
-let start = new Date();
-start.setFullYear(start.getFullYear() - 1);
+////////////////WORKING TIME///////////////////
 
-let end = new Date();
-
-function formatDate(date: Date) {
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  const day = ("0" + date.getDate()).slice(-2);
-  const hours = ("0" + date.getHours()).slice(-2);
-  const minutes = ("0" + date.getMinutes()).slice(-2);
-  const seconds = ("0" + date.getSeconds()).slice(-2);
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
 /**
  *  This function fetchs the list of working times from the api who are waiting for validation for a specific team in a year, a manager can only see the working times of his team
  */
@@ -83,7 +83,6 @@ const fetchData = async () => {
       }
     );
     const data = await response.json();
-
     const waitingWorkingTimes = data.data.filter(
       (item: { status: string }) => item.status === "waiting"
     );
@@ -102,6 +101,8 @@ const fetchData = async () => {
 };
 let workingtimes_id = ref<string>();
 
+////////////////EDIT STATUS WORKING TIME///////////////////
+// Edit the status of a working time to validated or refused
 const changeValidateStatue = async (
   workingtimes_id: string,
   status: string
