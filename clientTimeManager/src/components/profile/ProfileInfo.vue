@@ -97,19 +97,3 @@ if(isManagedProfile) {
         </div>
     </div>
 </template>
-
-<!-- <script lang="ts">
-
-export default {
-  data() {
-    
-
-
-    
-
-    return {
-      user : user,
-    }
-  },
-}
-</script> -->
