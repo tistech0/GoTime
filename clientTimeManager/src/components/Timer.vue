@@ -59,6 +59,7 @@ export default {
         clearInterval(this.intervalId);
         this.clock = '00:00:00';
         await this.updateClockApi(new Date());
+        this.$emit('clock-stoped');
       }
     },
     async getClock() {
