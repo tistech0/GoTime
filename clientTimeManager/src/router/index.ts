@@ -15,7 +15,8 @@ export const routeNames = {
   register: 'register',
   profile: 'about',
   editProfile: 'editprofile',
-  validateTime: 'validate-time'
+  validateTime: 'validate-time',
+  notFound: 'not-found'
 }
 
 
@@ -57,6 +58,10 @@ const router = createRouter({
       name: routeNames.validateTime,
       component: ValidateTimeView,
     },
+    { path: '/:pathMatch(.*)*',
+      name: routeNames.notFound,
+      component: DashboardView, },
+
   ],
 });
 
