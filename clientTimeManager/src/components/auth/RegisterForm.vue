@@ -117,6 +117,7 @@ async function handleSubmit() {
     body: JSON.stringify(registerFormData.value),
   });
   if (!response.ok) {
+    // FIXME: use a try and catch statement
     errorHandling(response, snackbarStore, router);
     return;
   }

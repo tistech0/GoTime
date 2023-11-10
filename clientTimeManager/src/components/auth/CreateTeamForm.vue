@@ -10,18 +10,48 @@ import { transformData, errorHandling } from "../../utils/utils";
 import { useRouter } from "vue-router";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { Role } from "../../constants/RoleEnum";
+import { useUserStore } from "@/stores/user";
 
 const { lg, mobile } = useDisplay();
 const router = useRouter();
 const snackbarStore = useSnackbarStore();
 const apiUrl = import.meta.env.VITE_API_URL;
 
+const user = ref(useUserStore().getUser);
+
 const createTeamFormData = ref({
   team: {
     name: "",
-    manager_id: "",
+    manager_id: user.value?.id,
   },
 });
+
+const handleSubmit = async () => {
+  try {
+    const response = await fetch(`${apiUrl}/api/teams`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        team: {
+          name: createTeamFormData.value.team.name,
+          manager_id: createTeamFormData.value.team.manager_id,
+        },
+      }),
+    });
+  } catch (error) {
+    console.error(error);
+    // TODO: error handling
+    // errorHandling(error, snackbarStore, router);
+  }
+};
+
+// Initialize the list of teams as a list of Item
+const listManager = ref<Item[]>([]);
+
+// TODO: FETCH MANAGER
 </script>
 
 <template>
@@ -39,15 +69,16 @@ const createTeamFormData = ref({
         v-model="createTeamFormData.team.name"
       />
       <SelectOne
-        label="Select a team"
-        :itemList="listTeam"
+        v-if="user!.role === 'SuperAdmin'"
+        label="Select a manager"
+        :itemList="listManager"
         hint="Assign the employee to a team"
         v-model="createTeamFormData.team.manager_id"
         :clearable="true"
       />
       <Button
         btnColor="blue"
-        buttonName="Create the manager"
+        buttonName="Create the team"
         type="submit"
         @click="handleSubmit()"
       ></Button>
