@@ -19,7 +19,6 @@ const refusePopupVisible = ref(false);
 
 let workingTimesList = ref<TableStats[]>([]);
 const listTeam = ref<Item[]>([]);
-console.log(listTeam);
 
 const queryUuid = ref<string>();
 
@@ -121,7 +120,6 @@ const changeValidateStatue = async (
         }),
       }
     );
-    console.log("change status time " + response);
   } catch (error) {
     console.error(error);
   }
