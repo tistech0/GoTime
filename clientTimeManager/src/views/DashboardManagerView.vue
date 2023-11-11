@@ -52,7 +52,7 @@
             <v-icon class="mr-2" v-if="!item.needValidation">
               mdi-check-circle-outline
             </v-icon>
-            <v-icon class="mr-2" v-else @click="router.push({ name: routeNames.validateTimeUser, params: { id: item.user.id } })">
+            <v-icon class="mr-2" v-else @click="router.push({ name: routeNames.validateTimeUser, params: { id: queryUuid } })">
                 mdi-alert-box-outline
             </v-icon>
           </td>
@@ -149,14 +149,14 @@ export default {
 
         const WorkingTimes = data.data.filter((item: { status: string }) => item.status === 'validated' || item.status === 'waiting');
         workingTimesListFlat = WorkingTimes.map(
-            (w: TableTeamStats) => ({
+            (w: any) => ({
               ...w,
               id: w.id,
               start: new Date(w.start),
               status: w.status,
               end: new Date(w.end),
-              valueDay: w.valueDay.toFixed(2),
-              valueNight: w.valueNight.toFixed(2),
+              valueDay: parseFloat(w.valueDay).toFixed(2),
+              valueNight: parseFloat(w.valueNight).toFixed(2),
               user: w.user,
             })
         );
@@ -178,12 +178,13 @@ export default {
           let needValidation = false;
           workingTimeFlat.forEach((item2) => {
             if (item2.user.username === user && item2.status === 'validated') {
-              day += item2.valueDay;
-              night += item2.valueNight;
+              day += parseFloat(item2.valueDay);
+              night += parseFloat(item2.valueNight);
             } else if (item2.user.username === user && item2.status === 'waiting') {
               needValidation = true;
             }
           });
+          console.log(day, typeof day);
           workingTimeList.push({
             id: item.id,
             start: item.start,
