@@ -1,7 +1,7 @@
 <template>
   <BottomNav v-if="mobile" />
   <Sidebar v-else />
-  <!-- <DeleteLogoutOverlay
+  <DeleteLogoutOverlay
     ref="deleteTeamPopup"
     title="Delete the team"
     description="Are you sure you want to delete this team?"
@@ -9,7 +9,7 @@
     v-model:visible="deleteTeamPopupVisible"
     v-if="deleteTeamPopupVisible"
   />
-  <Button
+  <!-- <Button
     btnColor="pink"
     buttonName="Delete Team"
     @click="deleteTeamPopupVisible = true"
@@ -25,6 +25,11 @@
         @update:modelValue="updateAll()"
         :clearable="false"
       />
+      <AddMemberOverlay
+        :team_id="queryUuid"
+        v-model:visible="addNewMemberPopupVisible"
+        v-if="addNewMemberPopupVisible"
+      />
       <WeekSelector @week-updated="updateWeek" />
     </div>
     <TimeGraphManager
@@ -38,18 +43,24 @@
     <hr v-if="workingTimesList.length > 0" />
     <div class="button-manager-wrapper">
       <Button
+        @on-click="router.push({ name: routeNames.createTeam })"
         button-name="Add a new Team"
         btn-color="blue"
         style="width: 100%"
       />
-      <Button button-name="Remove Team" btn-color="pink" style="width: 100%" />
       <Button
+        @click="deleteTeamPopupVisible = true"
+        button-name="Remove Team"
+        btn-color="pink"
+        style="width: 100%"
+      />
+      <Button
+        @click="addNewMemberPopupVisible = true"
         button-name="Add a new Member"
         btn-color="blue"
         style="width: 100%"
       />
     </div>
-    >>>>>>> origin/feat/dashboard_manager
     <v-table class="" fixed-header>
       <thead class="drop-shadow-md">
         <tr>
@@ -128,8 +139,10 @@ import Sidebar from "@/components/SideBar.vue";
 import { routeNames } from "@/router";
 import DeleteLogoutOverlay from "../components/overlay/DeleteLogoutOverlay.vue";
 import Button from "@/components/form/Button.vue";
+import AddMemberOverlay from "../components/overlay/AddMemberOverlay.vue";
 
 const deleteTeamPopupVisible = ref(false);
+const addNewMemberPopupVisible = ref(false);
 export default {
   computed: {
     routeNames() {
