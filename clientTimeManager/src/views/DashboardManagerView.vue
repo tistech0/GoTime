@@ -36,6 +36,20 @@
     />
     <h2 v-else class="no-data">No data you need to pick a team</h2>
     <hr v-if="workingTimesList.length > 0" />
+    <div class="button-manager-wrapper">
+      <Button
+        button-name="Add a new Team"
+        btn-color="blue"
+        style="width: 100%"
+      />
+      <Button button-name="Remove Team" btn-color="pink" style="width: 100%" />
+      <Button
+        button-name="Add a new Member"
+        btn-color="blue"
+        style="width: 100%"
+      />
+    </div>
+    >>>>>>> origin/feat/dashboard_manager
     <v-table class="" fixed-header>
       <thead class="drop-shadow-md">
         <tr>
@@ -107,12 +121,13 @@ import type { Item } from "@/types/items";
 import { useDisplay } from "vuetify";
 import TimeGraphManger from "@/components/TimeGraphManager.vue";
 import WeekSelector from "@/components/WeekSelector.vue";
+import TimeGraphManager from "@/components/TimeGraphManager.vue";
 import SelectOne from "@/components/form/SelectOne.vue";
 import BottomNav from "@/components/BottomNav.vue";
 import Sidebar from "@/components/SideBar.vue";
-import TimeGraphManager from "@/components/TimeGraphManager.vue";
 import { routeNames } from "@/router";
 import DeleteLogoutOverlay from "../components/overlay/DeleteLogoutOverlay.vue";
+import Button from "@/components/form/Button.vue";
 
 const deleteTeamPopupVisible = ref(false);
 export default {
@@ -122,6 +137,7 @@ export default {
     },
   },
   components: {
+    Button,
     TimeGraphManger,
     WeekSelector,
     SelectOne,
@@ -355,5 +371,14 @@ hr {
 .page-wrapper {
   max-width: 80%;
   margin: 0 auto;
+}
+
+.button-manager-wrapper {
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  justify-content: end;
+  flex-direction: row;
+  align-items: center;
 }
 </style>
