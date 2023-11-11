@@ -9,12 +9,12 @@ const {mobile} = useDisplay()
   <Sidebar v-else/>
   <v-main class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense">
     <Timer class="md:col-span-2" @clock-stoped="actualiseData" :username="userUsername"/>
-    <div class="data-wrapper md:col-span-3" :key="keyNumber">
+    <div class="data-wrapper md:col-span-3">
       <h1 class="text-center" v-if="$route.params.username">Working times of {{ userUsername }}</h1>
       <WeekSelector @week-updated="updateWeek"/>
-      <TimeGraph :end="end" :start="start" :workingTimeList="workingTimesList"/>
+      <TimeGraph :end="end" :start="start" :workingTimeList="workingTimesList" :key="keyNumber"/>
       <hr v-if="workingTimesList.length > 0">
-      <v-table class="" fixed-header>
+      <v-table class="" fixed-header :key="keyNumber">
         <thead class="drop-shadow-md">
         <tr>
           <th class="text-left">
@@ -126,6 +126,7 @@ export default {
       this.end = new Date(currentDate);
       this.end.setDate(this.end.getDate() - 6);
       await this.fetchData();
+      this.keyNumber++;
     },
     async fetchData() {
       try {
