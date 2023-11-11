@@ -81,8 +81,6 @@ For all the project, we wanted to have some kind of project management. We have 
 
 Before starting the project, we did some design thinking to have a better idea of what we wanted to do.
 
-We used [Notion](https://www.notion.so/) to do it. We created a [Notion](https://www.notion.so/) page to write down all our ideas and to have a better overview of the project.
-
 Then, we created 3 personas representing 3 types of user : User, Manager, Global manager. That helped us to have a better idea of what the user would want to do on the website.
 
 <a href="https://github.com/EpitechMscProPromo2025/T-POO-700-NAN_9/tree/main/clientTimeManager/public/TimeManagerPersonas/Persona1.png">
@@ -195,16 +193,17 @@ You must install:
    npm install -g @capacitor/cli
    npx cap init Gotime eu.gotime.app --web-dir=dist
    ```
+
 2. Build the app
    ```sh
    npm run build
    ```
-3. Install the native platforms 
+3. Install the native platforms
    ```sh
    npm i @capacitor/ios @capacitor/android
    npx cap add android
    npx cap add ios
-   ```   
+   ```
 4. Sync the app
    ```sh
     npx cap sync
@@ -215,6 +214,7 @@ You must install:
 1. Open the android project in android studio
 2. Build the project
 3. Generate the apk
+
 ---
 
 <!-- HOW TO USE IT -->
