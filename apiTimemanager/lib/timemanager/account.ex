@@ -38,6 +38,14 @@ defmodule Timemanager.Account do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets all admins.
+  """
+  def get_admins do
+    query = from u in User, join r in Role, on: u.role_id == r.id, where: r.role == "admin"
+    Repo.all(query)
+  end
+
+  @doc """
   This def gets the user without throwing an exception if it's null
   """
   def get_user(id), do: Repo.get(User, id)

@@ -138,6 +138,10 @@ defmodule TimemanagerWeb.Router do
     post("/", UserController, :register)
     patch("/:userID", UserController, :update_user_role, [:role])
     delete("/:userID", UserController, :delete)
+
+    pipe_through([:require_super_admin_role])
+    get("/admins", UserController, :get_admins)
+
   end
 
   ## Role routes
