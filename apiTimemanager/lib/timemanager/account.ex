@@ -41,9 +41,17 @@ defmodule Timemanager.Account do
   Gets all admins.
   """
   def get_admins do
-    query = from u in User, join r in Role, on: u.role_id == r.id, where: r.role == "admin"
+    # Create a query
+    query = from u in User,
+                 # Join the Role table
+                 join: r in Timemanager.Roles.Role, on: u.role_id == r.id,
+                   # Filter for admins
+                 where: r.role == "Admin"
+
+    # Execute the query
     Repo.all(query)
   end
+
 
   @doc """
   This def gets the user without throwing an exception if it's null

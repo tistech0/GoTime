@@ -219,7 +219,7 @@ defmodule TimemanagerWeb.UserController do
   @doc """
     This def gets the list of admins
   """
-  def get_admins(conn) do
+  def get_admins(conn, _params) do
     admins = Account.get_admins()
     render(conn, :index, users: admins)
   end
