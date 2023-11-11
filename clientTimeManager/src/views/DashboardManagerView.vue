@@ -167,7 +167,7 @@ export default {
       }
 
     },
-    formatWorkingTime(workingTimeFlat: TableTeamStats[],): TableTeamStats[] {
+    formatWorkingTime(workingTimeFlat: any[],): TableTeamStats[] {
       const workingTimeList: TableTeamStats[] = [];
       const userList: string[] = [];
       workingTimeFlat.forEach((item) => {

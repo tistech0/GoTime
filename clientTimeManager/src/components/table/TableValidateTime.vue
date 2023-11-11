@@ -22,7 +22,7 @@ const listTeam = ref<Item[]>([]);
 console.log(listTeam);
 
 
-const queryUuid = ref<string>(router.params.id);
+const queryUuid = ref<any>(router.params.id);
 const queryStartTime = ref<string>("2021-11-08 10:01:56");
 const queryEndTime = ref<string>("2025-11-08 10:01:56");
 
