@@ -49,8 +49,8 @@ _The service provied also a mobile app to be able to use it everywhere._
 - The web app in Vue.js
 - The dev ops part with Docker Kubernetes and CI/CD
 - The design thinking part with the personas, the user story map, the graphic charter, the maquette and the prototype
-- The authentication part with TODO
-- The mobile app in TODO
+- The authentication part
+- The mobile app with capacitor
 - The security part
 
 <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
@@ -119,7 +119,7 @@ You must install:
 
 2. Configure your environnment
 
-   Rename the `.env.example` file as `.env`. Create a new database and set the `\*DB\_\*\*` variables in the .env file in order to connect to your newly created database.
+   Rename the `.env.example` files as `.env`. Create a new database and set the variables in the .env file in order to configure your environment.
 
 > Again: You need to replace the variables in your `.env` file with your own values.
 
