@@ -48,11 +48,11 @@
       </template>
       <template v-else>
         <tr v-for="item in workingTimesList" :key="item.id">
-          <td @click="router.push({ name: routeNames.validateTimeUser, params: { id: item.user.id } })">
+          <td>
             <v-icon class="mr-2" v-if="!item.needValidation">
               mdi-check-circle-outline
             </v-icon>
-            <v-icon class="mr-2" v-else>
+            <v-icon class="mr-2" v-else @click="router.push({ name: routeNames.validateTimeUser, params: { id: item.user.id } })">
                 mdi-alert-box-outline
             </v-icon>
           </td>
@@ -178,8 +178,8 @@ export default {
           let needValidation = false;
           workingTimeFlat.forEach((item2) => {
             if (item2.user.username === user && item2.status === 'validated') {
-              day += parseFloat(item2.valueDay);
-              night += parseFloat(item2.valueNight);
+              day += item2.valueDay;
+              night += item2.valueNight;
             } else if (item2.user.username === user && item2.status === 'waiting') {
               needValidation = true;
             }
@@ -210,7 +210,6 @@ export default {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     formatHourMin(value: number) {
-      console.log(value)
       const hours = Math.floor(value);
       const minutes = Math.round((value - hours) * 60);
       return `${hours}h ${minutes}min`;

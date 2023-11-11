@@ -49,7 +49,8 @@ export default {
     };
   },
   methods: {
-    formatDate(date: Date) {
+    formatDate(date: Date): string {
+      if (!date) return "";
       let year = date.getFullYear();
       let month = ('0' + (date.getMonth() + 1)).slice(-2);
       let day = ('0' + date.getDate()).slice(-2);
@@ -72,13 +73,14 @@ export default {
       let night: number[] = [];
       let index = 0;
       data.forEach((element) => {
-        while (element.day !== this.formatDate(this.categories[index])) {
+        while (element.day !== this.formatDate(this.categories[index]) && index < 7 ) {
           day.push(0);
           night.push(0);
           this.min.push(0);
           this.max.push(0);
           index++;
         }
+        if (index >= 7) return;
         day.push(element.average_day_hours);
         night.push(element.average_night_hours);
         this.min.push(element.min_hours);
