@@ -8,8 +8,9 @@ const {mobile} = useDisplay()
   <BottomNav v-if="mobile"/>
   <Sidebar v-else/>
   <v-main class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense">
-    <Timer class="md:col-span-2" @clock-stoped="actualiseData"/>
+    <Timer class="md:col-span-2" @clock-stoped="actualiseData" :username="userUsername"/>
     <div class="data-wrapper md:col-span-3" :key="keyNumber">
+      <h1 class="text-center" v-if="$route.params.username">Working times of {{ userUsername }}</h1>
       <WeekSelector @week-updated="updateWeek"/>
       <TimeGraph :end="end" :start="start" :workingTimeList="workingTimesList"/>
       <hr v-if="workingTimesList.length > 0">
@@ -101,8 +102,9 @@ export default {
       start: new Date(),
       end: this.initOneWeekAgo(),
       workingTimesList: ref<TableStats[]>([]),
-      userId: user?.id,
-      keyNumber: 0
+      userId: this.setUserId(user),
+      userUsername: this.setUserUsername(user),
+      keyNumber: 0,
     };
   },
   methods: {
@@ -110,6 +112,14 @@ export default {
       let week = new Date();
       week.setDate(week.getDate() - 6);
       return week;
+    },
+    setUserId(user: any) {
+      const routeId = this.$route.params.id;
+      return routeId ? routeId : user.id;
+    },
+    setUserUsername(user: any) {
+      const routeUsername = this.$route.params.username;
+      return routeUsername ? routeUsername : user.username;
     },
     async updateWeek(currentDate: Date) {
       this.start = new Date(currentDate);

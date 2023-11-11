@@ -56,7 +56,7 @@
                 mdi-alert-box-outline
             </v-icon>
           </td>
-          <td @click="router.push({ name: routeNames.userLook, params: { id: item.user.id } })">
+          <td @click="router.push({ name: routeNames.userLook, params: { id: item.user.id, username: item.user.username } })">
             {{ item.user.username }}
           </td>
           <td>{{ formatHourMin(item.valueDay) }}</td>

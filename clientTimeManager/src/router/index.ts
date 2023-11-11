@@ -7,7 +7,7 @@ import ValidateTimeView from "../views/ValidateTimeView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import DashboardManagerViewVue from "@/views/DashboardManagerView.vue";
 import { useUserStore } from '@/stores/user';
-import { Role } from '../constants/RoleEnum'
+import { Role } from '@/constants/RoleEnum'
 
 export const routeNames = {
   home: 'home',
@@ -17,7 +17,7 @@ export const routeNames = {
   editProfile: 'editprofile',
   validateTime: 'validate-time',
   validateTimeUser: 'validate-time/:id',
-  userLook: 'user-look/:id',
+  userLook: '/:id/:username',
 }
 
 const router = createRouter({
@@ -59,7 +59,7 @@ const router = createRouter({
       component: ValidateTimeView,
     },
     {
-      path: "/user-look/:id",
+      path: "/:id/:username",
       name: routeNames.userLook,
       component: DashboardView,
     },
@@ -72,7 +72,7 @@ const router = createRouter({
 });
 
 // Make some checks before allowing routes redirections
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
 
   // Fetch from localstorage
   const userStore = useUserStore();
