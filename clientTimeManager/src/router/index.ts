@@ -17,7 +17,8 @@ export const routeNames = {
   profile: "about",
   editProfile: "editprofile",
   validateTime: "validate-time",
-  createTeam: "create-team",
+  validateTimeUser: "validate-time/:id",
+  userLook: "user-look/:id",
 };
 
 const router = createRouter({
@@ -59,9 +60,14 @@ const router = createRouter({
       component: ValidateTimeView,
     },
     {
-      path: "/create-team",
-      name: routeNames.createTeam,
-      component: CreateTeamView,
+      path: "/user-look/:id",
+      name: routeNames.userLook,
+      component: DashboardView,
+    },
+    {
+      path: "/validate-time/:id",
+      name: routeNames.validateTimeUser,
+      component: ValidateTimeView,
     },
   ],
 });

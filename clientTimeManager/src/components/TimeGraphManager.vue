@@ -71,7 +71,6 @@ export default {
       let day: number[] = [];
       let night: number[] = [];
       let index = 0;
-      console.log("data", data);
       data.forEach((element) => {
         while (element.day !== this.formatDate(this.categories[index])) {
           day.push(0);
@@ -86,7 +85,13 @@ export default {
         this.max.push(element.max_hours);
         index++;
       });
-
+      while (index < 7) {
+        day.push(0);
+        night.push(0);
+        this.min.push(0);
+        this.max.push(0);
+        index++;
+      }
       series.push({
         name: "Day average time",
         data: day,
