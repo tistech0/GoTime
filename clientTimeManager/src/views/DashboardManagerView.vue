@@ -1,7 +1,7 @@
 <template>
   <BottomNav v-if="mobile" />
   <Sidebar v-else />
-  <DeleteLogoutOverlay
+  <!-- <DeleteLogoutOverlay
     ref="deleteTeamPopup"
     title="Delete the team"
     description="Are you sure you want to delete this team?"
@@ -13,7 +13,7 @@
     btnColor="pink"
     buttonName="Delete Team"
     @click="deleteTeamPopupVisible = true"
-  ></Button>
+  ></Button> -->
   <v-main class="page-wrapper">
     <div class="selector-wrapper">
       <SelectOne
@@ -91,6 +91,10 @@
   </v-main>
 </template>
 
+<script setup lang="ts">
+const { mobile } = useDisplay();
+</script>
+
 <script lang="ts">
 import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
@@ -110,7 +114,6 @@ import TimeGraphManager from "@/components/TimeGraphManager.vue";
 import { routeNames } from "@/router";
 import DeleteLogoutOverlay from "../components/overlay/DeleteLogoutOverlay.vue";
 
-const { mobile } = useDisplay();
 const deleteTeamPopupVisible = ref(false);
 export default {
   computed: {
@@ -224,8 +227,8 @@ export default {
           let needValidation = false;
           workingTimeFlat.forEach((item2) => {
             if (item2.user.username === user && item2.status === "validated") {
-              day += parseFloat(item2.valueDay);
-              night += parseFloat(item2.valueNight);
+              day += item2.valueDay;
+              night += item2.valueNight;
             } else if (
               item2.user.username === user &&
               item2.status === "waiting"
