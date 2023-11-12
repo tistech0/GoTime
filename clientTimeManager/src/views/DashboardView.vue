@@ -44,9 +44,8 @@ let selectedItem = ref<WorkingTime>();
   >
     <Timer
       class="md:col-span-2"
-      @clock-stoped="(item: WorkingTime) => {
-        actualiseData();
-
+      @clock-stoped="actualiseData"
+      @edit-time="(item: WorkingTime) => {
         workingtimes_id = item.id;
         selectedItem = item;
         editTimePopupVisible = true;
@@ -65,7 +64,7 @@ let selectedItem = ref<WorkingTime>();
         :key="keyNumber"
       />
       <hr v-if="workingTimesList.length > 0" />
-      <v-table class="" fixed-header :key="keyNumber">
+      <v-table fixed-header height="400px" :key="keyNumber">
         <thead class="drop-shadow-md">
           <tr>
             <th class="text-left">Start</th>
