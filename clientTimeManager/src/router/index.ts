@@ -15,7 +15,6 @@ export const routeNames = {
   register: 'register',
   profile: 'profile',
   editProfile: 'editprofile',
-  validateTime: 'validate-time',
   validateTimeUser: 'validate-time/:id',
   userLook: '/:id/:username',
   manageProfile: 'manageProfile',
@@ -118,6 +117,7 @@ router.beforeEach((to) => {
       case routeNames.manageEditprofile:
       case routeNames.manageProfile:
       case routeNames.userLook:
+      case routeNames.validateTimeUser:
       case routeNames.register: {
         return { name: routeNames.home };
       }
