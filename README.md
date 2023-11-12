@@ -136,27 +136,22 @@ You must install:
       <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
 
 ### Initialisation mobil app
-
 1. Install capacitor
 
    ```sh
    npm install -g @capacitor/cli
    npx cap init Gotime eu.gotime.app --web-dir=dist
    ```
-
-2. Build the app
-   ```sh
-   npm run build
-   ```
-3. Install the native platforms
+2. Install the native platforms
    ```sh
    npm i @capacitor/ios @capacitor/android
    npx cap add android
    npx cap add ios
    ```
-4. Sync the app
+3. Sync the app
    ```sh
-    npx cap sync
+   npm run build
+   npx cap sync
    ```
 
 ### Generate the apk android
