@@ -42,7 +42,6 @@ defmodule Timemanager.Teams do
   """
   def get_team(id), do: Repo.get(Team, id)
 
-
   @doc """
   Creates a team.
 
@@ -123,6 +122,6 @@ defmodule Timemanager.Teams do
         where: t.manager_id == ^manager_id
       )
 
-      teams = Repo.all(query)
+    Repo.all(query)
   end
 end

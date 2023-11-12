@@ -102,7 +102,8 @@ export default {
   },
   components: {Button, TimeGraphManger, WeekSelector, SelectOne, BottomNav, Sidebar, TimeGraphManager},
   data() {
-    const user = useUserStore().getUser;
+    const userStore = useUserStore();
+    const user = userStore.getUser;
 
     return {
       start: new Date(),
@@ -110,6 +111,7 @@ export default {
       workingTimesList: ref<TableTeamStats[]>([]),
       userId: user?.id,
       snackbarStore: useSnackbarStore(),
+      userStore: userStore,
       router: useRouter(),
       apiUrl: import.meta.env.VITE_API_URL,
       workingTimesListTeam: ref<TeamStats[]>([]),
@@ -145,6 +147,10 @@ export default {
                 'Content-Type': 'application/json'
               }
             });
+         if (!response.ok) {
+          errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
+          return
+        }
         const data = await response.json();
 
         const WorkingTimes = data.data.filter((item: { status: string }) => item.status === 'validated' || item.status === 'waiting');
@@ -221,7 +227,7 @@ export default {
         }
       });
       if (!response.ok) {
-        errorHandling(response, this.snackbarStore, this.router);
+        errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
         return
       }
       const data = await response.json();
@@ -239,6 +245,10 @@ export default {
                 'Content-Type': 'application/json'
               }
             });
+        if (!response.ok) {
+          errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
+          return
+      }
         const data = await response.json();
 
         this.workingTimesListTeam = data.data.map(

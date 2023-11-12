@@ -129,6 +129,6 @@ defmodule Timemanager.Team do
         select: t
       )
 
-    teams = Repo.all(query)
+    Repo.all(query)
   end
 end

@@ -48,7 +48,6 @@ roles_uuids = %{
   "SuperAdmin" => Repo.get_by(Role, role: "SuperAdmin").id
 }
 
-
 # List of users to be inserted
 users_list = [
   %{
@@ -73,6 +72,7 @@ users_list = [
     role_id: roles_uuids["SuperAdmin"]
   }
 ]
+
 Enum.each(users_list, fn user ->
   # Check if the user already exists in the database
   existing_user = Repo.get_by(Timemanager.Account.User, username: user.username)
@@ -89,7 +89,7 @@ Enum.each(users_list, fn user ->
   end
 end)
 
-users_uuid= %{
+users_uuid = %{
   "admin" => Repo.get_by(Timemanager.Account.User, username: "admin").id,
   "user" => Repo.get_by(Timemanager.Account.User, username: "user").id,
   "superadmin" => Repo.get_by(Timemanager.Account.User, username: "superadmin").id
@@ -168,7 +168,7 @@ working_times_list = [
     valueNight: 0.0,
     status: "validated",
     user_id: users_uuid["superadmin"]
-  },
+  }
 ]
 
 Enum.each(working_times_list, fn working_time ->
@@ -243,7 +243,7 @@ teams_list = [
   %{
     name: "Team 4",
     manager_id: users_uuid["admin"]
-  },
+  }
 ]
 
 Enum.each(teams_list, fn team ->
@@ -262,6 +262,7 @@ Enum.each(teams_list, fn team ->
       IO.puts("Team '#{team.name}' already exists.")
   end
 end)
+
 teams_uuid = %{
   "Team 1" => Repo.get_by(Timemanager.Teams.Team, name: "Team 1").id,
   "Team 2" => Repo.get_by(Timemanager.Teams.Team, name: "Team 2").id,
@@ -302,7 +303,7 @@ team_members_list = [
   %{
     team_id: teams_uuid["Team 4"],
     user_id: users_uuid["superadmin"]
-  },
+  }
 ]
 
 Enum.each(team_members_list, fn team_member ->

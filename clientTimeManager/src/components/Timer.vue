@@ -22,6 +22,11 @@
 <script lang="ts">
 import type { Clock } from '@/types/clock';
 import { useUserStore } from "@/stores/user";
+import { errorHandling } from "@/utils/utils";
+import { useSnackbarStore } from "@/stores/snackbar";
+import {useRouter} from "vue-router";
+
+
 
 export default {
   props: {
@@ -31,7 +36,8 @@ export default {
     }
   },
   data() {
-    const userStore = useUserStore().getUser;
+    const userStore = useUserStore();
+    const user = userStore.getUser;
 
     return {
       clock: "00:00:00",
@@ -39,7 +45,10 @@ export default {
       isTicking: false,
       intervalId: 0 as unknown as NodeJS.Timeout,
       startTime: new Date(),
-      userId: userStore?.id
+      userId: user?.id,
+      userStore: userStore,
+      snackbarStore: useSnackbarStore(),
+      router: useRouter(),
     }
   },
   methods: {
@@ -75,6 +84,10 @@ export default {
           'Content-Type': 'application/json'
         },
       });
+      if (!response.ok) {
+        errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
+        return
+      }
       return await response.json();
     },
     async updateClockApi(date: Date) {
@@ -92,6 +105,10 @@ export default {
           }
         })
       });
+      if (!response.ok) {
+        errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
+        return
+      }
       return await response.json();
     },
     formatDate(date: Date) {

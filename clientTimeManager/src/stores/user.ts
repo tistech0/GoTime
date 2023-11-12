@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import type { User } from '../types/user'
+import { Role } from '@/constants/RoleEnum'
+
 
 /**
  * This defines the pinia store for the current connected user.
@@ -24,6 +26,10 @@ export const useUserStore = defineStore({
      * @param currentUser is the user returned on login
      */
     loginUser(currentUser: User) {
+      // set the current user role with the right enum value.
+      currentUser.role = Role[currentUser.role as keyof typeof Role] || currentUser.role
+
+      // Log the user by persisting the values.
       this.user = currentUser;
       this.isAuthenticated = true;
     },
