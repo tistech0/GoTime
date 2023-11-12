@@ -7,7 +7,6 @@ import type { Item } from "@/types/items";
 import { errorHandling } from "@/utils/utils";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import DeleteLogoutOverlay from "../overlay/DeleteLogoutOverlay.vue";
 
@@ -15,6 +14,7 @@ const snackbarStore = useSnackbarStore();
 const router = useRoute();
 const { mobile } = useDisplay();
 const apiUrl = import.meta.env.VITE_API_URL;
+const userStore = useUserStore();
 
 const validatePopupVisible = ref(false);
 const refusePopupVisible = ref(false);
@@ -38,8 +38,6 @@ function formatDate(date: Date) {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 const queryUuid = ref<any>(router.params.id);
-const queryStartTime = ref<string>("2021-11-08 10:01:56");
-const queryEndTime = ref<string>("2025-11-08 10:01:56");
 
 ////////////////TEAM///////////////////
 
@@ -47,19 +45,27 @@ const queryEndTime = ref<string>("2025-11-08 10:01:56");
  *  This function fetchs the list of teams from the api and assign the value to the listTeam
  */
 async function getTeamList() {
-  const response = await fetch(`${apiUrl}/api/teams/manage`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    errorHandling(response, snackbarStore, router, useUserStore().logoutUser);
-    return;
+  try {
+    const response = await fetch(`${apiUrl}/api/teams/manage`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      errorHandling(response, snackbarStore, router, useUserStore().logoutUser);
+      return;
+    }
+    const data = await response.json();
+    listTeam.value = data.data;
+    // preselect the first team
+    queryUuid.value = data.data[0].id;
+
+    fetchData();
+  } catch (error) {
+    console.error(error);
   }
-  const data = await response.json();
-  listTeam.value = data.data;
 }
 
 // Fetch the team list the user has access to.
@@ -98,6 +104,10 @@ const fetchData = async () => {
       valueDay: parseInt(w.valueDay),
       valueNight: parseInt(w.valueNight),
     }));
+    if (!response.ok) {
+      errorHandling(response, snackbarStore, router, userStore.logoutUser);
+      return;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -126,7 +136,10 @@ const changeValidateStatue = async (
         }),
       }
     );
-
+    if (!response.ok) {
+      errorHandling(response, snackbarStore, router, userStore.logoutUser);
+      return;
+    }
     fetchData();
   } catch (error) {
     console.error(error);
