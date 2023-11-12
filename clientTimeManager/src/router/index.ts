@@ -117,6 +117,7 @@ router.beforeEach((to) => {
     switch(to.name) {
       case routeNames.manageEditprofile:
       case routeNames.manageProfile:
+      case routeNames.userLook:
       case routeNames.register: {
         return { name: routeNames.home };
       }
