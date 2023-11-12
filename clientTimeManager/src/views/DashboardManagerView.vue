@@ -5,7 +5,12 @@
     ref="deleteTeamPopup"
     title="Delete the team"
     description="Are you sure you want to delete this team?"
-    @action="deleteTeam(queryUuid)"
+    @action="
+      async () => {
+        await deleteTeam(queryUuid);
+        fetchData();
+      }
+    "
     v-model:visible="deleteTeamPopupVisible"
     v-if="deleteTeamPopupVisible"
   />
