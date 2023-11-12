@@ -58,6 +58,7 @@ defmodule TimemanagerWeb.TeamController do
         end
     rescue
       _ -> ErrorTemplate.error_template(conn, 400, "Error whith the team id")
+      end
   end
 
   @doc """
