@@ -7,11 +7,6 @@ defmodule TimemanagerWeb.Team_userController do
 
   action_fallback TimemanagerWeb.FallbackController
 
-  def index(conn, _params) do
-    team_users = Team.list_team_users()
-    render(conn, :index, team_users: team_users)
-  end
-
   def create(conn, %{"team_user" => team_user_params}) do
     try do
       with {:ok, %Team_user{} = team_user} <- Team.create_team_user(team_user_params) do
@@ -24,11 +19,15 @@ defmodule TimemanagerWeb.Team_userController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    team_user = Team.get_team_user!(id)
+  def delete(conn, %{"team_id" => team_id, "user_id" => user_id}) do
+    try do
+      team_user = Team.get_team_user_by_teamid_userid(team_id, user_id)
 
-    with {:ok, %Team_user{}} <- Team.delete_team_user(team_user) do
-      send_resp(conn, :no_content, "")
+      with {:ok, %Team_user{}} <- Team.delete_team_user(team_user) do
+        send_resp(conn, :no_content, "")
+      end
+    rescue
+      _ -> ErrorTemplate.error_template(conn, 400, "Error Parameters")
     end
   end
 
@@ -47,8 +46,8 @@ defmodule TimemanagerWeb.Team_userController do
             }
           )
       })
+    rescue
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the user id")
     end
-  rescue
-    _ -> ErrorTemplate.error_template(conn, 400, "Error whit the user id")
   end
 end

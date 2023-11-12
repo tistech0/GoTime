@@ -35,6 +35,7 @@ defmodule TimemanagerWeb.Router do
     # Routes for team users
     - `GET /api/teamUser/:userID`: Returns the team link member for a specific userID. (Role: admin)
     - `POST /api/teamUser/`: Creates a new team user. (Role: admin)
+    - `DELETE /api/teamUser/`: Deletes a specific team user. (Role: admin)
 
     # Routes for clocks
     - `GET /api/clocks/:userID`: Returns the clock for a specific userID. (Role: user)
@@ -108,6 +109,7 @@ defmodule TimemanagerWeb.Router do
     pipe_through([:api, :require_authenticated_user, :require_admin_role])
 
     get("/:userID", Team_userController, :getTeamLinkMember)
+    delete("/", Team_userController, :delete, [:team_id, :user_id])
     post("/", Team_userController, :create)
   end
 
