@@ -102,10 +102,7 @@ router.beforeEach((to, from) => {
 
   // Check user roles and grant access or not to pages
 
-  // Get the role enum value
-  const userRoleEnumValue = Role[currentUser?.role as keyof typeof Role];
-
-  if(userRoleEnumValue != Role.Admin && userRoleEnumValue != Role.SuperAdmin) {
+  if(currentUser?.role != Role.Admin && currentUser?.role != Role.SuperAdmin) {
     switch(to.name) {
       case routeNames.manageEditprofile:
       case routeNames.manageProfile:
