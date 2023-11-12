@@ -51,10 +51,11 @@ defmodule TimemanagerWeb.TeamController do
 
 
   def delete(conn, %{"teamID" => id}) do
-    team = Teams.get_team!(id)
-      with {:ok, %Team{}} <- Teams.delete_team(team) do
-        send_resp(conn, :no_content, "")
-      end
+    try do
+      team = Teams.get_team!(id)
+        with {:ok, %Team{}} <- Teams.delete_team(team) do
+          send_resp(conn, :no_content, "")
+        end
     rescue
       _ -> ErrorTemplate.error_template(conn, 400, "Error whith the team id")
     end
