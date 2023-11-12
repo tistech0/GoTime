@@ -98,8 +98,8 @@ users_uuid = %{
 # List of working_times to be inserted
 working_times_list = [
   %{
-    start: "2023-11-05 09:00:54",
-    end: "2023-11-05 12:16:13",
+    start: "2023-11-07 09:00:54",
+    end: "2023-11-07 12:16:13",
     valueDay: 0.0,
     valueNight: 9.0,
     status: "validated",
@@ -122,8 +122,8 @@ working_times_list = [
     user_id: users_uuid["admin"]
   },
   %{
-    start: "2023-11-05 09:00:54",
-    end: "2023-11-05 12:16:13",
+    start: "2023-11-08 09:00:54",
+    end: "2023-11-08 12:16:13",
     valueDay: 0.0,
     valueNight: 0.0,
     status: "validated",
@@ -146,8 +146,8 @@ working_times_list = [
     user_id: users_uuid["user"]
   },
   %{
-    start: "2023-11-05 09:00:54",
-    end: "2023-11-05 12:16:13",
+    start: "2023-11-08 09:00:54",
+    end: "2023-11-08 12:16:13",
     valueDay: 2.2,
     valueNight: 2.8,
     status: "validated",
