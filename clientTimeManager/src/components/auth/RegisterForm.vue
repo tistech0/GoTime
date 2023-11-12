@@ -102,21 +102,22 @@ getTeamList();
 async function handleSubmit() {
   // Encrypt password with bcrypt
 
-  // Check the two password are equals
+  // Check email fields aren't empty
   if (
-    registerFormData.value.user.password !==
-    registerFormData.value.user.confirmPassword
+    registerFormData.value.user.email == initialFormData.user.email ||
+    registerFormData.value.user.username == initialFormData.user.username ||
+    registerFormData.value.user.password == initialFormData.user.password ||
+    registerFormData.value.user.confirm_password ==
+      initialFormData.user.confirm_password ||
+    registerFormData.value.user.role_id == initialFormData.user.role_id
   ) {
     snackbarStore.showSnackbar(
-      "Both password need to be the same",
+      "You forgot to fill some informations",
       2000,
       "error"
     );
-    registerFormData.value.user.confirmPassword = "";
     return;
   }
-  // Reset confirm password as it is unfiltered by phoenix and useless
-  registerFormData.value.user.confirmPassword = "";
 
   // Check the two password are equals
   if (
