@@ -272,7 +272,7 @@ export default {
         const apiUrl = import.meta.env.VITE_API_URL;
         const response = await fetch(
           `${apiUrl}/api/workingtimes/${workingtimes_id}`,
-          {>>>>>>> main
+          {
             method: "PUT",
             credentials: "include",
             headers: {
