@@ -7,6 +7,7 @@ defmodule TimemanagerWeb.UserController do
   alias Timemanager.Time
   alias Timemanager.Team
   alias Timemanager.Teams
+  alias TimemanagerWeb.ErrorTemplate
 
   require RoleEnum
 
@@ -43,7 +44,7 @@ defmodule TimemanagerWeb.UserController do
 
     # Send an error if the role given doesn't exist.
     if is_nil(role) do
-      error_template(conn, 400, "Invalid role")
+      ErrorTemplate.error_template(conn, 400, "Invalid role")
     end
 
     case Account.register_user(user_params) do
@@ -61,7 +62,7 @@ defmodule TimemanagerWeb.UserController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         error_msg = changeset_error_message(changeset)
-        error_template(conn, 400, error_msg)
+        ErrorTemplate.error_template(conn, 400, error_msg)
     end
   end
 
@@ -120,7 +121,7 @@ defmodule TimemanagerWeb.UserController do
 
     # from here, if user send error
     if current_user_role.role == RoleEnum.role(:user_role) do
-      error_template(conn, 403, "You are unauthorized to access this user.")
+      ErrorTemplate.error_template(conn, 403, "You are unauthorized to access this user.")
     end
 
     # If we reach this state, the user being accessed isn't the current user.
@@ -139,7 +140,7 @@ defmodule TimemanagerWeb.UserController do
 
       # If no user found, send error.
       true ->
-        error_template(conn, 400, "You are unauthorized to update this user.")
+        ErrorTemplate.error_template(conn, 400, "You are unauthorized to update this user.")
     end
   end
 
@@ -159,7 +160,7 @@ defmodule TimemanagerWeb.UserController do
       end)
 
     if is_team_manager == false do
-      error_template(conn, 400, "You are unauthorized to access this user.")
+      ErrorTemplate.error_template(conn, 400, "You are unauthorized to access this user.")
     end
   end
 
@@ -171,7 +172,7 @@ defmodule TimemanagerWeb.UserController do
     if user = Account.get_user_by_email_and_username(email, username) do
       render(conn, :show, user: user)
     else
-      error_template(conn, 404, "Email and username are different.")
+      ErrorTemplate.error_template(conn, 404, "Email and username are different.")
     end
   end
 
@@ -185,7 +186,7 @@ defmodule TimemanagerWeb.UserController do
 
     case Account.get_user(user_id) do
       nil ->
-        error_template(conn, 404, "User not found")
+        ErrorTemplate.error_template(conn, 404, "User not found")
 
       %User{} = user ->
         case handle_update(conn, current_user_role, current_user, user, user_params) do
@@ -195,7 +196,7 @@ defmodule TimemanagerWeb.UserController do
             render(conn, :show_profile, user: updated_user_with_role)
 
           {:error, reason} ->
-            error_template(conn, 400, reason)
+            ErrorTemplate.error_template(conn, 400, reason)
         end
     end
   end
@@ -252,12 +253,12 @@ defmodule TimemanagerWeb.UserController do
 
     # Check user isn't nil
     if is_nil(user) do
-      error_template(conn, 400, "Invalid user")
+      ErrorTemplate.error_template(conn, 400, "Invalid user")
     end
 
     # Check user isn't trying to delete itself
     if current_user.id == user.id do
-      error_template(conn, 400, "You are no allowed to delete yourself")
+      ErrorTemplate.error_template(conn, 400, "You are no allowed to delete yourself")
     end
 
     # If the user has the User role, terminate the def
@@ -267,7 +268,7 @@ defmodule TimemanagerWeb.UserController do
 
       # if list isn't empty, send error because the user is manages at least one team. Manager should be replaced before deleting
       if teams_managed != [] do
-        error_template(
+        ErrorTemplate.error_template(
           conn,
           400,
           "The user manages teams. You should replace the manager before deleting this user."
@@ -298,15 +299,5 @@ defmodule TimemanagerWeb.UserController do
   def get_admins(conn, _params) do
     admins = Account.get_admins()
     render(conn, :index, users: admins)
-  end
-
-  #    This private def is an error template to return.
-  #    It accepts the conn, and HttpErrorCode and a message
-
-  defp error_template(conn, error_code, message) do
-    conn
-    |> put_status(error_code)
-    |> json(%{error: message})
-    |> halt()
   end
 end
