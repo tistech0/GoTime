@@ -2,7 +2,6 @@ defmodule TimemanagerWeb.RoleController do
   use TimemanagerWeb, :controller
 
   alias Timemanager.Roles
-  alias Timemanager.Roles.Role
   alias TimemanagerWeb.ErrorTemplate
 
   require RoleEnum

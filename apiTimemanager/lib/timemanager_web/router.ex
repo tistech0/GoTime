@@ -138,7 +138,6 @@ defmodule TimemanagerWeb.Router do
     # Routes with admin rights. More control to make in the controller.
     pipe_through([:require_admin_role])
 
-    get("/", UserController, :get_user_by_email_and_username, [:email, :username])
     post("/", UserController, :register)
     get("/users", UserController, :index)
     delete("/:userID", UserController, :delete)

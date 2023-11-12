@@ -18,15 +18,7 @@
         >
           Stop your day</v-btn
         >
-        <a
-          @click="
-            updateClock()
-            // get last working time
-            // => edit working time
-            // updateclockapi
-          "
-          >Did you forget to stop your timer?</a
-        >
+        <a @click="updateClockEdit">Did you forget to stop your timer?</a>
       </div>
       <div v-else class="flex justify-center pt-10">
         <v-btn
@@ -73,6 +65,10 @@ export default {
     };
   },
   methods: {
+    async updateClockEdit() {
+      await this.updateClock();
+      this.$emit("edit-time", this.lastWorkingTime);
+    },
     async updateClock() {
       this.isTicking = !this.isTicking;
       if (this.isTicking) {
@@ -99,7 +95,7 @@ export default {
 
         this.lastWorkingTime = data;
 
-        this.$emit("clock-stoped", this.lastWorkingTime);
+        this.$emit("clock-stoped");
       }
     },
     async getClock() {
