@@ -17,6 +17,7 @@ const router = useRouter();
 const snackbarStore = useSnackbarStore();
 const apiUrl = import.meta.env.VITE_API_URL;
 
+const userStore = useUserStore();
 const user = ref(useUserStore().getUser);
 
 const createTeamFormData = ref({
@@ -41,17 +42,48 @@ const handleSubmit = async () => {
         },
       }),
     });
+
+    if (!response.ok) {
+      errorHandling(response, snackbarStore, router, userStore.logoutUser);
+      return;
+    } else {
+      router.push({ name: "manager" });
+    }
   } catch (error) {
     console.error(error);
-    // TODO: error handling
-    // errorHandling(error, snackbarStore, router);
   }
 };
 
 // Initialize the list of teams as a list of Item
 const listManager = ref<Item[]>([]);
 
-// TODO: FETCH MANAGER
+const getAdmin = async () => {
+  try {
+    const response = await fetch(`${apiUrl}/api/users/roles/admins`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      errorHandling(response, snackbarStore, router, userStore.logoutUser);
+      return;
+    }
+
+    const { data } = await response.json();
+
+    listManager.value = transformData(data, "id", "username");
+    listManager.value.push({
+      id: user.value!.id,
+      name: user.value!.username,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+getAdmin();
 </script>
 
 <template>
@@ -69,7 +101,7 @@ const listManager = ref<Item[]>([]);
         v-model="createTeamFormData.team.name"
       />
       <SelectOne
-        v-if="user!.role === 'SuperAdmin'"
+        v-if="user!.role === 'General Manager'"
         label="Select a manager"
         :itemList="listManager"
         hint="Assign the employee to a team"
