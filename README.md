@@ -126,12 +126,12 @@ You must install:
 4. Run the app with docker
 
    ```sh
-   docker-compose up
+   docker-compose up --build
    ```
 
    Your website should be available at http://localhost:4000
 
-   The website is also available at TODO (the deployed version)
+   The website is also available at http://34.163.234.235:80
 
       <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
 
