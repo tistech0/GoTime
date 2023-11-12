@@ -43,16 +43,10 @@ const {mobile} = useDisplay()
           </tr>
         </template>
         <template v-else>
-          <tr v-for="item in workingTimesList" :key="item.id">
+          <tr v-for="item in workingTimesList" :key="item.day">
             <td>
               {{
-                item.day.toLocaleString("en", {
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  year: "numeric",
-                })
+                item.day
               }}
             </td>
             <td>{{ formatHourMin(item.total_day_hours) }}</td>
