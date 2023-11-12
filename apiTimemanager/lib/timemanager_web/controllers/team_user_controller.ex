@@ -47,7 +47,7 @@ defmodule TimemanagerWeb.Team_userController do
           )
       })
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the user id")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the user id")
     end
   end
 end
