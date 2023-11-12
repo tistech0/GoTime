@@ -136,6 +136,7 @@ You must install:
       <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
 
 ### Initialisation mobil app
+In clientTimeManager/
 1. Install capacitor
 
    ```sh
