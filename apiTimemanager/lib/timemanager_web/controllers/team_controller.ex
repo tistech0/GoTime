@@ -70,7 +70,6 @@ defmodule TimemanagerWeb.TeamController do
       render(conn, :render_team_link_manager, teams: teams)
     rescue
       _ -> ErrorTemplate.error_template(conn, 400, "Error whith the user id")
-    end
   end
 
   @doc """
