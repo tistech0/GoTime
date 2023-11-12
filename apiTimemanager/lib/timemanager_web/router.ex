@@ -11,9 +11,9 @@ defmodule TimemanagerWeb.Router do
 
   @moduledoc """
     API routes for TimemanagerWeb.
-
+  
      ## Routes
-
+  
     # Routes for working times
     - `GET /api/workingtimes/`: Returns a list of all working times. (Role: superadmin)
     - `GET /api/workingtimes/:userID/:id`: Returns the working times for a specific user by ID. (Role: user)
@@ -21,7 +21,8 @@ defmodule TimemanagerWeb.Router do
     - `POST /api/workingtimes/:userID`: Creates a new working time entry for a specific user by ID. (Role: user)
     - `DELETE /api/workingtimes/:id`: Deletes a specific working time entry by ID. (Role: user)
     - `PUT /api/workingtimes/:id`: Updates a specific working time entry by ID. (Role: user)
-
+    - `PATCH /api/workingtimes/:id`: Updates the status of a specific working time entry by ID. (Role: admin)
+  
     # Routes for teams
     - `GET /api/teams/`: Returns a list of all teams. (Role: admin)
     - `GET /api/teams/:teamID`: Returns the team for a specific teamID. (Role: admin)
@@ -30,19 +31,19 @@ defmodule TimemanagerWeb.Router do
     - `PUT /api/teams/:teamID`: Updates a specific team by teamID. (Role: admin)
     - `DELETE /api/teams/:teamID`: Deletes a specific team by teamID. (Role: admin)
     - `GET /api/teams/manage`: Returns the teams managed by the current user. (Role: admin)
-
+  
     # Routes for team users
     - `GET /api/teamUser/:userID`: Returns the team link member for a specific userID. (Role: admin)
     - `POST /api/teamUser/`: Creates a new team user. (Role: admin)
-
+  
     # Routes for clocks
     - `GET /api/clocks/:userID`: Returns the clock for a specific userID. (Role: user)
     - `POST /api/clocks/:userID`: Creates or updates the clock for a specific userID. (Role: user)
-
+  
     # Routes for authentication
     - `POST /api/users/log_in`: Logs in a user. (No authentication required)
     - `DELETE /api/users/log_out`: Logs out a user. (No authentication required)
-
+  
     # Routes for users
     - `GET /api/users/`: Returns the user by email and username. (Role: admin)
     - `GET /api/users/:userID`: Returns the user for a specific userID. (Role: user)
@@ -50,11 +51,14 @@ defmodule TimemanagerWeb.Router do
     - `PUT /api/users/:userID`: Updates a specific user by userID. (Role: user)
     - `PATCH /api/users/:userID`: Updates the user role for a specific userID. (Role: admin)
     - `DELETE /api/users/:userID`: Deletes a specific user by userID. (Role: admin)
-
+    - `GET /api/users/roles/users`: Returns a list of all users. (Role: admin)
+    - `GET /api/users/roles/admins`: Returns a list of all admins. (Role: superadmin)
+  
     # Routes for roles
     - `GET /api/roles/`: Returns a list of all roles. (Role: admin)
-
+  
     # Stats routes
+    - `GET /api/stats/user/workingtimes/:userID`: Returns the working hours per day for a specific user within a start and end time. (Role: user)
     - `GET /api/stats/team/workingtimes/all/:teamID`: Returns all working times for a specific team within a start and end time. (Role: admin)
     - `GET /api/stats/team/workingtimes/average/:teamID`: Returns the average working hours per day for a specific team within a start and end time. (Role: admin)
   """
@@ -70,7 +74,11 @@ defmodule TimemanagerWeb.Router do
     delete("/:id", WorkingTimesController, :delete)
     put("/:id", WorkingTimesController, :update)
 
-    pipe_through([:require_admin_role, :require_super_admin_role])
+    pipe_through([:require_admin_role])
+
+    patch("/:id", WorkingTimesController, :updateStatus)
+
+    pipe_through([:require_super_admin_role])
 
     get("/", WorkingTimesController, :index)
   end
@@ -130,8 +138,16 @@ defmodule TimemanagerWeb.Router do
 
     get("/", UserController, :get_user_by_email_and_username, [:email, :username])
     post("/", UserController, :register)
-    patch("/:userID", UserController, :update_user_role, [:role])
+    get("/users", UserController, :index)
     delete("/:userID", UserController, :delete)
+  end
+
+  scope "/api/users/roles", TimemanagerWeb do
+    pipe_through([:api, :require_authenticated_user, :require_admin_role])
+    get("/users", UserController, :index)
+
+    pipe_through([:require_super_admin_role])
+    get("/admins", UserController, :get_admins)
   end
 
   ## Role routes
@@ -143,6 +159,12 @@ defmodule TimemanagerWeb.Router do
   end
 
   ## Stats routes
+  scope "/api/stats/user/workingtimes/", TimemanagerWeb do
+    pipe_through([:api, :require_authenticated_user])
+
+    get("/:userID", WorkingTimesController, :getUserHoursPerDay, [:start, :end])
+  end
+
   scope "/api/stats/team/workingtimes/all", TimemanagerWeb do
     pipe_through([:api, :require_authenticated_user, :require_admin_role])
 

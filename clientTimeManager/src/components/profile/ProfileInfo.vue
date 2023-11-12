@@ -1,13 +1,53 @@
 <script setup lang="ts">
 import Button from "../form/Button.vue";
 import { useRouter } from "vue-router";
+import { routeNames } from "@/router/index";
+import { ref } from "vue";
+import type { User } from "@/types/user";
+import { errorHandling } from "@/utils/utils";
+import { useSnackbarStore } from "@/stores/snackbar";
+import { useUserStore } from "@/stores/user";
 import DeleteLogoutOverlay from "../overlay/DeleteLogoutOverlay.vue";
+
 const router = useRouter();
+const snackbarStore = useSnackbarStore();
+const apiUrl = import.meta.env.VITE_API_URL;
+const userStore = useUserStore();
+
+const isManagedProfile =
+  router.currentRoute.value.name == routeNames.manageProfile;
+
 const deleteAccountPopupVisible = ref(false);
 const deleteAccount = () => {
   // TODO: delete account
   console.log("Account deleted");
 };
+
+const user = ref<User | null>();
+
+async function getUserProfile(id: string | string[]) {
+  const response = await fetch(`${apiUrl}/api/users/${id}`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    errorHandling(response, snackbarStore, router, userStore.logoutUser);
+    return;
+  }
+  const data = await response.json();
+  user.value = data.data;
+}
+
+// Check which route we are in
+if (isManagedProfile) {
+  const userId = router.currentRoute.value.params.id; // Then we need to fetch the user id we want to managed from the url
+  getUserProfile(userId);
+} else {
+  user.value = userStore.getUser;
+}
 </script>
 
 <template>
@@ -33,7 +73,16 @@ const deleteAccount = () => {
     </div>
     <!-- edit button -->
     <div class="col-start-5 flex place-content-end mr-5">
-      <v-btn @click="router.push({ name: 'editprofile' })" icon>
+      <v-btn
+        @click="
+          router.push({
+            name: isManagedProfile
+              ? routeNames.manageEditprofile
+              : routeNames.editProfile,
+          })
+        "
+        icon
+      >
         <v-icon>mdi-square-edit-outline</v-icon>
       </v-btn>
     </div>
@@ -51,7 +100,7 @@ const deleteAccount = () => {
       </div>
       <!-- contract time -->
       <div class="grid grid-cols-5 items-center">
-        <v-icon class="">mdi-briefcase-alogoutccount-outline</v-icon>
+        <v-icon class="">mdi-briefcase-account-outline</v-icon>
         <div>
           <p class="font-semibold">Contract</p>
           <p>{{ user?.time_contract }}</p>
@@ -67,27 +116,15 @@ const deleteAccount = () => {
       </div>
     </div>
     <!-- Delete account button -->
-    <div class="grid col-span-3 col-start-2 mt-10 mb-10">
+    <div
+      v-if="isManagedProfile"
+      class="grid col-span-3 col-start-2 mt-10 mb-10"
+    >
       <Button
+        @click="deleteAccountPopupVisible = true"
         btnColor="pink"
         buttonName="Delete Account"
-        @click="deleteAccountPopupVisible = true"
       />
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { useUserStore } from "@/stores/user";
-import { ref } from "vue";
-
-export default {
-  data() {
-    const user = useUserStore().getUser;
-
-    return {
-      user: user,
-    };
-  },
-};
-</script>

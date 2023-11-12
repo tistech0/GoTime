@@ -8,6 +8,7 @@ import { errorHandling } from "../../utils/utils";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useRouter } from "vue-router";
 import DeleteLogoutOverlay from "../overlay/DeleteLogoutOverlay.vue";
+import { useUserStore } from "@/stores/user";
 
 const snackbarStore = useSnackbarStore();
 const router = useRouter();
@@ -51,7 +52,7 @@ async function getTeamList() {
     },
   });
   if (!response.ok) {
-    errorHandling(response, snackbarStore, router);
+    errorHandling(response, snackbarStore, router, useUserStore().logoutUser);
     return;
   }
   const data = await response.json();

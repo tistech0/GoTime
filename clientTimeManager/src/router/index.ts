@@ -14,10 +14,13 @@ export const routeNames = {
   home: "home",
   login: "login",
   register: "register",
-  profile: "about",
+  profile: "profile",
   editProfile: "editprofile",
+  manageProfile: "manageProfile",
+  manageEditprofile: "manageEditprofile",
   validateTime: "validate-time",
   validateTimeUser: "validate-time/:id",
+  notFound: "not-found",
   userLook: "user-look/:id",
   createTeam: "create-team",
 };
@@ -36,8 +39,18 @@ const router = createRouter({
       component: ProfileView,
     },
     {
-      path: "/editprofile",
+      path: "/edit-profile",
       name: routeNames.editProfile,
+      component: EditProfileView,
+    },
+    {
+      path: "/manage/profile/:id",
+      name: routeNames.manageProfile,
+      component: ProfileView,
+    },
+    {
+      path: "/manage/edit-profile/:id",
+      name: routeNames.manageEditprofile,
       component: EditProfileView,
     },
     {
@@ -75,6 +88,11 @@ const router = createRouter({
       name: routeNames.createTeam,
       component: CreateTeamView,
     },
+    {
+      path: "/:pathMatch(.*)*",
+      name: routeNames.notFound,
+      component: DashboardView,
+    },
   ],
 });
 
@@ -102,12 +120,10 @@ router.beforeEach((to, from) => {
 
   // Check user roles and grant access or not to pages
 
-  // Get the role enum value
-  const userRoleEnumValue = Role[currentUser?.role as keyof typeof Role];
-
-  if (userRoleEnumValue != Role.Admin && userRoleEnumValue != Role.SuperAdmin) {
+  if (currentUser?.role != Role.Admin && currentUser?.role != Role.SuperAdmin) {
     switch (to.name) {
-      case "otherRouteToRestrict": // Write real routes to also redirect to home when wrong access.
+      case routeNames.manageEditprofile:
+      case routeNames.manageProfile:
       case routeNames.register: {
         return { name: routeNames.home };
       }

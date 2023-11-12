@@ -1,36 +1,32 @@
 <script setup lang="ts">
-import { ref, defineEmits, defineProps } from 'vue';
+import { ref, defineEmits, defineProps, watch } from 'vue';
+
+const props = defineProps({
+  modelValue: [String, Number],
+  label: String,
+  inputType: String,
+  disable: Boolean,
+  hint: String
+});
 
 const emit = defineEmits(["update:modelValue"]);
 
-const inputValue = ref("");
+let localInputValue = ref(props.modelValue);
 
-const handleChange = () => {
-    emit("update:modelValue", inputValue.value);
+watch(() => props.modelValue, (newVal) => {
+  localInputValue.value = newVal;
+});
+
+const handleChange = (event: any) => {
+    emit("update:modelValue", event.target.value);
 };
 
 </script>
 
 <template>
   <div>
-    <v-text-field bg-color="var(--primary-blue-light)" :label=label :type=inputType clearable
-                  :disabled="disable" v-model=localInputValue variant="solo-filled" :hint=hint @input="handleChange">
+    <v-text-field bg-color="var(--primary-blue-light)" :label=props.label :type=props.inputType clearable
+                  :disabled="props.disable" v-model=localInputValue variant="solo-filled" :hint=props.hint @input="handleChange">
     </v-text-field>
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  props: ['inputValue', 'label', 'inputType', 'disable', 'hint'],
-  data() {
-    return {
-      localInputValue: this.inputValue,
-    };
-  },
-  watch: {
-    inputValue(newVal) {
-      this.localInputValue = newVal;
-    },
-  },
-};
-</script>

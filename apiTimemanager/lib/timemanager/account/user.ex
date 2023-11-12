@@ -4,12 +4,12 @@ defmodule Timemanager.Account.User do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "users" do
-    field :email, :string
-    field :password, :string, virtual: true, redact: true
-    field :hashed_password, :string, redact: true
-    field :time_contract, :float
-    field :username, :string
-    belongs_to :role, Timemanager.Roles.Role, foreign_key: :role_id, type: :binary_id
+    field(:email, :string)
+    field(:password, :string, virtual: true, redact: true)
+    field(:hashed_password, :string, redact: true)
+    field(:time_contract, :float)
+    field(:username, :string)
+    belongs_to(:role, Timemanager.Roles.Role, foreign_key: :role_id, type: :binary_id)
 
     timestamps(type: :utc_datetime)
   end
@@ -36,31 +36,22 @@ defmodule Timemanager.Account.User do
   end
 
   @doc """
-  Changeset only to update the role
-  """
-  def update_user_role_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:role_id])
-    |> validate_required([:role_id])
-  end
-
-  @doc """
   A user changeset for registration.
-
+  
   It is important to validate the length of both email and password.
   Otherwise databases may truncate the email without warnings, which
   could lead to unpredictable or insecure behaviour. Long passwords may
   also be very expensive to hash for certain algorithms.
-
+  
   ## Options
-
+  
     * `:hash_password` - Hashes the password so it can be stored securely
       in the database and ensures the password field is cleared to prevent
       leaks in the logs. If password hashing is not needed and clearing the
       password field is not desired (like when using this changeset for
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
-
+  
     * `:validate_email` - Validates the uniqueness of the email, in case
       you don't want to validate the uniqueness of the email (like when
       using this changeset for validations on a LiveView form before
@@ -75,14 +66,47 @@ defmodule Timemanager.Account.User do
   end
 
   @doc """
-    This def updates the user without changing the role!
+    This def updates the user totally. It is only for the superadmin
   """
-  def update_changeset(user, attrs, opts \\ []) do
+  def update_changeset_total(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
+    |> validate_required([:username, :email, :time_contract, :role_id])
+    |> validate_email(opts)
+    |> maybe_validate_password(opts)
+  end
+
+  @doc """
+    This def update changeset only updates the username and password.
+    This is when you try to update yourself and are not a superadmin.
+  """
+  def update_changeset_current_user(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username, :password])
+    |> validate_required([:username])
+    |> maybe_validate_password(opts)
+  end
+
+  @doc """
+    This def changeset is updates everything but the role. It is use to update an other user. Only for managers
+  """
+  def update_changeset_other_user(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:username, :email, :password, :time_contract])
-    |> validate_required([:username, :email, :password, :time_contract])
+    |> validate_required([:username, :email, :time_contract])
     |> validate_email(opts)
-    |> validate_password(opts)
+    |> maybe_validate_password(opts)
+  end
+
+  defp maybe_validate_password(changeset, opts) do
+    password = get_change(changeset, :password)
+
+    if is_nil(password) do
+      changeset
+    else
+      changeset
+      |> validate_password(opts)
+    end
   end
 
   defp validate_email(changeset, opts) do
@@ -133,7 +157,7 @@ defmodule Timemanager.Account.User do
 
   @doc """
   Verifies the password.
-
+  
   If there is no user or the user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
