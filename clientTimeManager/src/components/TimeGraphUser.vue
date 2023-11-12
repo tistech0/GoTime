@@ -9,6 +9,7 @@ import ApexCharts from 'apexcharts';
 import WeekSelector from '../components/WeekSelector.vue';
 import type { UserStat } from '@/types/userStat';
 import {useDisplay} from 'vuetify';
+import type {TeamStats} from "@/types/teamStats";
 
 interface DataProps {
   categories: Date[];
@@ -54,15 +55,35 @@ export default {
       }
       return newCategories;
     },
-    createSeries(data: UserStat[]) {
+    formatDate(date: Date): string {
+      if (!date) return "";
+      let year = date.getFullYear();
+      let month = ('0' + (date.getMonth() + 1)).slice(-2);
+      let day = ('0' + date.getDate()).slice(-2);
+
+      return `${year}-${month}-${day}`;
+    },
+    createSeries(data: any[]) {
       let series = [];
       let day: number[] = [];
       let night: number[] = [];
+      let index = 0;
       data.forEach((element) => {
-        day.push(element.total_day_hours);
-        night.push(element.total_night_hours);
+        while (element.day !== this.formatDate(this.categories[index]) && index < 7 ) {
+          day.push(0);
+          night.push(0);
+          index++;
+        }
+        if (index >= 7) return;
+        day.push(element.total_day_hours.toFixed(2));
+        night.push(element.total_night_hours.toFixed(2));
+        index++;
       });
-
+      while (index < 7) {
+        day.push(0);
+        night.push(0);
+        index++;
+      }
       series.push({
         name: "Day average time",
         data: day,
@@ -74,8 +95,6 @@ export default {
         data: night,
         color: "#1B2A41",
       });
-      if (day.length === 0 && night.length === 0)
-        series = [];
       return series;
     },
     createChart() {
@@ -127,12 +146,12 @@ export default {
               total: {
                 enabled: true,
                 formatter: function (val: number) {
-                    if (!val)
-                      return '0h 0min';
-                    const hours = Math.floor(val);
-                    const minutes = Math.round((val - hours) * 60);
-                    return `${hours}h ${minutes}min`;
-                  },
+                  if (!val)
+                    return '0h 0min';
+                  const hours = Math.floor(val);
+                  const minutes = Math.round((val - hours) * 60);
+                  return `${hours}h ${minutes}min`;
+                },
                 style: {
                   fontSize: '13px',
                   fontWeight: 900,
