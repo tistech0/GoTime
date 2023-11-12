@@ -21,6 +21,10 @@ defmodule TimemanagerWeb.WorkingTimesController do
       user_id = conn.params["userID"]
       working_times_params = Map.put(working_times_params, "status", "waiting")
 
+      if (Map.get(working_times_params, "start") > Map.get(working_times_params, "end")) do
+        ErrorTemplate.error_template(conn, 400, "Start time must be before end time")
+      end
+
       {:ok, start_time} = Map.get(working_times_params, "start") |> NaiveDateTime.from_iso8601()
       {:ok, end_time} = Map.get(working_times_params, "end") |> NaiveDateTime.from_iso8601()
 
@@ -44,8 +48,13 @@ defmodule TimemanagerWeb.WorkingTimesController do
     try do
       working_times = Time.get_working_times!(id)
 
+      if (Map.get(working_times_params, "start") > Map.get(working_times_params, "end")) do
+        ErrorTemplate.error_template(conn, 400, "Start time must be before end time")
+      end
+
       {:ok, start_time} = Map.get(working_times_params, "start") |> NaiveDateTime.from_iso8601()
       {:ok, end_time} = Map.get(working_times_params, "end") |> NaiveDateTime.from_iso8601()
+
 
       {day_hours, night_hours} = Time.calculate_day_and_night_hours(start_time, end_time)
 

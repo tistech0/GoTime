@@ -62,22 +62,6 @@ defmodule TimemanagerWeb.WorkingTimesJSON do
   defp data(
          %{
            day: _,
-           total: _,
-           total_day: _,
-           total_night: _
-         } = stats
-       ) do
-    %{
-      day: stats.day,
-      total_hours: stats.total,
-      total_day_hours: stats.total_day,
-      total_night_hours: stats.total_night
-    }
-  end
-
-  defp data(
-         %{
-           day: _,
            average: _,
            average_day: _,
            average_night: _,
@@ -98,6 +82,22 @@ defmodule TimemanagerWeb.WorkingTimesJSON do
       total_night_hours: stats.total_night,
       min_hours: stats.min,
       max_hours: stats.max
+    }
+  end
+
+  defp data(
+         %{
+           day: _,
+           total: _,
+           total_day: _,
+           total_night: _
+         } = stats
+       ) do
+    %{
+      day: stats.day,
+      total_hours: stats.total,
+      total_day_hours: stats.total_day,
+      total_night_hours: stats.total_night
     }
   end
 end
