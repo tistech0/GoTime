@@ -2,7 +2,7 @@
   <div class="h-[100vh] bg-cover bg-center bg-[url('../assets/bgCompany.png')]">
     <div class="p-8">
       <p class="pb-5 text-center">
-        Hello <span class="text-customSecondary">{{ user.username }}</span>,
+        Hello <span class="text-customSecondary">{{ username }}</span>,
       </p>
       <h2>Check-in to work</h2>
       <p class="text-5xl font-semibold text-center pt-15">{{ clock }}</p>
@@ -21,20 +21,34 @@
 
 <script lang="ts">
 import type { Clock } from '@/types/clock';
+import { useUserStore } from "@/stores/user";
+import { errorHandling } from "@/utils/utils";
+import { useSnackbarStore } from "@/stores/snackbar";
+import {useRouter} from "vue-router";
+
+
 
 export default {
+  props: {
+    username: {
+      type: String,
+      required: true
+    }
+  },
   data() {
+    const userStore = useUserStore();
+    const user = userStore.getUser;
+
     return {
       clock: "00:00:00",
       clockData: null as unknown as Clock,
       isTicking: false,
       intervalId: 0 as unknown as NodeJS.Timeout,
-      user: {
-        username: 'john',
-        surname: 'doe'
-      },
       startTime: new Date(),
-      userId: '48f4ced2-3455-4fd4-9719-e842b20abead'
+      userId: user?.id,
+      userStore: userStore,
+      snackbarStore: useSnackbarStore(),
+      router: useRouter(),
     }
   },
   methods: {
@@ -57,6 +71,7 @@ export default {
         clearInterval(this.intervalId);
         this.clock = '00:00:00';
         await this.updateClockApi(new Date());
+        this.$emit('clock-stoped');
       }
     },
     async getClock() {
@@ -69,6 +84,10 @@ export default {
           'Content-Type': 'application/json'
         },
       });
+      if (!response.ok) {
+        errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
+        return
+      }
       return await response.json();
     },
     async updateClockApi(date: Date) {
@@ -86,6 +105,10 @@ export default {
           }
         })
       });
+      if (!response.ok) {
+        errorHandling(response, this.snackbarStore, this.router, this.userStore.logoutUser);
+        return
+      }
       return await response.json();
     },
     formatDate(date: Date) {

@@ -1,21 +1,32 @@
 <script setup lang="ts">
-import { ref, defineEmits, defineProps } from 'vue';
+import { ref, defineEmits, defineProps, watch } from 'vue';
 
-const props = defineProps({ label: String, inputType: String, hint: { type: String, default: "" }, modelValue: [String, Number], disable: { type: Boolean, default: false } })
+const props = defineProps({
+  modelValue: [String, Number],
+  label: String,
+  inputType: String,
+  disable: Boolean,
+  hint: String
+});
+
 const emit = defineEmits(["update:modelValue"]);
 
-const inputValue = ref("");
+let localInputValue = ref(props.modelValue);
 
-const handleChange = () => {
-    emit("update:modelValue", inputValue.value);
+watch(() => props.modelValue, (newVal) => {
+  localInputValue.value = newVal;
+});
+
+const handleChange = (event: any) => {
+    emit("update:modelValue", event.target.value);
 };
 
 </script>
 
 <template>
-    <div>
-        <v-text-field bg-color="var(--primary-blue-light)" :label=props.label :type=props.inputType clearable
-            :disabled="props.disable" v-model=inputValue variant="solo-filled" :hint=props.hint @input="handleChange">
-        </v-text-field>
-    </div>
+  <div>
+    <v-text-field bg-color="var(--primary-blue-light)" :label=props.label :type=props.inputType clearable
+                  :disabled="props.disable" v-model=localInputValue variant="solo-filled" :hint=props.hint @input="handleChange">
+    </v-text-field>
+  </div>
 </template>

@@ -9,6 +9,7 @@ import ApexCharts from 'apexcharts';
 import WeekSelector from '../components/WeekSelector.vue';
 import type { TableStats } from '@/types/tableStats';
 import {useDisplay} from 'vuetify';
+import type {TeamStats} from "@/types/teamStats";
 
 interface DataProps {
   categories: Date[];
@@ -32,15 +33,15 @@ export default {
       default: true,
     },
     workingTimeList: {
-      type: Array<TableStats>,
+      type: Array<TeamStats>,
       default: true
     }
   },
   data(props): DataProps {
     return {
       categories: this.initCategories(props.end),
-      min: [1, 2, 3, 2, 4, 0, 0],
-      max: [6, 7, 8, 4, 7, 0, 0],
+      min: [],
+      max: [],
       series: [],
       chart: ApexCharts,
       options: {},
@@ -48,6 +49,14 @@ export default {
     };
   },
   methods: {
+    formatDate(date: Date): string {
+      if (!date) return "";
+      let year = date.getFullYear();
+      let month = ('0' + (date.getMonth() + 1)).slice(-2);
+      let day = ('0' + date.getDate()).slice(-2);
+
+      return `${year}-${month}-${day}`;
+    },
     initCategories(end: Date): Date[] {
       let currentDate = new Date(end);
 
@@ -58,16 +67,33 @@ export default {
       }
       return newCategories;
     },
-    createSeries(data: TableStats[]) {
+    createSeries(data: TeamStats[]) {
       let series = [];
       let day: number[] = [];
       let night: number[] = [];
-      console.log(data);
+      let index = 0;
       data.forEach((element) => {
-        day.push(element.valueDay);
-        night.push(element.valueNight);
+        while (element.day !== this.formatDate(this.categories[index]) && index < 7 ) {
+          day.push(0);
+          night.push(0);
+          this.min.push(0);
+          this.max.push(0);
+          index++;
+        }
+        if (index >= 7) return;
+        day.push(element.average_day_hours);
+        night.push(element.average_night_hours);
+        this.min.push(element.min_hours);
+        this.max.push(element.max_hours);
+        index++;
       });
-
+      while (index < 7) {
+        day.push(0);
+        night.push(0);
+        this.min.push(0);
+        this.max.push(0);
+        index++;
+      }
       series.push({
         name: "Day average time",
         data: day,
@@ -79,7 +105,6 @@ export default {
         data: night,
         color: "#1B2A41",
       });
-
       return series;
     },
     createChart() {

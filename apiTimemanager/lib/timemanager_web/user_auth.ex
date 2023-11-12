@@ -40,6 +40,7 @@ defmodule TimemanagerWeb.UserAuth do
         username: user.username,
         email: user.email,
         time_contract: user.time_contract,
+        role_id: user.role_id,
         role: Roles.get_role!(user.role_id).role
       }
 

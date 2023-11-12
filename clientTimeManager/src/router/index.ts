@@ -7,17 +7,21 @@ import ValidateTimeView from "../views/ValidateTimeView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import DashboardManagerViewVue from "@/views/DashboardManagerView.vue";
 import { useUserStore } from '@/stores/user';
-import { Role } from '../constants/RoleEnum'
+import { Role } from '@/constants/RoleEnum'
 
 export const routeNames = {
   home: 'home',
   login: 'login',
   register: 'register',
-  profile: 'about',
+  profile: 'profile',
   editProfile: 'editprofile',
-  validateTime: 'validate-time'
+  validateTimeUser: 'validate-time/:id',
+  userLook: '/:id/:username',
+  manageProfile: 'manageProfile',
+  manageEditprofile: 'manageEditprofile',
+  validateTime: 'validate-time',
+  notFound: 'not-found'
 }
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,8 +37,18 @@ const router = createRouter({
       component: ProfileView,
     },
     {
-      path: "/editprofile",
+      path: "/edit-profile",
       name: routeNames.editProfile,
+      component: EditProfileView,
+    },
+    {
+      path: "/manage/profile/:id",
+      name: routeNames.manageProfile,
+      component: ProfileView,
+    },
+    {
+      path: "/manage/edit-profile/:id",
+      name: routeNames.manageEditprofile,
       component: EditProfileView,
     },
     {
@@ -57,11 +71,24 @@ const router = createRouter({
       name: routeNames.validateTime,
       component: ValidateTimeView,
     },
+    {
+      path: "/:id/:username",
+      name: routeNames.userLook,
+      component: DashboardView,
+    },
+    {
+      path: "/validate-time/:id",
+      name: routeNames.validateTimeUser,
+      component: ValidateTimeView,
+    },
+    { path: '/:pathMatch(.*)*',
+      name: routeNames.notFound,
+      component: DashboardView, },
   ],
 });
 
 // Make some checks before allowing routes redirections
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
 
   // Fetch from localstorage
   const userStore = useUserStore();
@@ -85,12 +112,13 @@ router.beforeEach((to, from) => {
 
   // Check user roles and grant access or not to pages
 
-  // Get the role enum value
-  const userRoleEnumValue = Role[currentUser?.role as keyof typeof Role];
-
-  if(userRoleEnumValue != Role.Admin && userRoleEnumValue != Role.SuperAdmin) {
+  if(currentUser?.role != Role.Admin && currentUser?.role != Role.SuperAdmin) {
     switch(to.name) {
-      case 'otherRouteToRestrict': // Write real routes to also redirect to home when wrong access.
+      case routeNames.manageEditprofile:
+      case routeNames.manageProfile:
+      case routeNames.userLook:
+      case routeNames.validateTimeUser:
+      case routeNames.validateTime:
       case routeNames.register: {
         return { name: routeNames.home };
       }

@@ -31,7 +31,6 @@ async function handleSubmit() {
 
     // TODO: Encrypt password with bcrypt
   const apiUrl = import.meta.env.VITE_API_URL;
-
   const response = await fetch(`${apiUrl}/api/users/log_in`, {
     method: 'POST',
     credentials: 'include',
@@ -42,7 +41,7 @@ async function handleSubmit() {
   });
 
     if (!response.ok) {
-        errorHandling(response, snackbarStore, router);
+        errorHandling(response, snackbarStore, router, userStore.logoutUser);
         return
     }
     // Get the data in json format
