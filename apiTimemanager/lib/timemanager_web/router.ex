@@ -51,6 +51,8 @@ defmodule TimemanagerWeb.Router do
     - `PUT /api/users/:userID`: Updates a specific user by userID. (Role: user)
     - `PATCH /api/users/:userID`: Updates the user role for a specific userID. (Role: admin)
     - `DELETE /api/users/:userID`: Deletes a specific user by userID. (Role: admin)
+    - `GET /api/users/roles/users`: Returns a list of all users. (Role: admin)
+    - `GET /api/users/roles/admins`: Returns a list of all admins. (Role: superadmin)
 
     # Routes for roles
     - `GET /api/roles/`: Returns a list of all roles. (Role: admin)
@@ -136,8 +138,19 @@ defmodule TimemanagerWeb.Router do
 
     get("/", UserController, :get_user_by_email_and_username, [:email, :username])
     post("/", UserController, :register)
+    get("/users", UserController, :index)
     patch("/:userID", UserController, :update_user_role, [:role])
     delete("/:userID", UserController, :delete)
+
+  end
+
+  scope "/api/users/roles", TimemanagerWeb do
+    pipe_through([:api, :require_authenticated_user, :require_admin_role])
+    get("/users", UserController, :index)
+
+    pipe_through([:require_super_admin_role])
+    get("/admins", UserController, :get_admins)
+
   end
 
   ## Role routes

@@ -216,6 +216,14 @@ defmodule TimemanagerWeb.UserController do
     end
   end
 
+  @doc """
+    This def gets the list of admins
+  """
+  def get_admins(conn, _params) do
+    admins = Account.get_admins()
+    render(conn, :index, users: admins)
+  end
+
   #    This private def is an error template to return.
   #    It accepts the conn, and HttpErrorCode and a message
 
