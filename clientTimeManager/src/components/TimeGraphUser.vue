@@ -126,7 +126,9 @@ export default {
             dataLabels: {
               total: {
                 enabled: true,
-                formatter: function (val: number, opts: any) {
+                formatter: function (val: number) {
+                    if (!val)
+                      return '0h 0min';
                     const hours = Math.floor(val);
                     const minutes = Math.round((val - hours) * 60);
                     return `${hours}h ${minutes}min`;
