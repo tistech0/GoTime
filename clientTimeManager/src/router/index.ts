@@ -23,6 +23,7 @@ export const routeNames = {
   notFound: "not-found",
   userLook: "user-look/:id",
   createTeam: "create-team",
+  manager: "manager",
 };
 
 const router = createRouter({
@@ -65,7 +66,7 @@ const router = createRouter({
     },
     {
       path: "/manager",
-      name: "manager",
+      name: routeNames.manager,
       component: DashboardManagerViewVue,
     },
     {
