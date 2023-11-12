@@ -9,6 +9,7 @@ import { useSnackbarStore } from "@/stores/snackbar";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import DeleteLogoutOverlay from "../overlay/DeleteLogoutOverlay.vue";
 
 const snackbarStore = useSnackbarStore();
 const router = useRoute();
@@ -113,7 +114,7 @@ const changeValidateStatue = async (
     const response = await fetch(
       `${apiUrl}/api/workingtimes/${workingtimes_id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
@@ -125,6 +126,8 @@ const changeValidateStatue = async (
         }),
       }
     );
+
+    fetchData();
   } catch (error) {
     console.error(error);
   }
