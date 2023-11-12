@@ -34,7 +34,7 @@
     </div>
     <TimeGraphManager
       v-if="workingTimesListTeam.length > 0"
-      :key="`${start}-${end}`"
+      :key="keyValue"
       :end="end"
       :start="start"
       :workingTimeList="workingTimesListTeam"
@@ -61,7 +61,7 @@
         style="width: 100%"
       />
     </div>
-    <v-table class="" fixed-header>
+    <v-table class="" fixed-header :key="keyValue">
       <thead class="drop-shadow-md">
         <tr>
           <th class="text-left">Time to validate</th>
@@ -104,14 +104,14 @@
                   params: { id: item.user.id, username: item.user.username },
                 })
               "
-            >
+            class="user-profil">
               {{ item.user.username }}
             </td>
             <td>{{ formatHourMin(item.valueDay) }}</td>
             <td>{{ formatHourMin(item.valueNight) }}</td>
             <td>{{ formatHourMin(item.valueDay + item.valueNight) }}</td>
             <td>
-              <v-icon class="mr-2"> mdi-account-remove-outline </v-icon>
+              <v-icon class="mr-2" @click="removeUser(item.user.id)"> mdi-account-remove-outline </v-icon>
             </td>
           </tr>
         </template>
@@ -179,9 +179,33 @@ export default {
       listTeam: [] as Item[],
       queryUuid: ref<string>(""),
       mobile: useDisplay().smAndDown,
+      keyValue: 0,
     };
   },
   methods: {
+    async removeUser(userId: string) {
+      try {
+        const response = await fetch(`${this.apiUrl}/api/teamUser/?team_id=${this.queryUuid}&user_id=${userId}`, {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          errorHandling(
+              response,
+              this.snackbarStore,
+              this.router,
+              this.userStore.logoutUser
+          );
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      this.keyValue++;
+    },
     initOneWeekAgo() {
       let week = new Date();
       week.setDate(week.getDate() - 6);
@@ -192,6 +216,7 @@ export default {
       this.end = new Date(currentDate);
       this.end.setDate(this.end.getDate() - 6);
       await this.fetchData();
+      this.keyValue++;
     },
     async deleteTeam(uuid: string) {
       try {
@@ -204,10 +229,10 @@ export default {
         });
         if (!response.ok) {
           errorHandling(
-            response,
-            this.snackbarStore,
-            this.router,
-            this.userStore.logoutUser
+              response,
+              this.snackbarStore,
+              this.router,
+              this.userStore.logoutUser
           );
           return;
         }
@@ -415,5 +440,15 @@ hr {
   justify-content: end;
   flex-direction: row;
   align-items: center;
+}
+
+.user-profil {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--primary-blue);
+}
+
+.user-profil:hover {
+  color: var(--secondary-pink);
 }
 </style>
