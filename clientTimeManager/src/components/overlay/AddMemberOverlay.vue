@@ -17,7 +17,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 // fetch all users
 const getUsers = async () => {
   try {
-    const response = await fetch(`${apiUrl}/api/users`, {
+    const response = await fetch(`${apiUrl}/api/users/roles/users`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -48,7 +48,7 @@ const AddUserToTeam = async () => {
         body: JSON.stringify({
           team_user: {
             team_id: props.team_id,
-            user_id: u.id,
+            user_id: u,
           },
         }),
       });
