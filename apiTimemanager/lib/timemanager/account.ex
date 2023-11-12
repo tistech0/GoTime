@@ -42,16 +42,17 @@ defmodule Timemanager.Account do
   """
   def get_admins do
     # Create a query
-    query = from u in User,
-                 # Join the Role table
-                 join: r in Timemanager.Roles.Role, on: u.role_id == r.id,
-                   # Filter for admins
-                 where: r.role == "Admin"
+    query =
+      from u in User,
+        # Join the Role table
+        join: r in Timemanager.Roles.Role,
+        on: u.role_id == r.id,
+        # Filter for admins
+        where: r.role == "Admin"
 
     # Execute the query
     Repo.all(query)
   end
-
 
   @doc """
   This def gets the user without throwing an exception if it's null

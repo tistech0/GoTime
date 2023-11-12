@@ -3,13 +3,9 @@ defmodule TimemanagerWeb.ClockController do
 
   alias Timemanager.Time
   alias Timemanager.Time.Clock
+  alias TimemanagerWeb.ErrorTemplate
 
-  action_fallback TimemanagerWeb.FallbackController
-
-  def index(conn, _params) do
-    clocks = Time.list_clocks()
-    render(conn, :index, clocks: clocks)
-  end
+  action_fallback(TimemanagerWeb.FallbackController)
 
   def createOrUpdate(conn, %{"clock" => clock_params}) do
     user_id = conn.params["userID"]
@@ -41,7 +37,7 @@ defmodule TimemanagerWeb.ClockController do
               end
 
             {:error, reason} ->
-              IO.puts("Erreur lors de la conversion de la date : #{reason}")
+              ErrorTemplate.error_template(conn, 400, "Error converting date " <> reason)
           end
         end
 
@@ -65,34 +61,12 @@ defmodule TimemanagerWeb.ClockController do
     end
   end
 
-  def create(conn, %{"clock" => clock_params}) do
-    user_id = conn.params["userID"]
-
-    with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params, user_id) do
-      conn
-      |> put_status(:created)
-      |> render(:show, clock: clock)
-    end
-  end
-
   def show(conn, %{"userID" => userID}) do
-    clock = Time.get_clock_by_user_id!(userID)
-    render(conn, :show, clock: clock)
-  end
-
-  def update(conn, %{"id" => id, "clock" => clock_params}) do
-    clock = Time.get_clock!(id)
-
-    with {:ok, %Clock{} = clock} <- Time.update_clock(clock, clock_params) do
+    try do
+      clock = Time.get_clock_by_user_id!(userID)
       render(conn, :show, clock: clock)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    clock = Time.get_clock!(id)
-
-    with {:ok, %Clock{}} <- Time.delete_clock(clock) do
-      send_resp(conn, :no_content, "")
+    rescue
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the user id")
     end
   end
 end

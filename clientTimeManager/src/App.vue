@@ -4,14 +4,14 @@ import { useDisplay } from 'vuetify';
 import Snackbar from './components/form/Snackbar.vue';
 
 
-
 const { mobile } = useDisplay()
 </script>
 
 <template>
   <v-layout>
+
     <router-view />
-    <Snackbar  />
+    <Snackbar />
   </v-layout>
 </template>
 
