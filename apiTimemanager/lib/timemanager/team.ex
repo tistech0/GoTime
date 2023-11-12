@@ -131,4 +131,12 @@ defmodule Timemanager.Team do
 
     Repo.all(query)
   end
+
+  def get_team_user_by_teamid_userid(team_id, user_id) do
+    from(tu in Timemanager.Team.Team_user,
+      where: tu.user_id == ^user_id and tu.team_id == ^team_id,
+      select: tu
+    )
+    |> Repo.one()
+  end
 end
