@@ -15,7 +15,6 @@ defmodule TimemanagerWeb.UserJSON do
     %{data: data(user)}
   end
 
-
   def show_profile(%{user: user}) do
     %{data: data_profile(user)}
   end
@@ -30,15 +29,16 @@ defmodule TimemanagerWeb.UserJSON do
     }
   end
 
-  defp data_profile(%{
-      id: _,
-      username: _,
-      email: _,
-      time_contract: _,
-      role_id: _,
-      role: _
-    } = user
-  ) do
+  defp data_profile(
+         %{
+           id: _,
+           username: _,
+           email: _,
+           time_contract: _,
+           role_id: _,
+           role: _
+         } = user
+       ) do
     %{
       id: user.id,
       username: user.username,

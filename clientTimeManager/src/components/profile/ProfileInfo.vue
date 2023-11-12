@@ -19,8 +19,9 @@ const isManagedProfile =
 
 const deleteAccountPopupVisible = ref(false);
 const deleteAccount = () => {
-  // TODO: delete account
-  console.log("Account deleted");
+  if (isManagedProfile) {
+    deleteUserAccount()
+  }
 };
 
 const user = ref<User | null>();
@@ -41,12 +42,34 @@ async function getUserProfile(id: string | string[]) {
   user.value = data.data;
 }
 
+function getUserIdFromUrl(){
+  return router.currentRoute.value.params.id
+}
+
 // Check which route we are in
 if (isManagedProfile) {
-  const userId = router.currentRoute.value.params.id; // Then we need to fetch the user id we want to managed from the url
+  const userId = getUserIdFromUrl(); // Then we need to fetch the user id we want to managed from the url
   getUserProfile(userId);
 } else {
   user.value = userStore.getUser;
+}
+
+
+async function deleteUserAccount() {
+  const userId = getUserIdFromUrl();
+  const response = await fetch(`${apiUrl}/api/users/${userId}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    errorHandling(response, snackbarStore, router, userStore.logoutUser);
+    return;
+  }
+  snackbarStore.showSnackbar('Account succesfully deleted', 2000, 'success');
+  router.push({name : routeNames.manager})
 }
 </script>
 
