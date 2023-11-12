@@ -5,7 +5,7 @@ defmodule TimemanagerWeb.ClockController do
   alias Timemanager.Time.Clock
   alias TimemanagerWeb.ErrorTemplate
 
-  action_fallback TimemanagerWeb.FallbackController
+  action_fallback(TimemanagerWeb.FallbackController)
 
   def createOrUpdate(conn, %{"clock" => clock_params}) do
     user_id = conn.params["userID"]
@@ -66,7 +66,7 @@ defmodule TimemanagerWeb.ClockController do
       clock = Time.get_clock_by_user_id!(userID)
       render(conn, :show, clock: clock)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the user id")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the user id")
     end
   end
 end

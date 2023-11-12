@@ -25,7 +25,7 @@ defmodule TimemanagerWeb.RoleController do
 
       render(conn, :index, roles: roles)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error Server")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the current user")
     end
   end
 end

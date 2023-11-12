@@ -12,7 +12,7 @@ defmodule TimemanagerWeb.TeamController do
       teams = Teams.list_teams()
       render(conn, :index, teams: teams)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error Server")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error API")
     end
   end
 
@@ -33,7 +33,7 @@ defmodule TimemanagerWeb.TeamController do
       team = Teams.get_team!(id)
       render(conn, :show, team: team)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the team id")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the team id")
     end
   end
 
@@ -45,19 +45,18 @@ defmodule TimemanagerWeb.TeamController do
         render(conn, :show, team: team)
       end
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the team id or the parameters")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the team id or the parameters")
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    try do
-      team = Teams.get_team!(id)
 
+  def delete(conn, %{"teamID" => id}) do
+    team = Teams.get_team!(id)
       with {:ok, %Team{}} <- Teams.delete_team(team) do
         send_resp(conn, :no_content, "")
       end
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the team id")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the team id")
     end
   end
 
@@ -70,7 +69,7 @@ defmodule TimemanagerWeb.TeamController do
       teams = Teams.get_list_team_link_manager(id)
       render(conn, :render_team_link_manager, teams: teams)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error whit the user id")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the user id")
     end
   end
 
@@ -83,7 +82,7 @@ defmodule TimemanagerWeb.TeamController do
       teams = Teams.get_list_team_link_manager(current_user.id)
       render(conn, :render_team_link_manager, teams: teams)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error Server")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error whith the user id")
     end
   end
 end
