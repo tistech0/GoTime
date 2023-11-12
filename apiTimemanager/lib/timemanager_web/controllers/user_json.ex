@@ -35,6 +35,7 @@ defmodule TimemanagerWeb.UserJSON do
       username: _,
       email: _,
       time_contract: _,
+      role_id: _,
       role: _
     } = user
   ) do
@@ -43,6 +44,7 @@ defmodule TimemanagerWeb.UserJSON do
       username: user.username,
       email: user.email,
       time_contract: user.time_contract,
+      role_id: user.role_id,
       role: user.role
     }
   end
