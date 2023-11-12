@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
 import WeekSelector from "@/components/WeekSelector.vue";
-import type { WorkingTime } from "../types/workingTime";
+import type { WorkingTime } from "@/types/workingTime";
 
 const { mobile } = useDisplay();
 const deleteTimePopupVisible = ref(false);
@@ -20,7 +20,8 @@ let selectedItem = ref<WorkingTime>();
     @action="
       async () => {
         await deleteWorkingTime(workingtimes_id!);
-        fetchData();
+        fetchDataGraph();
+        fetchDataArray();
       }
     "
     v-model:visible="deleteTimePopupVisible"
@@ -35,7 +36,8 @@ let selectedItem = ref<WorkingTime>();
     @action="
       async () => {
         await editWorkingTime(workingtimes_id!, selectedItem!);
-        fetchData();
+        fetchDataGraph();
+        fetchDataArray();
       }
     "
   />
@@ -61,54 +63,54 @@ let selectedItem = ref<WorkingTime>();
       <TimeGraph
         :end="end"
         :start="start"
-        :workingTimeList="workingTimesList"
+        :workingTimeList="workingTimesListGraph"
         :key="keyNumber"
       />
-      <hr v-if="workingTimesList.length > 0" />
+      <hr v-if="workingTimesListArray.length > 0" />
       <v-table class="" fixed-header :key="keyNumber">
         <thead class="drop-shadow-md">
-          <tr>
-            <th class="text-left">Start</th>
-            <th class="text-left">End</th>
-            <th class="text-left">Day</th>
-            <th class="text-left">Night</th>
-            <th class="text-left">Operation</th>
-          </tr>
+        <tr>
+          <th class="text-left">Start</th>
+          <th class="text-left">End</th>
+          <th class="text-left">Day</th>
+          <th class="text-left">Night</th>
+          <th class="text-left">Operation</th>
+        </tr>
         </thead>
         <tbody>
-          <template v-if="workingTimesList.length === 0">
+        <template v-if="workingTimesListArray.length === 0">
             <tr>
               <td class="text-center" colspan="7">No data available</td>
             </tr>
-          </template>
-          <template v-else>
-            <tr v-for="item in workingTimesList" :key="item.id">
-              <td>
-                {{
-                  item.start.toLocaleString("en", {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    year: "numeric",
-                  })
-                }}
-              </td>
-              <td>
-                {{
-                  item.end.toLocaleString("en", {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    year: "numeric",
-                  })
-                }}
-              </td>
-              <td>{{ formatHourMin(item.valueDay) }}</td>
-              <td>{{ formatHourMin(item.valueNight) }}</td>
-              <td>
-                <v-icon
+        </template>
+        <template v-else>
+          <tr v-for="item in workingTimesListArray" :key="item.id">
+            <td>
+              {{
+                item.start.toLocaleString("en", {
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  year: "numeric",
+                })
+              }}
+            </td>
+            <td>
+              {{
+                item.end.toLocaleString("en", {
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  year: "numeric",
+                })
+              }}
+            </td>
+            <td>{{ formatHourMin(item.valueDay) }}</td>
+            <td>{{ formatHourMin(item.valueNight) }}</td>
+            <td>
+              <v-icon
                   @click="
                     () => {
                       workingtimes_id = item.id;
@@ -117,10 +119,10 @@ let selectedItem = ref<WorkingTime>();
                     }
                   "
                   class="mr-2"
-                >
-                  mdi-clock-edit-outline
-                </v-icon>
-                <v-icon
+              >
+                mdi-clock-edit-outline
+              </v-icon>
+              <v-icon
                   @click="
                     () => {
                       workingtimes_id = item.id;
@@ -128,12 +130,12 @@ let selectedItem = ref<WorkingTime>();
                     }
                   "
                   class="mr-2"
-                >
-                  mdi-delete-alert-outline
-                </v-icon>
-              </td>
-            </tr>
-          </template>
+              >
+                mdi-delete-alert-outline
+              </v-icon>
+            </td>
+          </tr>
+        </template>
         </tbody>
       </v-table>
     </div>
@@ -141,14 +143,15 @@ let selectedItem = ref<WorkingTime>();
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
-import BottomNav from "../components/BottomNav.vue";
-import Sidebar from "../components/SideBar.vue";
-import Timer from "../components/Timer.vue";
-import TimeGraph from "../components/TimeGraphUser.vue";
+import { ref } from 'vue';
+import BottomNav from '../components/BottomNav.vue';
+import Sidebar from '../components/SideBar.vue';
+import Timer from '../components/Timer.vue';
+import TimeGraph from '../components/TimeGraphUser.vue';
+import type { UserStat } from "@/types/userStat";
+import type { TableStats } from "@/types/tableStats";
 import DeleteLogoutOverlay from "../components/overlay/DeleteLogoutOverlay.vue";
 import NewEditTimeOverlay from "../components/overlay/NewEditTimeOverlay.vue";
-import type { TableStats } from "@/types/tableStats";
 import { useUserStore } from "@/stores/user";
 import { reactive } from "vue";
 import type { Clock } from "@/types/clock";
@@ -161,7 +164,8 @@ export default {
     return {
       start: new Date(),
       end: this.initOneWeekAgo(),
-      workingTimesList: ref<TableStats[]>([]),
+      workingTimesListGraph: ref<UserStat[]>([]),
+      workingTimesListArray: ref<TableStats[]>([]),
       userId: this.setUserId(user),
       userUsername: this.setUserUsername(user),
       keyNumber: 0,
@@ -185,29 +189,55 @@ export default {
       this.start = new Date(currentDate);
       this.end = new Date(currentDate);
       this.end.setDate(this.end.getDate() - 6);
-      await this.fetchData();
+      await this.fetchDataGraph();
+      await this.fetchDataArray();
       this.keyNumber++;
     },
-    async fetchData() {
+    async fetchDataGraph() {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
         const startTime = this.formatDate(this.end);
-        const endTime = this.formatDate(this.start);
-        const response = await fetch(
-          `${apiUrl}/api/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        const endTime = this.formatDate(this.start)
+        const response = await fetch(`${apiUrl}/api/stats/user/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+        const data = await response.json();
+        console.log(data);
+        this.workingTimesListGraph = data.data.map(
+            (w: UserStat) => ({
+              day: w.day,
+              total_day_hours: w.total_day_hours,
+              total_hours: w.total_hours,
+              total_night_hours: w.total_night_hours,
+            })
         );
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchDataArray() {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const startTime = this.formatDate(this.end);
+        const endTime = this.formatDate(this.start)
+        const response = await fetch(`${apiUrl}/api/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
         const data = await response.json();
         const validateWorkingTimes = data.data.filter(
-          (item: { status: string }) => item.status === "validated"
+            (item: { status: string }) => item.status === "validated"
         );
-        this.workingTimesList = validateWorkingTimes.map((w: any) => ({
+        this.workingTimesListArray = validateWorkingTimes.map((w: any) => ({
           // TODO: create interface to replace any
           ...w,
           start: new Date(w.start),
@@ -278,11 +308,13 @@ export default {
     },
     actualiseData() {
       this.keyNumber++;
-      this.fetchData();
+      this.fetchDataArray();
+      this.fetchDataGraph();
     },
   },
   mounted() {
-    this.fetchData();
+    this.fetchDataArray();
+    this.fetchDataGraph();
   },
 };
 </script>
