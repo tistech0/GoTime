@@ -18,7 +18,15 @@
         >
           Stop your day</v-btn
         >
-        <a>Did you forget to stop your timer?</a>
+        <a
+          @click="
+            updateClock()
+            // get last working time
+            // => edit working time
+            // updateclockapi
+          "
+          >Did you forget to stop your timer?</a
+        >
       </div>
       <div v-else class="flex justify-center pt-10">
         <v-btn
@@ -61,6 +69,7 @@ export default {
       userStore: userStore,
       snackbarStore: useSnackbarStore(),
       router: useRouter(),
+      lastWorkingTime: null as unknown as Clock,
     };
   },
   methods: {
@@ -86,8 +95,11 @@ export default {
       } else {
         clearInterval(this.intervalId);
         this.clock = "00:00:00";
-        await this.updateClockApi(new Date());
-        this.$emit("clock-stoped");
+        const { data } = await this.updateClockApi(new Date());
+
+        this.lastWorkingTime = data;
+
+        this.$emit("clock-stoped", this.lastWorkingTime);
       }
     },
     async getClock() {

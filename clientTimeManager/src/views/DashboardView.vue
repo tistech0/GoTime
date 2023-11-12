@@ -17,7 +17,12 @@ let selectedItem = ref<WorkingTime>();
     ref="deleteTimePopup"
     title="Delete your time"
     description="Are you sure you want to delete this time?"
-    @action="deleteWorkingTime(workingtimes_id!)"
+    @action="
+      async () => {
+        await deleteWorkingTime(workingtimes_id!);
+        fetchData();
+      }
+    "
     v-model:visible="deleteTimePopupVisible"
     v-if="deleteTimePopupVisible"
   />
@@ -27,14 +32,25 @@ let selectedItem = ref<WorkingTime>();
     v-model:visible="editTimePopupVisible"
     v-model:item="selectedItem"
     v-if="editTimePopupVisible"
-    @action="editWorkingTime(workingtimes_id!, selectedItem!)"
+    @action="
+      async () => {
+        await editWorkingTime(workingtimes_id!, selectedItem!);
+        fetchData();
+      }
+    "
   />
   <v-main
     class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense"
   >
     <Timer
       class="md:col-span-2"
-      @clock-stoped="actualiseData"
+      @clock-stoped="(item: WorkingTime) => {
+        actualiseData();
+
+        workingtimes_id = item.id;
+        selectedItem = item;
+        editTimePopupVisible = true;
+      }"
       :username="userUsername"
     />
     <div class="data-wrapper md:col-span-3">
@@ -135,6 +151,7 @@ import NewEditTimeOverlay from "../components/overlay/NewEditTimeOverlay.vue";
 import type { TableStats } from "@/types/tableStats";
 import { useUserStore } from "@/stores/user";
 import { reactive } from "vue";
+import type { Clock } from "@/types/clock";
 
 export default {
   components: { Timer, BottomNav, Sidebar, TimeGraph, DeleteLogoutOverlay },
