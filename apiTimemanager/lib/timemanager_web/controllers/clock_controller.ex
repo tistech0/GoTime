@@ -5,7 +5,7 @@ defmodule TimemanagerWeb.ClockController do
   alias Timemanager.Time.Clock
   alias TimemanagerWeb.ErrorTemplate
 
-  action_fallback TimemanagerWeb.FallbackController
+  action_fallback(TimemanagerWeb.FallbackController)
 
   def createOrUpdate(conn, %{"clock" => clock_params}) do
     user_id = conn.params["userID"]

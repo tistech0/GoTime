@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import BottomNav from "../components/BottomNav.vue";
+import SideBar from "../components/SideBar.vue";
+import ProfileInfo from "../components/profile/ProfileInfo.vue";
+import HeaderProfile from "../components/profile/HeaderProfile.vue";
+import { useDisplay } from "vuetify";
 
-import BottomNav from '../components/BottomNav.vue';
-import SideBar from '../components/SideBar.vue';
-import ProfileInfo from '../components/profile/ProfileInfo.vue';
-import HeaderProfile from '../components/profile/HeaderProfile.vue';
-import { useDisplay } from 'vuetify';
-
-const { mobile } = useDisplay()
+const { mobile } = useDisplay();
 </script>
 
 <template>
