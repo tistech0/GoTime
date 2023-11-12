@@ -160,7 +160,6 @@ export default {
               user: w.user,
             })
         );
-        console.log(workingTimesListFlat);
         this.workingTimesList = this.formatWorkingTime(workingTimesListFlat);
       } catch (error) {
         console.error(error);
@@ -184,7 +183,6 @@ export default {
               needValidation = true;
             }
           });
-          console.log(day, typeof day);
           workingTimeList.push({
             id: item.id,
             start: item.start,
@@ -198,7 +196,6 @@ export default {
           userList.push(item.user.username);
         }
       });
-      console.log(workingTimeList);
       return workingTimeList;
     },
     formatDate(date: Date) {
@@ -231,7 +228,6 @@ export default {
       this.listTeam = data.data;
     },
     async fetchTeam() {
-      console.log("THIS IS A FETCH" + this.queryUuid);
       const startTime = this.formatDate(this.end);
       const endTime = this.formatDate(this.start);
       try {
