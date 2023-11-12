@@ -334,6 +334,9 @@ export default {
       }
       const data = await response.json();
       this.listTeam = data.data;
+      // preselect the first team
+      this.queryUuid = this.listTeam[0].id;
+      await this.fetchData();
     },
     async fetchTeam() {
       const startTime = this.formatDate(this.end);
