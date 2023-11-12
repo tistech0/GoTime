@@ -128,16 +128,18 @@ defmodule TimemanagerWeb.UserController do
     case Account.get_user(user_id) do
       %User{} = user ->
         # Check is user is part of admin team
-      if current_user_role.role == RoleEnum.role(:admin_role) do
-        check_user_in_manager_team(conn, user.id, current_user.id)
-      end
+        if current_user_role.role == RoleEnum.role(:admin_role) do
+          check_user_in_manager_team(conn, user.id, current_user.id)
+        end
 
-      role = Roles.get_role(user.role_id)
-      user_with_role = Map.put(user, :role, role.role)
+        role = Roles.get_role(user.role_id)
+        user_with_role = Map.put(user, :role, role.role)
 
-      render(conn, :show_profile, user: user_with_role)
-    true -> # If no user found, send error.
-      error_template(conn, 400, "You are unauthorized to update this user.")
+        render(conn, :show_profile, user: user_with_role)
+
+      # If no user found, send error.
+      true ->
+        error_template(conn, 400, "You are unauthorized to update this user.")
     end
   end
 
@@ -145,14 +147,17 @@ defmodule TimemanagerWeb.UserController do
     # Get list of team_users with which the user is affiliated
     team_user_list = Team.get_list_team_link_member(user_id)
     # Check if the current_user is a manager
-    is_team_manager = Enum.reduce(team_user_list, false, fn team_user, acc ->
-      team = Teams.get_team(team_user.id)
-      if team.manager_id == current_user_id do
-        true
-      else
-        acc
-      end
-    end)
+    is_team_manager =
+      Enum.reduce(team_user_list, false, fn team_user, acc ->
+        team = Teams.get_team(team_user.id)
+
+        if team.manager_id == current_user_id do
+          true
+        else
+          acc
+        end
+      end)
+
     if is_team_manager == false do
       error_template(conn, 400, "You are unauthorized to access this user.")
     end
@@ -175,39 +180,65 @@ defmodule TimemanagerWeb.UserController do
     If the id provided is diferent than the id of the current user, throw an error
   """
   def update(conn, %{"userID" => user_id, "user" => user_params}) do
-
     current_user = conn.assigns[:current_user]
     current_user_role = Roles.get_role(current_user.role_id)
 
-    with %User{} = user <- Account.get_user(user_id),
-      {:ok, updated_user} <- handle_update(conn, current_user_role, current_user, user, user_params) do
+    case Account.get_user(user_id) do
+      nil ->
+        error_template(conn, 404, "User not found")
 
-      # Assign role value
-      role = Roles.get_role(updated_user.role_id)
-      updated_user_with_role = Map.put(updated_user, :role, role.role)
+      %User{} = user ->
+        case handle_update(conn, current_user_role, current_user, user, user_params) do
+          {:ok, updated_user} ->
+            role = Roles.get_role(updated_user.role_id)
+            updated_user_with_role = Map.put(updated_user, :role, role.role)
+            render(conn, :show_profile, user: updated_user_with_role)
 
-      render(conn, :show_profile, user: updated_user_with_role)
-    else
-      {:error, reason} ->
-      error_template(conn, 400, reason)
+          {:error, reason} ->
+            error_template(conn, 400, reason)
+        end
     end
   end
 
   defp handle_update(conn, current_user_role, current_user, user, user_params) do
-    case current_user_role.role do
-      RoleEnum.role(:super_admin_role) ->
-        Account.update_user_total(user, user_params)
+    # Check that if the password is empty, it doesn't try to change it.
+    updated_user_params =
+      if user_params["password"] == "" do
+        Map.delete(user_params, "password")
+      else
+        user_params
+      end
 
-      _ when user.id == current_user.id ->
-        Account.update_current_user(user, user_params)
+    result =
+      case current_user_role.role do
+        RoleEnum.role(:super_admin_role) ->
+          Account.update_user_total(user, updated_user_params)
 
-      RoleEnum.role(:admin_role) ->
-        check_user_in_manager_team(conn, user.id, current_user.id)
-        Account.update_other_user(user, user_params)
+        _ when user.id == current_user.id ->
+          Account.update_current_user(user, updated_user_params)
 
-      _ ->
-        {:error, "You are unauthorized to update this user."}
-    end
+        RoleEnum.role(:admin_role) ->
+          check_user_in_manager_team(conn, user.id, current_user.id)
+          Account.update_other_user(user, updated_user_params)
+
+        _ ->
+          {:error, "You are unauthorized to update this user."}
+      end
+
+    handle_update_result(result)
+  end
+
+  defp handle_update_result({:ok, updated_user}) do
+    {:ok, updated_user}
+  end
+
+  defp handle_update_result({:error, %Ecto.Changeset{} = changeset}) do
+    error_msg = changeset_error_message(changeset)
+    {:error, error_msg}
+  end
+
+  defp handle_update_result({:error, error}) do
+    {:error, error}
   end
 
   @doc """
