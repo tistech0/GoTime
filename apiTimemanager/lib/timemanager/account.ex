@@ -88,18 +88,21 @@ defmodule Timemanager.Account do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs) do
+  def update_user_total(%User{} = user, attrs) do
     user
-    |> User.update_changeset(attrs)
+    |> User.update_changeset_total(attrs)
     |> Repo.update()
   end
 
-  @doc """
-    This def only updates the user roles.
-  """
-  def update_user_role(%User{} = user, attrs) do
+  def update_current_user(%User{} = user, attrs) do
     user
-    |> User.update_user_role_changeset(attrs)
+    |> User.update_changeset_current_user(attrs)
+    |> Repo.update()
+  end
+
+  def update_other_user(%User{} = user, attrs) do
+    user
+    |> User.update_changeset_other_user(attrs)
     |> Repo.update()
   end
 

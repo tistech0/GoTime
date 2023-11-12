@@ -6,6 +6,9 @@ export interface User {
     username: string, 
     email: string,
     role: string,
+    role_id: string,
     time_contract: number,
+    password: string,
+    confirm_password: string,
 }
   
