@@ -12,7 +12,7 @@ defmodule TimemanagerWeb.WorkingTimesController do
       working_time = Time.list_working_time()
       render(conn, :index, working_time: working_time)
     rescue
-      _ -> ErrorTemplate.error_template(conn, 400, "Error Server")
+      _ -> ErrorTemplate.error_template(conn, 400, "Error API")
     end
   end
 
