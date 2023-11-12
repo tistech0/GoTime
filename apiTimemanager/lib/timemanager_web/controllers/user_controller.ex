@@ -15,7 +15,6 @@ defmodule TimemanagerWeb.UserController do
   @doc """
     This def gets the list of users
   """
-  @todo "Check if user can access this information"
   def index(conn, _params) do
     users = Account.list_users()
     render(conn, :index, users: users)
@@ -46,7 +45,9 @@ defmodule TimemanagerWeb.UserController do
       error_template(conn, 400, "Invalid role")
     end
 
-    case Account.register_user(user_params) do
+    user_params_with_role = Map.put(user_params, "role_id", role.id)
+
+    case Account.register_user(user_params_with_role) do
       {:ok, user} ->
         team_id = team_params["id"]
 

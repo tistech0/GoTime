@@ -61,6 +61,7 @@ defmodule Timemanager.Account.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:username, :email, :password, :time_contract, :role_id])
+    |> validate_required([:username, :email, :password, :time_contract, :role_id])
     |> validate_email(opts)
     |> validate_password(opts)
   end
