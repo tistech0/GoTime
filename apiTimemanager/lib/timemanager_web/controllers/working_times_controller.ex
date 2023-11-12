@@ -38,6 +38,7 @@ defmodule TimemanagerWeb.WorkingTimesController do
 
   def update(conn, %{"id" => id, "working_times" => working_times_params}) do
     working_times = Time.get_working_times!(id)
+    working_times_params = Map.put(working_times_params, "status", "waiting")
 
     {:ok, start_time} = Map.get(working_times_params, "start") |> NaiveDateTime.from_iso8601()
     {:ok, end_time} = Map.get(working_times_params, "end") |> NaiveDateTime.from_iso8601()

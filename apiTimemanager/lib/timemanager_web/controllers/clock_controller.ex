@@ -4,7 +4,7 @@ defmodule TimemanagerWeb.ClockController do
   alias Timemanager.Time
   alias Timemanager.Time.Clock
 
-  action_fallback TimemanagerWeb.FallbackController
+  action_fallback(TimemanagerWeb.FallbackController)
 
   def index(conn, _params) do
     clocks = Time.list_clocks()
