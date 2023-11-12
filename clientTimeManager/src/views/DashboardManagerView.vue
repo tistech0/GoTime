@@ -9,11 +9,6 @@
     v-model:visible="deleteTeamPopupVisible"
     v-if="deleteTeamPopupVisible"
   />
-  <!-- <Button
-    btnColor="pink"
-    buttonName="Delete Team"
-    @click="deleteTeamPopupVisible = true"
-  ></Button> -->
   <v-main class="page-wrapper">
     <div class="selector-wrapper">
       <SelectOne

@@ -36,7 +36,7 @@ const logout = () => {
         title="Dashboard"
       ></v-list-item>
       <v-list-item
-        @click="router.push({ name: 'about' })"
+        @click="router.push({ name: 'profile' })"
         prepend-icon="mdi-account-outline"
         title="Profile"
       ></v-list-item>

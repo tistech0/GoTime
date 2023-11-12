@@ -154,9 +154,6 @@ async function handleSubmit() {
 
 <template>
   <div class="grid grid-cols-1 register">
-    <div v-if="mobile" class="logo-container">
-      <v-img aspect-ratio="1/1" cover width="9rem" :src="myImage"> </v-img>
-    </div>
     <div>
       <h1 class="text-customSecondary">CREATE A NEW ACCOUNT</h1>
     </div>
@@ -165,32 +162,27 @@ async function handleSubmit() {
         label="Email"
         inputType="email"
         v-model="registerFormData.user.email"
-        :inputValue="registerFormData.user.email"
       />
       <TextField
         label="Username"
         inputType="text"
         v-model="registerFormData.user.username"
-        :inputValue="registerFormData.user.username"
       />
       <TextField
         label="Password"
         inputType="password"
         v-model="registerFormData.user.password"
-        :inputValue="registerFormData.user.password"
       />
       <TextField
         label="Confirm Password"
         input-type="password"
-        v-model="registerFormData.user.confirm_password"
-        :inputValue="registerFormData.user.confirm_password"
+        v-model="registerFormData.user.confirmPassword"
       />
       <TextField
         label="Contract time"
         input-type="number"
         hint="The employee's weekly hours"
         v-model.number="registerFormData.user.time_contract"
-        :inputValue="registerFormData.user.time_contract"
       />
       <SelectOne
         label="Select a team"
@@ -214,57 +206,6 @@ async function handleSubmit() {
       ></Button>
     </form>
   </div>
-  <div>
-    <h1 class="text-customSecondary">CREATE A NEW ACCOUNT</h1>
-  </div>
-  <form :class="!lg ? 'text-input' : ''">
-    <TextField
-      label="Email"
-      inputType="email"
-      v-model="registerFormData.user.email"
-    />
-    <TextField
-      label="Username"
-      inputType="text"
-      v-model="registerFormData.user.username"
-    />
-    <TextField
-      label="Password"
-      inputType="password"
-      v-model="registerFormData.user.password"
-    />
-    <TextField
-      label="Confirm Password"
-      input-type="password"
-      v-model="registerFormData.user.confirmPassword"
-    />
-    <TextField
-      label="Contract time"
-      input-type="number"
-      hint="The employee's weekly hours"
-      v-model.number="registerFormData.user.time_contract"
-    />
-    <SelectOne
-      label="Select a team"
-      :itemList="listTeam"
-      hint="Assign the employee to a team"
-      v-model="registerFormData.team.id"
-      :clearable="true"
-    />
-    <SelectOne
-      label="Select a role"
-      :itemList="listRoles"
-      hint="Assign a role to the"
-      :clearable="false"
-      v-model="registerFormData.user.role_id"
-    />
-    <Button
-      btnColor="blue"
-      buttonName="Create Account"
-      type="submit"
-      @click="handleSubmit()"
-    ></Button>
-  </form>
 </template>
 
 <style scoped>
