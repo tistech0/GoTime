@@ -41,7 +41,7 @@ const logout = () => {
         title="Profile"
       ></v-list-item>
       <v-list-item
-        @click="router.push({ name: 'manager' })"
+        @click="router.push({ name: 'manageProfile' })"
         prepend-icon="mdi-account-group-outline"
         title="Manage Team"
       ></v-list-item>
