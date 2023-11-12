@@ -2,7 +2,7 @@
   <div class="h-[100vh] bg-cover bg-center bg-[url('../assets/bgCompany.png')]">
     <div class="p-8">
       <p class="pb-5 text-center">
-        Hello <span class="text-customSecondary">{{ user.username }}</span>,
+        Hello <span class="text-customSecondary">{{ username }}</span>,
       </p>
       <h2>Check-in to work</h2>
       <p class="text-5xl font-semibold text-center pt-15">{{ clock }}</p>
@@ -29,6 +29,12 @@ import {useRouter} from "vue-router";
 
 
 export default {
+  props: {
+    username: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     const userStore = useUserStore();
     const user = userStore.getUser;
@@ -38,9 +44,6 @@ export default {
       clockData: null as unknown as Clock,
       isTicking: false,
       intervalId: 0 as unknown as NodeJS.Timeout,
-      user: {
-        username: user?.username,
-      },
       startTime: new Date(),
       userId: user?.id,
       userStore: userStore,

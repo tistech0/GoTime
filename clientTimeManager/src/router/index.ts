@@ -74,7 +74,7 @@ const router = createRouter({
       component: ValidateTimeView,
     },
     {
-      path: "/user-look/:id",
+      path: "/:id/:username",
       name: routeNames.userLook,
       component: DashboardView,
     },
@@ -97,7 +97,7 @@ const router = createRouter({
 });
 
 // Make some checks before allowing routes redirections
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   // Fetch from localstorage
   const userStore = useUserStore();
 
@@ -124,6 +124,9 @@ router.beforeEach((to, from) => {
     switch (to.name) {
       case routeNames.manageEditprofile:
       case routeNames.manageProfile:
+      case routeNames.userLook:
+      case routeNames.validateTimeUser:
+      case routeNames.validateTime:
       case routeNames.register: {
         return { name: routeNames.home };
       }

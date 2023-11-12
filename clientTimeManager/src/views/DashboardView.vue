@@ -32,16 +32,24 @@ let selectedItem = ref<WorkingTime>();
   <v-main
     class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense"
   >
-    <Timer class="md:col-span-2" @clock-stoped="actualiseData" />
-    <div class="data-wrapper md:col-span-3" :key="keyNumber">
+    <Timer
+      class="md:col-span-2"
+      @clock-stoped="actualiseData"
+      :username="userUsername"
+    />
+    <div class="data-wrapper md:col-span-3">
+      <h1 class="text-center" v-if="$route.params.username">
+        Working times of {{ userUsername }}
+      </h1>
       <WeekSelector @week-updated="updateWeek" />
       <TimeGraph
         :end="end"
         :start="start"
         :workingTimeList="workingTimesList"
+        :key="keyNumber"
       />
       <hr v-if="workingTimesList.length > 0" />
-      <v-table class="" fixed-header>
+      <v-table class="" fixed-header :key="keyNumber">
         <thead class="drop-shadow-md">
           <tr>
             <th class="text-left">Start</th>
@@ -137,7 +145,8 @@ export default {
       start: new Date(),
       end: this.initOneWeekAgo(),
       workingTimesList: ref<TableStats[]>([]),
-      userId: user?.id,
+      userId: this.setUserId(user),
+      userUsername: this.setUserUsername(user),
       keyNumber: 0,
     };
   },
@@ -147,11 +156,20 @@ export default {
       week.setDate(week.getDate() - 6);
       return week;
     },
+    setUserId(user: any) {
+      const routeId = this.$route.params.id;
+      return routeId ? routeId : user.id;
+    },
+    setUserUsername(user: any) {
+      const routeUsername = this.$route.params.username;
+      return routeUsername ? routeUsername : user.username;
+    },
     async updateWeek(currentDate: Date) {
       this.start = new Date(currentDate);
       this.end = new Date(currentDate);
       this.end.setDate(this.end.getDate() - 6);
       await this.fetchData();
+      this.keyNumber++;
     },
     async fetchData() {
       try {

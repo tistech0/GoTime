@@ -80,24 +80,28 @@
         </template>
         <template v-else>
           <tr v-for="item in workingTimesList" :key="item.id">
-            <td
-              @click="
-                router.push({
-                  name: routeNames.validateTimeUser,
-                  params: { id: item.user.id },
-                })
-              "
-            >
+            <td>
               <v-icon class="mr-2" v-if="!item.needValidation">
                 mdi-check-circle-outline
               </v-icon>
-              <v-icon class="mr-2" v-else> mdi-alert-box-outline </v-icon>
+              <v-icon
+                class="mr-2"
+                v-else
+                @click="
+                  router.push({
+                    name: routeNames.validateTimeUser,
+                    params: { id: queryUuid },
+                  })
+                "
+              >
+                mdi-alert-box-outline
+              </v-icon>
             </td>
             <td
               @click="
                 router.push({
                   name: routeNames.userLook,
-                  params: { id: item.user.id },
+                  params: { id: item.user.id, username: item.user.username },
                 })
               "
             >
@@ -234,23 +238,22 @@ export default {
           (item: { status: string }) =>
             item.status === "validated" || item.status === "waiting"
         );
-        workingTimesListFlat = WorkingTimes.map((w: TableTeamStats) => ({
+        workingTimesListFlat = WorkingTimes.map((w: any) => ({
           ...w,
           id: w.id,
           start: new Date(w.start),
           status: w.status,
           end: new Date(w.end),
-          valueDay: w.valueDay.toFixed(2),
-          valueNight: w.valueNight.toFixed(2),
+          valueDay: parseFloat(w.valueDay).toFixed(2),
+          valueNight: parseFloat(w.valueNight).toFixed(2),
           user: w.user,
         }));
-        console.log(workingTimesListFlat);
         this.workingTimesList = this.formatWorkingTime(workingTimesListFlat);
       } catch (error) {
         console.error(error);
       }
     },
-    formatWorkingTime(workingTimeFlat: TableTeamStats[]): TableTeamStats[] {
+    formatWorkingTime(workingTimeFlat: any[]): TableTeamStats[] {
       const workingTimeList: TableTeamStats[] = [];
       const userList: string[] = [];
       workingTimeFlat.forEach((item) => {
@@ -283,7 +286,6 @@ export default {
           userList.push(item.user.username);
         }
       });
-      console.log(workingTimeList);
       return workingTimeList;
     },
     formatDate(date: Date) {
@@ -296,7 +298,6 @@ export default {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     formatHourMin(value: number) {
-      console.log(value);
       const hours = Math.floor(value);
       const minutes = Math.round((value - hours) * 60);
       return `${hours}h ${minutes}min`;
@@ -322,7 +323,6 @@ export default {
       this.listTeam = data.data;
     },
     async fetchTeam() {
-      console.log("THIS IS A FETCH" + this.queryUuid);
       const startTime = this.formatDate(this.end);
       const endTime = this.formatDate(this.start);
       try {
