@@ -118,6 +118,7 @@ router.beforeEach((to) => {
       case routeNames.manageProfile:
       case routeNames.userLook:
       case routeNames.validateTimeUser:
+      case routeNames.validateTime:
       case routeNames.register: {
         return { name: routeNames.home };
       }
