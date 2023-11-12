@@ -1,18 +1,18 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-import type { TableStats } from '../../types/tableStats.ts';
+import type { TableStats } from '@/types/tableStats.ts';
 import { useDisplay } from 'vuetify';
 import SelectOne from '../form/SelectOne.vue';
-import type { Item } from "../../types/items";
-import { errorHandling } from "../../utils/utils";
+import type { Item } from "@/types/items";
+import { errorHandling } from "@/utils/utils";
 import { useSnackbarStore } from '@/stores/snackbar';
+import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useUserStore } from "@/stores/user";
 
-
 const snackbarStore = useSnackbarStore();
-const router = useRouter();
+const router = useRoute();
 const { mobile } = useDisplay()
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -24,13 +24,9 @@ const listTeam = ref<Item[]>([]);
 console.log(listTeam);
 
 
-const queryUuid = ref<string>();
+const queryUuid = ref<any>(router.params.id);
 const queryStartTime = ref<string>("2021-11-08 10:01:56");
 const queryEndTime = ref<string>("2025-11-08 10:01:56");
-
-
-
-
 
 
 ////////////////TEAM///////////////////
@@ -99,6 +95,9 @@ const fetchData = async () => {
     }
 };
 
+if (queryUuid.value) {
+    fetchData();
+}
 // fetch the data needed for the validate time table
 
 

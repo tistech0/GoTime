@@ -49,7 +49,8 @@ export default {
     };
   },
   methods: {
-    formatDate(date: Date) {
+    formatDate(date: Date): string {
+      if (!date) return "";
       let year = date.getFullYear();
       let month = ('0' + (date.getMonth() + 1)).slice(-2);
       let day = ('0' + date.getDate()).slice(-2);
@@ -71,22 +72,28 @@ export default {
       let day: number[] = [];
       let night: number[] = [];
       let index = 0;
-      console.log("data", data);
       data.forEach((element) => {
-        while (element.day !== this.formatDate(this.categories[index])) {
+        while (element.day !== this.formatDate(this.categories[index]) && index < 7 ) {
           day.push(0);
           night.push(0);
           this.min.push(0);
           this.max.push(0);
           index++;
         }
+        if (index >= 7) return;
         day.push(element.average_day_hours);
         night.push(element.average_night_hours);
         this.min.push(element.min_hours);
         this.max.push(element.max_hours);
         index++;
       });
-
+      while (index < 7) {
+        day.push(0);
+        night.push(0);
+        this.min.push(0);
+        this.max.push(0);
+        index++;
+      }
       series.push({
         name: "Day average time",
         data: day,

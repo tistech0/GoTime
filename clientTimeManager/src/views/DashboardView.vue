@@ -8,25 +8,26 @@ const {mobile} = useDisplay()
   <BottomNav v-if="mobile"/>
   <Sidebar v-else/>
   <v-main class="w-full h-full grid grid-cols-1 md:grid-cols-5 grid-flow-row-dense">
-    <Timer class="md:col-span-2"/>
+    <Timer class="md:col-span-2" @clock-stoped="actualiseData" :username="userUsername"/>
     <div class="data-wrapper md:col-span-3">
+      <h1 class="text-center" v-if="$route.params.username">Working times of {{ userUsername }}</h1>
       <WeekSelector @week-updated="updateWeek"/>
-      <TimeGraph :key="`${start}-${end}`" :end="end" :start="start" :workingTimeList="workingTimesList"/>
+      <TimeGraph :end="end" :start="start" :workingTimeList="workingTimesList" :key="keyNumber"/>
       <hr v-if="workingTimesList.length > 0">
-      <v-table class="" fixed-header>
+      <v-table class="" fixed-header :key="keyNumber">
         <thead class="drop-shadow-md">
         <tr>
+          <th class="text-left">
+            Start
+          </th>
+          <th class="text-left">
+            End
+          </th>
           <th class="text-left">
             Day
           </th>
           <th class="text-left">
-            Time Day
-          </th>
-          <th class="text-left">
-            Time Night
-          </th>
-          <th class="text-left">
-            Total
+            Night
           </th>
           <th class="text-left">
             Operation
@@ -45,7 +46,7 @@ const {mobile} = useDisplay()
           <tr v-for="item in workingTimesList" :key="item.id">
             <td>
               {{
-                item.day.toLocaleString("en", {
+                item.start.toLocaleString("en", {
                   month: "short",
                   day: "numeric",
                   hour: "numeric",
@@ -54,9 +55,19 @@ const {mobile} = useDisplay()
                 })
               }}
             </td>
-            <td>{{ formatHourMin(item.total_day_hours) }}</td>
-            <td>{{ formatHourMin(item.total_night_hours) }}</td>
-            <td>{{ formatHourMin(item.total_hours) }}</td>
+            <td>
+              {{
+                item.end.toLocaleString("en", {
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  year: "numeric",
+                })
+              }}
+            </td>
+            <td>{{ formatHourMin(item.valueDay) }}</td>
+            <td>{{ formatHourMin(item.valueNight) }}</td>
             <td>
               <v-icon class="mr-2">
                 mdi-clock-edit-outline
@@ -79,7 +90,7 @@ import BottomNav from '../components/BottomNav.vue';
 import Sidebar from '../components/SideBar.vue';
 import Timer from '../components/Timer.vue';
 import TimeGraph from '../components/TimeGraphUser.vue';
-import type { UserStat } from "@/types/userStat";
+import type { TableStats } from '@/types/tableStats';
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -90,8 +101,10 @@ export default {
     return {
       start: new Date(),
       end: this.initOneWeekAgo(),
-      workingTimesList: ref<UserStat[]>([]),
-      userId: user?.id
+      workingTimesList: ref<TableStats[]>([]),
+      userId: this.setUserId(user),
+      userUsername: this.setUserUsername(user),
+      keyNumber: 0,
     };
   },
   methods: {
@@ -100,19 +113,27 @@ export default {
       week.setDate(week.getDate() - 6);
       return week;
     },
+    setUserId(user: any) {
+      const routeId = this.$route.params.id;
+      return routeId ? routeId : user.id;
+    },
+    setUserUsername(user: any) {
+      const routeUsername = this.$route.params.username;
+      return routeUsername ? routeUsername : user.username;
+    },
     async updateWeek(currentDate: Date) {
       this.start = new Date(currentDate);
       this.end = new Date(currentDate);
       this.end.setDate(this.end.getDate() - 6);
       await this.fetchData();
+      this.keyNumber++;
     },
     async fetchData() {
-      this.workingTimesList = [];
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
         const startTime = this.formatDate(this.end);
         const endTime = this.formatDate(this.start)
-        const response = await fetch(`${apiUrl}/api/stats/user/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
+        const response = await fetch(`${apiUrl}/api/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
             {
               method: "GET",
               credentials: "include",
@@ -121,13 +142,13 @@ export default {
               }
             });
         const data = await response.json();
-        console.log(data);
-        this.workingTimesList = data.data.map(
-            (w: UserStat) => ({ // TODO: create interface to replace any
-              day: w.day,
-              total_day_hours: w.total_day_hours,
-              total_hours: w.total_hours,
-              total_night_hours: w.total_night_hours,
+        const validateWorkingTimes = data.data.filter((item: { status: string }) => item.status === 'validated');
+        this.workingTimesList = validateWorkingTimes.map(
+            (w: any) => ({ // TODO: create interface to replace any
+              start: new Date(w.start),
+              end: new Date(w.end),
+              valueDay: parseFloat(w.valueDay).toFixed(2),
+              valueNight: w.valueNight ? parseFloat(w.valueNight) : 0,
             })
         );
       } catch (error) {
@@ -147,6 +168,10 @@ export default {
       const hours = Math.floor(value);
       const minutes = Math.round((value - hours) * 60);
       return `${hours}h ${minutes}min`;
+    },
+    actualiseData() {
+      this.keyNumber++;
+      this.fetchData();
     }
   },
   mounted() {

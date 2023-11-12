@@ -107,7 +107,16 @@ getTeamList();
 // Form submition for creating a new account
 async function handleSubmit() {
 
-    // Encrypt password with bcrypt
+    // Check email fields aren't empty
+    if(registerFormData.value.user.email == initialFormData.user.email ||
+    registerFormData.value.user.username == initialFormData.user.username ||
+    registerFormData.value.user.password == initialFormData.user.password ||
+    registerFormData.value.user.confirm_password == initialFormData.user.confirm_password ||
+    registerFormData.value.user.role_id == initialFormData.user.role_id
+    ) {
+        snackbarStore.showSnackbar('You forgot to fill some informations', 2000, 'error');
+        return
+    }
 
     // Check the two password are equals
     if (registerFormData.value.user.password !== registerFormData.value.user.confirm_password) {

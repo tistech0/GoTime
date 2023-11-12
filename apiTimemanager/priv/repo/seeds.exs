@@ -110,7 +110,7 @@ working_times_list = [
     end: "2023-11-06 12:16:13",
     valueDay: 9.1,
     valueNight: 0.0,
-    status: "validated",
+    status: "waiting",
     user_id: users_uuid["admin"]
   },
   %{

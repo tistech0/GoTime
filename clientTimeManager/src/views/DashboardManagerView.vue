@@ -1,38 +1,28 @@
-<script lang="ts" setup>
-import {useDisplay} from 'vuetify';
-import WeekSelector from "@/components/WeekSelector.vue";
-import SelectOne from "@/components/form/SelectOne.vue";
-import BottomNav from '@/components/BottomNav.vue';
-import Sidebar from '@/components/SideBar.vue';
-import TimeGraphManager from "@/components/TimeGraphManager.vue";
-
-const { mobile } = useDisplay()
-
-// TODO: a manager can only see the working times of his team
-
-
-</script>
-
 <template>
   <BottomNav v-if="mobile"/>
   <Sidebar v-else/>
-  <v-main class="w-full h-full grid grid-cols-1">
+  <v-main class="page-wrapper">
     <div class="selector-wrapper">
       <SelectOne class="w-60 text-xs col-start-2 mt-20" label="Pick team" :itemList=listTeam hint="Pick a team"
-                 v-model="queryUuid" @update:modelValue="fetchTeam()" :clearable=false />
+                 v-model="queryUuid" @update:modelValue="updateAll()" :clearable=false />
       <WeekSelector @week-updated="updateWeek"/>
     </div>
     <TimeGraphManager v-if="workingTimesListTeam.length > 0" :key="`${start}-${end}`" :end="end" :start="start" :workingTimeList="workingTimesListTeam"/>
     <h2 v-else class="no-data">No data you need to pick a team</h2>
     <hr v-if="workingTimesList.length > 0">
+    <div class="button-manager-wrapper">
+      <Button button-name="Add a new Team" btn-color="blue" style="width: 100%"/>
+      <Button button-name="Remove Team" btn-color="pink" style="width: 100%"/>
+      <Button button-name="Add a new Member" btn-color="blue" style="width: 100%"/>
+    </div>
     <v-table class="" fixed-header>
       <thead class="drop-shadow-md">
       <tr>
         <th class="text-left">
-          Start
+          Time to validate
         </th>
         <th class="text-left">
-          End
+          Name
         </th>
         <th class="text-left">
           Day
@@ -41,7 +31,10 @@ const { mobile } = useDisplay()
           Night
         </th>
         <th class="text-left">
-          Operation
+          total
+        </th>
+        <th class="text-left">
+          Remove User
         </th>
       </tr>
       </thead>
@@ -56,35 +49,22 @@ const { mobile } = useDisplay()
       <template v-else>
         <tr v-for="item in workingTimesList" :key="item.id">
           <td>
-            {{
-              item.start.toLocaleString("en", {
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                year: "numeric",
-              })
-            }}
+            <v-icon class="mr-2" v-if="!item.needValidation">
+              mdi-check-circle-outline
+            </v-icon>
+            <v-icon class="mr-2" v-else @click="router.push({ name: routeNames.validateTimeUser, params: { id: queryUuid } })">
+                mdi-alert-box-outline
+            </v-icon>
           </td>
-          <td>
-            {{
-              item.end.toLocaleString("en", {
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                year: "numeric",
-              })
-            }}
+          <td @click="router.push({ name: routeNames.userLook, params: { id: item.user.id, username: item.user.username } })">
+            {{ item.user.username }}
           </td>
           <td>{{ formatHourMin(item.valueDay) }}</td>
           <td>{{ formatHourMin(item.valueNight) }}</td>
+          <td>{{ formatHourMin(item.valueDay + item.valueNight) }}</td>
           <td>
             <v-icon class="mr-2">
-              mdi-clock-edit-outline
-            </v-icon>
-            <v-icon class="mr-2">
-              mdi-delete-alert-outline
+              mdi-account-remove-outline
             </v-icon>
           </td>
         </tr>
@@ -100,11 +80,27 @@ import { useUserStore } from "@/stores/user";
 import {useSnackbarStore} from "@/stores/snackbar";
 import {useRouter} from "vue-router";
 import {errorHandling} from "@/utils/utils";
-import type {TableStats} from "@/types/tableStats";
+import type {TableTeamStats} from "@/types/tableTeamStats";
 import type {TeamStats} from "@/types/teamStats";
 import type {Item} from "@/types/items";
+import {useDisplay} from 'vuetify';
+import TimeGraphManger from '@/components/TimeGraphManager.vue';
+import WeekSelector from "@/components/WeekSelector.vue";
+import TimeGraphManager from "@/components/TimeGraphManager.vue";
+import SelectOne from "@/components/form/SelectOne.vue";
+import BottomNav from '@/components/BottomNav.vue';
+import Sidebar from '@/components/SideBar.vue';
+import Button from "@/components/form/Button.vue";
+import {routeNames} from "@/router";
+
 
 export default {
+  computed: {
+    routeNames() {
+      return routeNames
+    }
+  },
+  components: {Button, TimeGraphManger, WeekSelector, SelectOne, BottomNav, Sidebar, TimeGraphManager},
   data() {
     const userStore = useUserStore();
     const user = userStore.getUser;
@@ -112,15 +108,16 @@ export default {
     return {
       start: new Date(),
       end: this.initOneWeekAgo(),
-      workingTimesList: ref<TableStats[]>([]),
+      workingTimesList: ref<TableTeamStats[]>([]),
       userId: user?.id,
       snackbarStore: useSnackbarStore(),
       userStore: userStore,
       router: useRouter(),
       apiUrl: import.meta.env.VITE_API_URL,
       workingTimesListTeam: ref<TeamStats[]>([]),
-      listTeam: ref<Item[]>([]),
+      listTeam: [] as Item[],
       queryUuid: ref<string>(""),
+      mobile: useDisplay().smAndDown
     };
   },
   methods: {
@@ -136,12 +133,13 @@ export default {
       await this.fetchData();
     },
     async fetchData() {
-      this.workingTimesList = [];
+      let workingTimesListFlat: TableTeamStats[];
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
         const startTime = this.formatDate(this.end);
-        const endTime = this.formatDate(this.start)
-        const response = await fetch(`${apiUrl}/api/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
+        const endTime = this.formatDate(this.start);
+
+        const response = await fetch(`${apiUrl}/api/stats/team/workingtimes/all/${this.queryUuid}?start=${startTime}&end=${endTime}`,
             {
               method: "GET",
               credentials: "include",
@@ -155,18 +153,56 @@ export default {
         }
         const data = await response.json();
 
-        const validateWorkingTimes = data.data.filter((item: { status: string }) => item.status === 'validated');
-        this.workingTimesList = validateWorkingTimes.map(
-            (w: any) => ({ // TODO: create interface to replace any
+        const WorkingTimes = data.data.filter((item: { status: string }) => item.status === 'validated' || item.status === 'waiting');
+        workingTimesListFlat = WorkingTimes.map(
+            (w: any) => ({
+              ...w,
+              id: w.id,
               start: new Date(w.start),
+              status: w.status,
               end: new Date(w.end),
               valueDay: parseFloat(w.valueDay).toFixed(2),
-              valueNight: w.valueNight ? parseFloat(w.valueNight) : 0,
+              valueNight: parseFloat(w.valueNight).toFixed(2),
+              user: w.user,
             })
         );
+        this.workingTimesList = this.formatWorkingTime(workingTimesListFlat);
       } catch (error) {
         console.error(error);
       }
+
+    },
+    formatWorkingTime(workingTimeFlat: any[],): TableTeamStats[] {
+      const workingTimeList: TableTeamStats[] = [];
+      const userList: string[] = [];
+      workingTimeFlat.forEach((item) => {
+        if (!userList.includes(item.user.username)) {
+          const user = item.user.username;
+          let day: number = 0;
+          let night = 0;
+          let needValidation = false;
+          workingTimeFlat.forEach((item2) => {
+            if (item2.user.username === user && item2.status === 'validated') {
+              day += parseFloat(item2.valueDay);
+              night += parseFloat(item2.valueNight);
+            } else if (item2.user.username === user && item2.status === 'waiting') {
+              needValidation = true;
+            }
+          });
+          workingTimeList.push({
+            id: item.id,
+            start: item.start,
+            end: item.end,
+            valueDay: day,
+            valueNight: night,
+            user: item.user,
+            status: item.status,
+            needValidation: needValidation
+          });
+          userList.push(item.user.username);
+        }
+      });
+      return workingTimeList;
     },
     formatDate(date: Date) {
       const year = date.getFullYear();
@@ -195,13 +231,11 @@ export default {
         return
       }
       const data = await response.json();
-      this.listTeam.values = data.data;
+      this.listTeam = data.data;
     },
     async fetchTeam() {
-      console.log("THIS IS A FETCH" + this.queryUuid);
       const startTime = this.formatDate(this.end);
-      const endTime = this.formatDate(this.start)
-      console.log(`${this.apiUrl}/api/stats/team/workingtimes/average/${this.queryUuid}?start=${startTime}&end=${endTime}`);
+      const endTime = this.formatDate(this.start);
       try {
         const response = await fetch(`${this.apiUrl}/api/stats/team/workingtimes/average/${this.queryUuid}?start=${startTime}&end=${endTime}`,
             {
@@ -224,25 +258,25 @@ export default {
               start: new Date(w.start),
               end: new Date(w.end),
               average_day_hours: w.average_day_hours.toFixed(2),
-              average_night_hours: w.average_night_hours ? w.average_night_hours : 0,
+              average_night_hours: w.average_night_hours.toFixed(2),
               average_hours: w.average_hours.toFixed(2),
               total_day_hours: w.total_day_hours.toFixed(2),
-              total_night_hours: w.total_night_hours ? w.total_night_hours : 0,
+              total_night_hours: w.total_night_hours.toFixed(2),
               total_hours: w.total_hours.toFixed(2),
-              max_hours: w.max_hours.toFixed(2),
-              min_hours: w.min_hours.toFixed(2),
             })
         );
 
-        console.log(this.workingTimesListTeam);
       } catch (error) {
         console.error(error);
       }
+    },
+    async updateAll() {
+      await this.fetchTeam();
+      await this.fetchData();
     }
   },
-  async created() {
+  async mounted() {
     await this.getTeamList();
-    await this.fetchData();
   }
 };
 </script>
@@ -271,6 +305,20 @@ hr {
 .no-data {
   text-align: center;
   margin-top: 1rem;
+}
+
+.page-wrapper {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.button-manager-wrapper {
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  justify-content: end;
+  flex-direction: row;
+  align-items: center;
 }
 
 </style>
