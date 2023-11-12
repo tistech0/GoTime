@@ -69,6 +69,7 @@
           <th class="text-left">Day</th>
           <th class="text-left">Night</th>
           <th class="text-left">total</th>
+          <th class="text-left">Show User Profile</th>
           <th class="text-left">Remove User</th>
         </tr>
       </thead>
@@ -110,6 +111,18 @@
             <td>{{ formatHourMin(item.valueDay) }}</td>
             <td>{{ formatHourMin(item.valueNight) }}</td>
             <td>{{ formatHourMin(item.valueDay + item.valueNight) }}</td>
+            <td>
+              <v-icon 
+                class="mr-2"
+                @click="
+                  router.push({
+                    name: routeNames.manageProfile,
+                    params: { id: item.user.id },
+                  })
+                "> 
+                mdi-account-circle 
+                </v-icon>
+            </td>
             <td>
               <v-icon class="mr-2"> mdi-account-remove-outline </v-icon>
             </td>
