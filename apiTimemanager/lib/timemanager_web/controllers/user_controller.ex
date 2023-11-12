@@ -161,7 +161,7 @@ defmodule TimemanagerWeb.UserController do
       end)
 
     if is_team_manager == false do
-      ErrorTemplate.error_template(conn, 400, "You are unauthorized to access this user.")
+      ErrorTemplate.error_template(conn, 403, "You are unauthorized to access this user.")
     end
   end
 
@@ -248,6 +248,7 @@ defmodule TimemanagerWeb.UserController do
   """
   def delete(conn, %{"userID" => id}) do
     current_user = conn.assigns[:current_user]
+    current_user_role = Roles.get_role(current_user.role_id)
 
     # fetch the user to delete
     user = Account.get_user(id)
@@ -275,6 +276,11 @@ defmodule TimemanagerWeb.UserController do
           "The user manages teams. You should replace the manager before deleting this user."
         )
       end
+    end
+
+    # Check if role is admin that the user is part of his team
+    if current_user_role.role == RoleEnum.role(:admin_role) do
+      check_user_in_manager_team(conn, user.id, current_user.id)
     end
 
     # delete all clocks for this user
