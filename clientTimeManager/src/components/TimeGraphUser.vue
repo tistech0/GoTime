@@ -6,8 +6,8 @@
 
 <script lang="ts">
 import ApexCharts from 'apexcharts';
-import WeekSelector from '../components/WeekSelector.vue';
-import type { TableStats } from '@/types/tableStats';
+import WeekSelector from '@/components/WeekSelector.vue';
+import type { UserStat } from '@/types/userStat';
 import {useDisplay} from 'vuetify';
 
 interface DataProps {
@@ -30,7 +30,7 @@ export default {
       default: true,
     },
     workingTimeList: {
-      type: Array<TableStats>,
+      type: Array<UserStat>,
       default: true
     }
   },
@@ -54,13 +54,13 @@ export default {
       }
       return newCategories;
     },
-    createSeries(data: TableStats[]) {
+    createSeries(data: UserStat[]) {
       let series = [];
       let day: number[] = [];
       let night: number[] = [];
       data.forEach((element) => {
-        day.push(element.valueDay);
-        night.push(element.valueNight);
+        day.push(element.total_day_hours);
+        night.push(element.total_night_hours);
       });
 
       series.push({
@@ -127,6 +127,7 @@ export default {
               total: {
                 enabled: true,
                 formatter: function (val: number, opts: any) {
+                    if (val === undefined) return '';
                     const hours = Math.floor(val);
                     const minutes = Math.round((val - hours) * 60);
                     return `${hours}h ${minutes}min`;

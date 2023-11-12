@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useDisplay} from 'vuetify';
-import TimeGraphManger from '@/components/TimeGraphManager.vue';
 import WeekSelector from "@/components/WeekSelector.vue";
 import SelectOne from "@/components/form/SelectOne.vue";
 import BottomNav from '@/components/BottomNav.vue';

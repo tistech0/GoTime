@@ -17,16 +17,16 @@ const {mobile} = useDisplay()
         <thead class="drop-shadow-md">
         <tr>
           <th class="text-left">
-            Start
-          </th>
-          <th class="text-left">
-            End
-          </th>
-          <th class="text-left">
             Day
           </th>
           <th class="text-left">
-            Night
+            Time Day
+          </th>
+          <th class="text-left">
+            Time Night
+          </th>
+          <th class="text-left">
+            Total
           </th>
           <th class="text-left">
             Operation
@@ -45,7 +45,7 @@ const {mobile} = useDisplay()
           <tr v-for="item in workingTimesList" :key="item.id">
             <td>
               {{
-                item.start.toLocaleString("en", {
+                item.day.toLocaleString("en", {
                   month: "short",
                   day: "numeric",
                   hour: "numeric",
@@ -54,19 +54,9 @@ const {mobile} = useDisplay()
                 })
               }}
             </td>
-            <td>
-              {{
-                item.end.toLocaleString("en", {
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  year: "numeric",
-                })
-              }}
-            </td>
-            <td>{{ formatHourMin(item.valueDay) }}</td>
-            <td>{{ formatHourMin(item.valueNight) }}</td>
+            <td>{{ formatHourMin(item.total_day_hours) }}</td>
+            <td>{{ formatHourMin(item.total_night_hours) }}</td>
+            <td>{{ formatHourMin(item.total_hours) }}</td>
             <td>
               <v-icon class="mr-2">
                 mdi-clock-edit-outline
@@ -89,7 +79,7 @@ import BottomNav from '../components/BottomNav.vue';
 import Sidebar from '../components/SideBar.vue';
 import Timer from '../components/Timer.vue';
 import TimeGraph from '../components/TimeGraphUser.vue';
-import type { TableStats } from '@/types/tableStats';
+import type { UserStat } from "@/types/userStat";
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -100,7 +90,7 @@ export default {
     return {
       start: new Date(),
       end: this.initOneWeekAgo(),
-      workingTimesList: ref<TableStats[]>([]),
+      workingTimesList: ref<UserStat[]>([]),
       userId: user?.id
     };
   },
@@ -122,7 +112,7 @@ export default {
         const apiUrl = import.meta.env.VITE_API_URL;
         const startTime = this.formatDate(this.end);
         const endTime = this.formatDate(this.start)
-        const response = await fetch(`${apiUrl}/api/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
+        const response = await fetch(`${apiUrl}/api/stats/user/workingtimes/${this.userId}?start=${startTime}&end=${endTime}`,
             {
               method: "GET",
               credentials: "include",
@@ -131,13 +121,13 @@ export default {
               }
             });
         const data = await response.json();
-        const validateWorkingTimes = data.data.filter((item: { status: string }) => item.status === 'validated');
-        this.workingTimesList = validateWorkingTimes.map(
-            (w: any) => ({ // TODO: create interface to replace any
-              start: new Date(w.start),
-              end: new Date(w.end),
-              valueDay: parseFloat(w.valueDay).toFixed(2),
-              valueNight: w.valueNight ? parseFloat(w.valueNight) : 0,
+        console.log(data);
+        this.workingTimesList = data.data.map(
+            (w: UserStat) => ({ // TODO: create interface to replace any
+              day: w.day,
+              total_day_hours: w.total_day_hours,
+              total_hours: w.total_hours,
+              total_night_hours: w.total_night_hours,
             })
         );
       } catch (error) {
