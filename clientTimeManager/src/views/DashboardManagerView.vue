@@ -110,7 +110,7 @@
             </td>
             <td>{{ formatHourMin(item.valueDay) }}</td>
             <td>{{ formatHourMin(item.valueNight) }}</td>
-            <td>{{ formatHourMin(item.valueDay + item.valueNight) }}</td>
+            <td>{{ formatHourMin(parseFloat(item.valueDay)  + parseFloat(item.valueNight)) }}</td>
             <td>
               <v-icon 
                 class="mr-2"
@@ -124,7 +124,7 @@
                 </v-icon>
             </td>
             <td>
-              <v-icon class="mr-2"> mdi-account-remove-outline </v-icon>
+              <v-icon class="mr-2" @click="removeUser(item.user.id)"> mdi-account-remove-outline </v-icon>
             </td>
           </tr>
         </template>
@@ -302,8 +302,8 @@ export default {
           let needValidation = false;
           workingTimeFlat.forEach((item2) => {
             if (item2.user.username === user && item2.status === "validated") {
-              day += item2.valueDay;
-              night += item2.valueNight;
+              day += parseFloat(item2.valueDay);
+              night += parseFloat(item2.valueNight);
             } else if (
               item2.user.username === user &&
               item2.status === "waiting"
@@ -338,6 +338,7 @@ export default {
     formatHourMin(value: number) {
       const hours = Math.floor(value);
       const minutes = Math.round((value - hours) * 60);
+      console.log(hours, minutes, value)
       return `${hours}h ${minutes}min`;
     },
     async getTeamList() {

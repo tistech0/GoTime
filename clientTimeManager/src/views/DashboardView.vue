@@ -207,7 +207,6 @@ export default {
               }
             });
         const data = await response.json();
-        console.log(data);
         this.workingTimesListGraph = data.data.map(
             (w: UserStat) => ({
               day: w.day,
@@ -234,11 +233,7 @@ export default {
               }
             });
         const data = await response.json();
-        const validateWorkingTimes = data.data.filter(
-            (item: { status: string }) => item.status === "validated"
-        );
-        this.workingTimesListArray = validateWorkingTimes.map((w: any) => ({
-          // TODO: create interface to replace any
+        this.workingTimesListArray = data.data.map((w: any) => ({
           ...w,
           start: new Date(w.start),
           end: new Date(w.end),
@@ -306,10 +301,11 @@ export default {
       const minutes = Math.round((value - hours) * 60);
       return `${hours}h ${minutes}min`;
     },
-    actualiseData() {
+    async actualiseData() {
+      await this.fetchDataArray();
+      await this.fetchDataGraph();
+
       this.keyNumber++;
-      this.fetchDataArray();
-      this.fetchDataGraph();
     },
   },
   mounted() {
